@@ -1,0 +1,9 @@
+
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(²ƒ¬Ã
+%squid:RedundantThrowsDeclarationCheck"nRemove the declaration of thrown exception 'java.lang.IndexOutOfBoundsException' which is a runtime exception.(ß¶‡
+.squid:S1700"Rename field "draft"(ı°¸îüÿÿÿÿ
+„squid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(ñ¦›_
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(ä±øÌüÿÿÿÿ
+nsquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(…ı¬×
