@@ -93,9 +93,9 @@ public class Player {
         Scanner in;
         in = new Scanner(System.in);
         int j = draft.size()-1;
-        System.out.println("Select a dice from 0 to "+j);
+        System.out.println("Select a dice from 1 to " + (j+1));
         draft.print();
-        int i = in.nextInt();
+        int i = in.nextInt() - 1;
         if(i >= 0 && i <= j) {
             dice = draft.extract(i);
         }

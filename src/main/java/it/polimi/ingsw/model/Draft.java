@@ -31,7 +31,7 @@ public class Draft {
 
     public void print(){
         for(int i=0; i<draft.size(); i++){
-            System.out.println(draft.get(i).getValue()+" "+draft.get(i).getColor());
+            System.out.println((i+1) + ": " + draft.get(i).getValue()+" "+draft.get(i).getColor());
         }
     }
 

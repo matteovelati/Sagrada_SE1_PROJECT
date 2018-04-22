@@ -1,31 +1,31 @@
 
-T
-squid:S106"9Replace this use of System.out or System.err by a logger.(ÚñÀÍ8ù¸ğÀ®,
-S
-squid:S106"9Replace this use of System.out or System.err by a logger.(…†ˆa8¤Ë¿®,
+tsquid:S1450"_Remove the "toolCardSelected" field and declare it as a local variable in the relevant methods.(‡ Ëì
 M
-squid:S106"9Replace this use of System.out or System.err by a logger.(†å¦Ô
-Y
-squid:S106"9Replace this use of System.out or System.err by a logger.(û¡´ôøÿÿÿÿ8Ëğ‚¼®,
-{squid:S1450"_Remove the "toolCardSelected" field and declare it as a local variable in the relevant methods.(‡ Ëì8ÕÛÔ¿®,
-T
-squid:S106"9Replace this use of System.out or System.err by a logger.(¥®Ï÷8õœÉÀ®,
-S
-squid:S106"9Replace this use of System.out or System.err by a logger.(œø…h8ŞªÏÀ®,
-S
-squid:S106"9Replace this use of System.out or System.err by a logger.(œø…h8™ĞØÀ®,
-Y
-squid:S106"9Replace this use of System.out or System.err by a logger.(æèâÓıÿÿÿÿ8ÿÇÁ®,
-S
-squid:S106"9Replace this use of System.out or System.err by a logger.(çèİe8›õ¬À®,
-Y
-squid:S106"9Replace this use of System.out or System.err by a logger.(±íÏÀúÿÿÿÿ8çÛèÀ®,
-Y
-squid:S106"9Replace this use of System.out or System.err by a logger.(±íÏÀúÿÿÿÿ8ø¼íÀ®,
-Y
-squid:S106"9Replace this use of System.out or System.err by a logger.(Û´ûÙúÿÿÿÿ8›ç°À®,
-Y
-squid:S106"9Replace this use of System.out or System.err by a logger.(û¡´ôøÿÿÿÿ8èñŒ¼®,
-nsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(”‡·8êŸìÀ®,
-T
-squid:S106"9Replace this use of System.out or System.err by a logger.(¤Å·8ÜÊÍ¿®,
+squid:S106"9Replace this use of System.out or System.err by a logger.(¥®Ï÷
+L
+squid:S106"9Replace this use of System.out or System.err by a logger.(œø…h
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(±íÏÀúÿÿÿÿ
+L
+squid:S106"9Replace this use of System.out or System.err by a logger.(œø…h
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(±íÏÀúÿÿÿÿ
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(ÚñÀÍ
+L
+squid:S106"9Replace this use of System.out or System.err by a logger.(ÛÆÂu
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(æèâÓıÿÿÿÿ
+L
+squid:S106"9Replace this use of System.out or System.err by a logger.(…†ˆa
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(¤Å·
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(û¡´ôøÿÿÿÿ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(û¡´ôøÿÿÿÿ
+L
+squid:S106"9Replace this use of System.out or System.err by a logger.(çèİe
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(Û´ûÙúÿÿÿÿ
+gsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(”‡·
