@@ -42,51 +42,38 @@ public class Player {
     public void chooseWindow(SchemeCard card1, SchemeCard card2){
         Scanner in;
         in = new Scanner(System.in);
-        System.out.println("Select a SchemeCard (1 or 2)");
+        System.out.println("Select a SchemeCard");
+        System.out.print("1) ");
+        card1.getFront().print();
+        System.out.print("\n\n2) ");
+        card1.getBack().print();
+        System.out.print("\n\n3) ");
+        card2.getFront().print();
+        System.out.print("\n\n4) ");
+        card2.getBack().print();
         int i = in.nextInt();
-        if(i ==1){
-            System.out.println("Select a Window (1 or 2)");
-            in = new Scanner(System.in);
-            i = in.nextInt();
-            if(i == 1){
+        switch(i){
+            case 1:
                 this.window = card1.getFront();
-            }
-            else {
-                if(i == 2) {
-                    this.window = card1.getBack();
-                }
-                else{
-                    System.out.println("Errore selezione finestra");
-                    this.chooseWindow(card1, card2);
-                    return;
-                }
-            }
-        }
-        else{
-            if(i == 2) {
-                System.out.println("Select a Window (1 or 2)");
-                in = new Scanner(System.in);
-                i = in.nextInt();
-                if (i == 1) {
-                    this.window = card2.getFront();
-                } else {
-                    if(i == 2) {
-                        this.window = card2.getBack();
-                    }
-                    else{
-                        System.out.println("Errore selezione finestra");
-                        this.chooseWindow(card1, card2);
-                        return;
-                    }
-                }
-            }
-            else{
-                System.out.println("Errore selezione CartaSchema");
+                tokens = window.getDifficulty();
+                break;
+            case 2:
+                this.window = card1.getBack();
+                tokens = window.getDifficulty();
+                break;
+            case 3:
+                this.window = card2.getFront();
+                tokens = window.getDifficulty();
+                break;
+            case 4:
+                this.window = card2.getBack();
+                tokens = window.getDifficulty();
+                break;
+            default :
+                System.out.println("Errore selezione finestra");
                 this.chooseWindow(card1, card2);
-                return;
-            }
+                break;
         }
-        tokens = window.getDifficulty();
     }
 
     public void pickDice(Draft draft){
@@ -137,6 +124,7 @@ public class Player {
     }
 
     public void putDice(){
+        this.window.print();
         Scanner in;
         in = new Scanner(System.in);
         System.out.println("Select a row to put the dice");
@@ -144,6 +132,18 @@ public class Player {
         System.out.println("Select a column to put the dice");
         in = new Scanner(System.in);
         int j = in.nextInt();
-        this.window.getPattern()[i][j].setDice(dice);
+        if(i >= 0 && i<=3 && j >= 0 && j<= 4) {
+            if (this.window.verifyRestriction(dice, i, j)) {
+                this.window.setPattern(dice, i, j);
+            } else {
+                System.out.println("Restrizione presente. Non puoi inserire il dado in questa posizione. Scegline un'altra.");
+                this.putDice();
+                return;
+            }
+        }
+        else{
+            System.out.println("Errore selezione casella.");
+            this.putDice();
+        }
     }
 }

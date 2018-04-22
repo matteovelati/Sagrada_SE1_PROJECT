@@ -39,6 +39,9 @@ public class Space {
 
     public void setDice(Dice dice) {
         this.dice = dice;
+        this.setColor(dice.getColor());
+        this.setValue(dice.getValue());
+        this.setIsEmpty(false);
     }
 
     public Dice getDice() {
