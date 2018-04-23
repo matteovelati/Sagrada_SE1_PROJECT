@@ -1,3 +1,6 @@
+---GabriShibbo--- Draft, RoundTrack e Field rese singleton (istanziabili una sola volta)
+		  Creata nuova classe bag (sacchetto dadi) singleton e con costruttore che crea 18 dadi per ogni colore
+
 ---VELATINHO--- Aggiunte tutte le carte di gioco (switch nelle classi ToolCards, PublicObjective, PrivateObjective), 
 aggiornato metodo player.selectToolCard, aggiornati costruttori e metodi delle classe astratte Card e ObjectiveCard.
 
