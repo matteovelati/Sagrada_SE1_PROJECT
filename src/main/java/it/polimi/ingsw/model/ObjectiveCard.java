@@ -4,13 +4,12 @@ public abstract class ObjectiveCard extends Card {
 
     private int score;
 
-    public ObjectiveCard(String name, String description, int score){
-        super(name, description);
-        this.score = score;
+    public ObjectiveCard(Colors color){
+        super(color);
     }
 
-    public ObjectiveCard(String name, String description){
-        super(name, description);
+    public ObjectiveCard(int idNumber){
+        super(idNumber);
     }
 
     public int getScore(){

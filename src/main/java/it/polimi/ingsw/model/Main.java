@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model;
+import java.util.Random;
 
 public class Main {
 
@@ -10,14 +11,23 @@ public class Main {
         Window window4 = new Window("Water of Life");
         SchemeCard schemeCard1 = new SchemeCard(window1, window2);
         SchemeCard schemeCard2 = new SchemeCard(window3, window4);
+        Random r = new Random();
+        ToolCard toolCards[] = new ToolCard[3];
+        toolCards[0] = new ToolCard(r.nextInt(12)+1);
+        toolCards[1] = new ToolCard(r.nextInt(12)+1);
+        toolCards[2] = new ToolCard(r.nextInt(12)+1);
+
 
         player.chooseWindow(schemeCard1, schemeCard2);
 
         System.out.println(player.getWindow().getName());
 
+        player.selectToolCard(toolCards);
+
         Dice dice = new Dice(Colors.R);
         Draft draft = new Draft();
 
+
         draft.setDraft(dice);
         draft.setDraft(dice);
         draft.setDraft(dice);
@@ -31,13 +41,13 @@ public class Main {
         player.getWindow().print();
 
 
-        /*System.out.println(player.getDice().getColor());
+        System.out.println(player.getDice().getColor());
 
         player.pickDice(draft);
 
         System.out.println(player.getDice().getValue());
 
-        window1.print();*/
+        window1.print();
 
     }
 }

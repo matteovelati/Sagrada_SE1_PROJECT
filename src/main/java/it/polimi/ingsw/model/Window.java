@@ -419,6 +419,7 @@ public class Window {
                 break;
             default:
                 System.out.println("Errore colorazione facciata");
+                break;
         }
     }
 
