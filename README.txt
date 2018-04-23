@@ -3,4 +3,5 @@ aggiornato metodo player.selectToolCard, aggiornati costruttori e metodi delle c
 
 ---SHIBBOLETH--Ho inserito le mie carte schema e modificato la stampa per la selezione dei dadi (in Draft.print e Player.pickDice)
 
----ZANGA--- Modifiche in classi: Player, Space, Window, Colors
+---ZANGA--- 	Modifiche in classi: Player, Space, Window, Colors;
+		Aggiunta casi di test per Draft.
