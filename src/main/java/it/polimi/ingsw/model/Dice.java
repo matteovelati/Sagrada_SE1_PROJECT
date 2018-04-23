@@ -22,6 +22,6 @@ public class Dice {
 
     public void setValue() {
         Random r = new Random();
-        this.value = r.nextInt(6) + 1;
+        this.value = r.nextInt(faces) + 1;
     }
 }

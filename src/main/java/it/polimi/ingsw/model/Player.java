@@ -19,6 +19,10 @@ public class Player {
         this.privateObjective = privateObjective;
     }
 
+    public void setDice(Dice dice){
+        this.dice = dice;
+    }
+
     public Dice getDice() {
         return dice;
     }
@@ -84,7 +88,7 @@ public class Player {
         draft.print();
         int i = in.nextInt() - 1;
         if(i >= 0 && i <= j) {
-            dice = draft.extract(i);
+            this.setDice(draft.extract(i));
         }
         else{
             System.out.println("Errore selezione dado");

@@ -313,14 +313,14 @@ public class Window {
 
     private boolean colorRestriction(Dice dice, int i, int j){
         //restrizione colore su casella selezionata
-        if(!pattern[i][j].getIsEmpty() && !pattern[i][j].getColor().equals(dice.getColor()) && !pattern[i][j].getColor().equals(Colors.W)){
+        if(!pattern[i][j].getIsEmpty() || (!pattern[i][j].getColor().equals(dice.getColor()) && !pattern[i][j].getColor().equals(Colors.W))){
             return false;
         }
         //restrizione colore su caselle adiacenti N S O E
         else {
             if (i == 0) {
                 if (j == 0) {
-                    if ((!pattern[i][j].getIsEmpty() && pattern[i][j + 1].getColor().equals(dice.getColor())) || (!pattern[i+1][j].getIsEmpty() && pattern[i + 1][j].getColor().equals(dice.getColor()))) {
+                    if ((!pattern[i][j+1].getIsEmpty() && pattern[i][j + 1].getColor().equals(dice.getColor())) || (!pattern[i+1][j].getIsEmpty() && pattern[i + 1][j].getColor().equals(dice.getColor()))) {
                         return false;
                     } else {
                         return true;
@@ -391,7 +391,7 @@ public class Window {
     }
 
     private boolean numberRestriction(Dice dice, int i, int j){
-        if(!pattern[i][j].getIsEmpty() && pattern[i][j].getValue() != dice.getValue() && pattern[i][j].getValue() != 0){
+        if(!pattern[i][j].getIsEmpty() || (pattern[i][j].getValue() != dice.getValue() && pattern[i][j].getValue() != 0)){
             return false;
         }
         else{
