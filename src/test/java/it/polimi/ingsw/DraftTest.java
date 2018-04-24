@@ -15,7 +15,7 @@ public class DraftTest {
 
     @Before
     public void before(){
-        draft = new Draft();
+        draft = Draft.getInstance();
         dice = new Dice(Colors.G);
     }
 

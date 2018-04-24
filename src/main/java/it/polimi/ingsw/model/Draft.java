@@ -4,10 +4,17 @@ import java.util.ArrayList;
 
 public class Draft {
 
+    private static Draft instance = null;
     private ArrayList<Dice> draft;
 
-    public Draft(){
+    private Draft(){
         draft = new ArrayList<Dice>();
+    }
+
+    public static Draft getInstance(){
+        if (instance == null)
+            instance = new Draft();
+        return instance;
     }
 
     public void setDraft(Dice dice){

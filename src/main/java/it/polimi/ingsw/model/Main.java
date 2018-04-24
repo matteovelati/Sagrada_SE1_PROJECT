@@ -17,7 +17,6 @@ public class Main {
         toolCards[1] = new ToolCard(r.nextInt(12)+1);
         toolCards[2] = new ToolCard(r.nextInt(12)+1);
 
-
         player.chooseWindow(schemeCard1, schemeCard2);
 
         System.out.println(player.getWindow().getName());
@@ -25,7 +24,7 @@ public class Main {
         player.selectToolCard(toolCards);
 
         Dice dice = new Dice(Colors.R);
-        Draft draft = new Draft();
+        Draft draft = Draft.getInstance();
 
 
         draft.setDraft(dice);

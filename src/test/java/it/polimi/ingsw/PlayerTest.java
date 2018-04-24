@@ -23,7 +23,7 @@ public class PlayerTest {
     public void before(){
         player = new Player("zanga");
         dice = new Dice(Colors.G);
-        draft = new Draft();
+        draft = Draft.getInstance();
         draft.setDraft(dice);
 
     }
