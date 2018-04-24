@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
@@ -167,6 +166,4 @@ public class Player {
             this.putDice();
         }
     }
-
-
 }

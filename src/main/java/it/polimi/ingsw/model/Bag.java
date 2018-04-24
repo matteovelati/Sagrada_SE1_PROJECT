@@ -12,26 +12,10 @@ public class Bag {
 
         for(int i=0; i<18; i++){
             Dice dice = new Dice(Colors.B);
-            bag.add(dice);
-        }
-
-        for(int i=0; i<18; i++){
-            Dice dice = new Dice(Colors.P);
-            bag.add(dice);
-        }
-
-        for(int i=0; i<18; i++){
-            Dice dice = new Dice(Colors.G);
-            bag.add(dice);
-        }
-
-        for(int i=0; i<18; i++){
-            Dice dice = new Dice(Colors.G);
-            bag.add(dice);
-        }
-
-        for(int i=0; i<18; i++){
-            Dice dice = new Dice(Colors.Y);
+            Dice dice2 = new Dice(Colors.P);
+            Dice dice3 = new Dice(Colors.G);
+            Dice dice4 = new Dice(Colors.R);
+            Dice dice5 = new Dice(Colors.Y);
             bag.add(dice);
         }
     }

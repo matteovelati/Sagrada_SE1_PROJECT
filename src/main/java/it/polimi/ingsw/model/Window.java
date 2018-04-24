@@ -30,7 +30,6 @@ public class Window {
                 pattern[3][3].setValue(1);
                 pattern[3][4].setColor(Colors.G);
                 break;
-
             case "Battlo":
                 this.name = "Battlo";
                 this.difficulty = 5;
@@ -154,7 +153,6 @@ public class Window {
                 pattern[2][3].setValue(3);
                 pattern[2][4].setColor(Colors.P);
                 break;
-
             case "Industria":
                 this.name = name;
                 this.difficulty = 5;
@@ -172,7 +170,6 @@ public class Window {
                 pattern[3][3].setValue(3);
                 pattern[3][4].setColor(Colors.R);
                 break;
-
             case "Symphony of Light":
                 this.name = name;
                 this.difficulty = 6;
@@ -190,7 +187,6 @@ public class Window {
                 pattern[3][1].setValue(3);
                 pattern[3][3].setValue(5);
                 break;
-
             case "Water of Life":
                 this.name = name;
                 this.difficulty = 6;
@@ -209,7 +205,6 @@ public class Window {
                 pattern[3][3].setValue(3);
                 pattern[3][4].setColor(Colors.P);
                 break;
-
             case "Sun's Glory":
                 this.name = name;
                 this.difficulty = 6;
@@ -228,7 +223,6 @@ public class Window {
                 pattern[3][3].setValue(2);
                 pattern[3][4].setValue(1);
                 break;
-
             case "Via Lux":
                 this.name = name;
                 this.difficulty = 4;
@@ -245,7 +239,6 @@ public class Window {
                 pattern[3][3].setValue(3);
                 pattern[3][4].setColor(Colors.R);
                 break;
-
             case "Virtus":
                 this.name = name;
                 this.difficulty = 5;
@@ -263,7 +256,6 @@ public class Window {
                 pattern[3][1].setColor(Colors.G);
                 pattern[3][2].setValue(1);
                 break;
-
             case "Gravitas":
                 this.name = name;
                 this.difficulty = 5;
@@ -280,7 +272,6 @@ public class Window {
                 pattern[3][2].setValue(2);
                 pattern[3][4].setValue(1);
                 break;
-
             case "Firelight":
                 this.name = name;
                 this.difficulty = 5;
@@ -298,7 +289,6 @@ public class Window {
                 pattern[3][3].setColor(Colors.R);
                 pattern[3][4].setValue(6);
                 break;
-
             case "Shadow Thief":
                 this.name = name;
                 this.difficulty = 5;
@@ -316,7 +306,6 @@ public class Window {
                 pattern[3][3].setValue(4);
                 pattern[3][4].setValue(3);
                 break;
-
             case "Ripples of Light":
                 this.name = name;
                 this.difficulty = 5;
@@ -335,7 +324,6 @@ public class Window {
                 pattern[3][3].setValue(1);
                 pattern[3][4].setColor(Colors.R);
                 break;
-
             case "Firmitas":
                 this.name = name;
                 this.difficulty = 5;
@@ -353,7 +341,6 @@ public class Window {
                 pattern[3][3].setColor(Colors.P);
                 pattern[3][4].setValue(4);
                 break;
-
             case "Aurorae Magnificus":
                 this.name = name;
                 this.difficulty = 5;
@@ -371,7 +358,6 @@ public class Window {
                 pattern[3][3].setColor(Colors.G);
                 pattern[3][4].setValue(4);
                 break;
-
             case "Sun Catcher":
                 this.name = name;
                 this.difficulty = 3;
@@ -386,7 +372,6 @@ public class Window {
                 pattern[3][1].setValue(3);
                 pattern[3][4].setColor(Colors.P);
                 break;
-
             case "Fractal Drops":
                 this.name = name;
                 this.difficulty = 3;
@@ -401,7 +386,6 @@ public class Window {
                 pattern[3][0].setColor(Colors.B);
                 pattern[3][1].setColor(Colors.Y);
                 break;
-
             case "Kaleidoscopic Dream":
                 this.name = name;
                 this.difficulty = 4;
@@ -418,7 +402,6 @@ public class Window {
                 pattern[3][3].setColor(Colors.B);
                 pattern[3][4].setColor(Colors.Y);
                 break;
-
             case "Aurora Sagradis":
                 this.name = name;
                 this.difficulty = 4;
@@ -434,7 +417,6 @@ public class Window {
                 pattern[2][3].setValue(5);
                 pattern[3][2].setValue(6);
                 break;
-
             default:
                 System.out.println("Errore colorazione facciata");
                 break;
