@@ -16,37 +16,34 @@ public class Main {
         toolCards[0] = new ToolCard(r.nextInt(12)+1);
         toolCards[1] = new ToolCard(r.nextInt(12)+1);
         toolCards[2] = new ToolCard(r.nextInt(12)+1);
+        // può uscire 2 volte la stessa carta
+        PublicObjective[] publicObjective = new PublicObjective[3];
+        publicObjective[0] = new PublicObjective(r.nextInt(10)+1);
+        publicObjective[1] = new PublicObjective(r.nextInt(10)+1);
+        publicObjective[2] = new PublicObjective(r.nextInt(10)+1);
 
-        player.chooseWindow(schemeCard1, schemeCard2);
+        Field field = Field.getInstance(toolCards, publicObjective);
 
-        System.out.println(player.getWindow().getName());
 
-        player.selectToolCard(toolCards);
+        Turn turn1 = new Turn();
 
-        Dice dice = new Dice(Colors.R);
+        Dice dice1 = new Dice(Colors.R);
+        Dice dice2 = new Dice(Colors.G);
+        Dice dice3 = new Dice(Colors.B);
+        Dice dice4 = new Dice(Colors.B);
+        Dice dice5 = new Dice(Colors.B);
         Draft draft = Draft.getInstance();
 
-
-        draft.setDraft(dice);
-        draft.setDraft(dice);
-        draft.setDraft(dice);
-
-        player.pickDice(draft);
-        player.putDice();
-        player.getWindow().print();
-
-        player.pickDice(draft);
-        player.putDice();
-        player.getWindow().print();
+        draft.setDraft(dice1);
+        draft.setDraft(dice2);
+        draft.setDraft(dice3);
+        draft.setDraft(dice4);
+        draft.setDraft(dice5);
 
 
-        System.out.println(player.getDice().getColor());
 
-        player.pickDice(draft);
+        turn1.PlayerTurn(player, field);
 
-        System.out.println(player.getDice().getValue());
-
-        window1.print();
 
     }
 }

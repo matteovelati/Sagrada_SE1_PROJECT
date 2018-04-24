@@ -81,43 +81,13 @@ public class Player {
         }
     }
 
-    public void pickDice(Draft draft){
-        Scanner in;
-        in = new Scanner(System.in);
-        int j = draft.size()-1;
-        System.out.println("Select a dice from 1 to " + (j+1));
-        draft.print();
-        int i = in.nextInt() - 1;
-        if(i >= 0 && i <= j) {
-            this.setDice(draft.extract(i));
-        }
-        else{
-            System.out.println("Errore selezione dado");
-            this.pickDice(draft);
-            return;
-        }
+    public void pickDice(Draft draft, int i){
+        this.setDice(draft.extract(i));
     }
 
-    public boolean selectToolCard(ToolCard[] toolCards){
-
-        Scanner in;
-        in = new Scanner(System.in);
-        System.out.println("Select a ToolCard (1, 2, 3)");
-        System.out.println("|1| "+toolCards[0].getName()+"  ->PRICE: "+((toolCards[0].getIsUsed()) ? 2 : 1)+"\n"+toolCards[0].getDescription()+
-                "|2| "+toolCards[1].getName()+"  ->PRICE: "+((toolCards[1].getIsUsed()) ? 2 : 1)+"\n"+toolCards[1].getDescription()+
-                "|3| "+toolCards[2].getName()+"  ->PRICE: "+((toolCards[2].getIsUsed()) ? 2 : 1)+"\n"+toolCards[2].getDescription()+
-                "press |0| to NOT USE any cards");
-        int i = (in.nextInt())-1;
+    public boolean selectToolCard(ToolCard[] toolCards, int i){
         if (i >= 0 && i <= 2){
             toolCardSelected = toolCards[i];
-        }
-        else if (i == -1){
-            return false;
-        }
-        else {
-            System.out.println("Errore selezione ToolCard");
-            this.selectToolCard(toolCards);
-            return false;
         }
         if(toolCardSelected.getIsUsed()){
             if(this.tokens >= 2) {
@@ -126,7 +96,7 @@ public class Player {
             }
             else{
                 System.out.println("Segnalini favore non sufficienti");
-                this.selectToolCard(toolCards);
+                this.selectToolCard(toolCards, i);
                 return false;
             }
         }
@@ -138,7 +108,7 @@ public class Player {
             }
             else{
                 System.out.println("Segnalini favore non sufficienti");
-                this.selectToolCard(toolCards);
+                toolCardSelected = null;
                 return false;
             }
         }
