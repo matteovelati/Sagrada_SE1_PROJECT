@@ -10,7 +10,7 @@ public class Turn {
     public Turn(){
     }
 
-    public void PlayerTurn(Player player, Field field){
+    public void playerTurn(Player player, Field field){
 
         move = new Move();
         threshold = field.getDraft().size()-1;

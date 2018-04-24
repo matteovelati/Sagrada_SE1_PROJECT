@@ -1,14 +1,27 @@
 package it.polimi.ingsw.model;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args){
-        Player player = new Player("zanga");
+
+        ArrayList<Player> players = new ArrayList<Player>();
+        Player player1, player2, player3;
+        player1 = new Player("uno");
+        player2 = new Player("due");
+        player3 = new Player("tre");
+        players.add(player1);
+        players.add(player2);
+        players.add(player3);
+        int actPlayer = 0;
+        Bag bag = Bag.getInstance();
+
         Window window1 = new Window("Bellesguard");
         Window window2 = new Window("Industria");
         Window window3 = new Window("Symphony of Light");
         Window window4 = new Window("Water of Life");
+
         SchemeCard schemeCard1 = new SchemeCard(window1, window2);
         SchemeCard schemeCard2 = new SchemeCard(window3, window4);
         Random r = new Random();
@@ -23,26 +36,17 @@ public class Main {
         publicObjective[2] = new PublicObjective(r.nextInt(10)+1);
 
         Field field = Field.getInstance(toolCards, publicObjective);
+        Round round = new Round();
 
 
-        Turn turn1 = new Turn();
 
-        Dice dice1 = new Dice(Colors.R);
-        Dice dice2 = new Dice(Colors.G);
-        Dice dice3 = new Dice(Colors.B);
-        Dice dice4 = new Dice(Colors.B);
-        Dice dice5 = new Dice(Colors.B);
         Draft draft = Draft.getInstance();
 
-        draft.setDraft(dice1);
-        draft.setDraft(dice2);
-        draft.setDraft(dice3);
-        draft.setDraft(dice4);
-        draft.setDraft(dice5);
+        round.manager(players, actPlayer, field, bag);
 
 
 
-        turn1.PlayerTurn(player, field);
+        //turn1.playerTurn(player, field);
 
 
     }

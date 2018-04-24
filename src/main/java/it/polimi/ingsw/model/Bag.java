@@ -42,5 +42,11 @@ public class Bag {
         return instance;
     }
 
+    public ArrayList<Dice> getBag() {
+        return bag;
+    }
 
+    public Dice extract(int i){
+        return bag.remove(i);
+    }
 }

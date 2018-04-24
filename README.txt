@@ -1,3 +1,7 @@
+---GABRISHIBBO--- Aggiunta classe Round (gestisce l'ordine dei turni)
+
+---VELATINHO--- Aggiunte classi Turn e Move (gestiscono il turno di un singolo giocatore)
+
 ---ZANGA, VELATINHO, GABRISHIBBO--- Aggiunta casi di test
 
 ---GABRISHIBBO--- Draft, RoundTrack e Field rese singleton (istanziabili una sola volta)
