@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class DraftTest {
 
@@ -29,6 +30,7 @@ public class DraftTest {
     public void extractTest(){
         draft.setDraft(dice);
         draft.extract(0);
-        assertEquals(false, draft.getDraft().contains(dice));
+        assertFalse(draft.getDraft().contains(dice));
     }
+
 }

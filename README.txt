@@ -1,3 +1,5 @@
+---ZANGA--- Aggiunta test per Draft, Field, Player, Roundtrack
+
 ---GabriShibbo--- Draft, RoundTrack e Field rese singleton (istanziabili una sola volta)
 		  Creata nuova classe bag (sacchetto dadi) singleton e con costruttore che crea 18 dadi per ogni colore
 

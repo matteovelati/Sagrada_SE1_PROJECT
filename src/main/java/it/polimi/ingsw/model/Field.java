@@ -9,16 +9,16 @@ public class Field {
     private ToolCard[] toolCard; //sono 3 carte
     private PublicObjective[] publicObjectives; //sono 3 carte
 
-    private Field(RoundTrack roundTrack, Draft draft, ToolCard[] toolCard, PublicObjective[] publicObjectives){
-        this.roundTrack = roundTrack;
-        this.draft = draft;
+    private Field(ToolCard[] toolCard, PublicObjective[] publicObjectives){
+        this.roundTrack = RoundTrack.getInstance();
+        this.draft = Draft.getInstance();
         this.toolCard = toolCard;
         this.publicObjectives = publicObjectives;
     }
 
-    public static Field getInstance(RoundTrack roundTrack, Draft draft, ToolCard[] toolCard, PublicObjective[] publicObjectives){
+    public static Field getInstance(ToolCard[] toolCard, PublicObjective[] publicObjectives){
         if (instance == null)
-            instance = new Field(roundTrack, draft, toolCard, publicObjectives);
+            instance = new Field(toolCard, publicObjectives);
         return instance;
     }
 

@@ -1,9 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.Draft;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +15,7 @@ public class PlayerTest {
     private Player player;
     private Draft draft;
     private Dice dice;
+    private PrivateObjective privateObjective;
 
     @Before
     public void before(){
@@ -25,7 +23,20 @@ public class PlayerTest {
         dice = new Dice(Colors.G);
         draft = Draft.getInstance();
         draft.setDraft(dice);
+        privateObjective = new PrivateObjective(Colors.G);
 
+    }
+
+    @Test
+    public void setPrivateObjectiveTest(){
+        player.setPrivateObjective(privateObjective);
+        assertEquals(privateObjective, player.getPrivateObjective());
+    }
+
+    @Test
+    public void setDiceTest(){
+        player.setDice(dice);
+        assertEquals(dice, player.getDice());
     }
 
     @Test
