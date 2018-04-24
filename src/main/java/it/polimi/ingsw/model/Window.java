@@ -626,8 +626,14 @@ public class Window {
             System.out.println("\n| - - - | - - - | - - - | - - - | - - - |");
             System.out.print("|");
             for(int j=0; j<5; j++){
-                System.out.print("  "+pattern[i][j].getValue()+" "+pattern[i][j].getColor()+"  ");
-                System.out.print("|");
+                if(pattern[i][j].getIsEmpty()){
+                    System.out.print("  "+pattern[i][j].getValue()+" "+pattern[i][j].getColor()+"  ");
+                    System.out.print("|");
+                }
+                else {
+                    System.out.print(" [" + pattern[i][j].getValue() + " " + pattern[i][j].getColor() + "] ");
+                    System.out.print("|");
+                }
             }
         }
         System.out.println("\n| - - - | - - - | - - - | - - - | - - - |");
