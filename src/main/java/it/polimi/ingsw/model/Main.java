@@ -14,7 +14,8 @@ public class Main {
         players.add(player1);
         players.add(player2);
         players.add(player3);
-        int actPlayer = 0;
+        Game game = new Game(players);
+        /*int actPlayer = 0;
         Bag bag = Bag.getInstance();
 
         Window window1 = new Window("Bellesguard");
@@ -42,11 +43,13 @@ public class Main {
 
         Draft draft = Draft.getInstance();
 
-        round.manager(players, actPlayer, field, bag);
+        round.manager(players, actPlayer, field, bag);*/
 
 
 
         //turn1.playerTurn(player, field);
+        game.play();
+
 
 
     }

@@ -1,3 +1,5 @@
+---ZANGA--- Aggiunta classe Game + modifica classe Window(modifica del costruttore)
+
 ---GABRISHIBBO--- Aggiunta classe Round (gestisce l'ordine dei turni)
 
 ---VELATINHO--- Aggiunte classi Turn e Move (gestiscono il turno di un singolo giocatore)

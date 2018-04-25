@@ -18,10 +18,10 @@ public class SchemeCardTest {
 
     @Before
     public void before(){
-        front1 = new Window("Bellesguard");
-        back1 = new Window("Battlo");
-        front2 = new Window("Chromatic Splendor");
-        back2 = new Window("Comitas");
+        front1 = new Window(1);
+        back1 = new Window(2);
+        front2 = new Window(3);
+        back2 = new Window(4);
         card1 = new SchemeCard(front1, back1);
         card2 = new SchemeCard(front2, back2);
     }

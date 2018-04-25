@@ -19,7 +19,7 @@ public class WindowTest {
 
     @Before
     public void Before(){
-        window = new Window("Bellesguard");
+        window = new Window(1);
         dice = new Dice(Colors.B);
     }
 

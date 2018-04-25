@@ -6,7 +6,7 @@ public class Window {
     private int difficulty;
     private Space[][] pattern;
 
-    public Window(String name){
+    public Window(int x){
         pattern = new Space[4][5];
         for(int i=0; i<4; i++){
             for(int j=0; j<5; j++){
@@ -14,9 +14,9 @@ public class Window {
             }
         }
 
-        switch (name){
-            case "Bellesguard":
-                this.name = name;
+        switch (x){
+            case 1:
+                this.name = "Bellesguard";
                 this.difficulty = 3;
                 pattern[0][0].setColor(Colors.B);
                 pattern[0][1].setValue(6);
@@ -31,7 +31,7 @@ public class Window {
                 pattern[3][4].setColor(Colors.G);
                 break;
 
-            case "Battlo":
+            case 2:
                 this.name = "Battlo";
                 this.difficulty = 5;
                 pattern[0][2].setValue(6);
@@ -50,7 +50,7 @@ public class Window {
                 pattern[3][4].setValue(3);
                 break;
 
-            case "Chromatic Splendor":
+            case 3:
                 this.name = "Chromatic Splendor";
                 this.difficulty = 4;
                 pattern[0][2].setColor(Colors.G);
@@ -67,7 +67,7 @@ public class Window {
                 pattern[3][4].setValue(4);
                 break;
 
-            case "Comitas":
+            case 4:
                 this.name = "Comitas";
                 this.difficulty = 5;
                 pattern[0][0].setColor(Colors.Y);
@@ -84,7 +84,7 @@ public class Window {
                 pattern[3][3].setValue(3);
                 break;
 
-            case "Fulgor del Cielo":
+            case 5:
                 this.name = "Fulgor del Cielo";
                 this.difficulty = 5;
                 pattern[0][1].setColor(Colors.B);
@@ -102,7 +102,7 @@ public class Window {
                 pattern[3][3].setValue(1);
                 break;
 
-            case "Luz Celestial":
+            case 6:
                 this.name = "Luz Celestial";
                 this.difficulty = 3;
                 pattern[0][2].setColor(Colors.R);
@@ -117,7 +117,7 @@ public class Window {
                 pattern[3][2].setValue(2);
                 break;
 
-            case "Lux Mundi":
+            case 7:
                 this.name = "Lux Mundi";
                 this.difficulty = 6;
                 pattern[0][2].setValue(1);
@@ -136,7 +136,7 @@ public class Window {
                 pattern[3][3].setColor(Colors.G);
                 break;
 
-            case "Lux Astram":
+            case 8:
                 this.name = "Lux Astram";
                 this.difficulty = 5;
                 pattern[0][1].setValue(1);
@@ -155,8 +155,8 @@ public class Window {
                 pattern[2][4].setColor(Colors.P);
                 break;
 
-            case "Industria":
-                this.name = name;
+            case 9:
+                this.name = "Industria";
                 this.difficulty = 5;
                 pattern[0][0].setValue(1);
                 pattern[0][1].setColor(Colors.R);
@@ -173,8 +173,8 @@ public class Window {
                 pattern[3][4].setColor(Colors.R);
                 break;
 
-            case "Symphony of Light":
-                this.name = name;
+            case 10:
+                this.name = "Symphony of Light";
                 this.difficulty = 6;
                 pattern[0][0].setValue(2);
                 pattern[0][2].setValue(5);
@@ -191,8 +191,8 @@ public class Window {
                 pattern[3][3].setValue(5);
                 break;
 
-            case "Water of Life":
-                this.name = name;
+            case 11:
+                this.name = "Water of Life";
                 this.difficulty = 6;
                 pattern[0][0].setValue(6);
                 pattern[0][1].setColor(Colors.B);
@@ -210,8 +210,8 @@ public class Window {
                 pattern[3][4].setColor(Colors.P);
                 break;
 
-            case "Sun's Glory":
-                this.name = name;
+            case 12:
+                this.name = "Sun's Glory";
                 this.difficulty = 6;
                 pattern[0][0].setValue(1);
                 pattern[0][1].setColor(Colors.P);
@@ -229,8 +229,8 @@ public class Window {
                 pattern[3][4].setValue(1);
                 break;
 
-            case "Via Lux":
-                this.name = name;
+            case 13:
+                this.name = "Via Lux";
                 this.difficulty = 4;
                 pattern[0][0].setColor(Colors.Y);
                 pattern[0][2].setValue(6);
@@ -246,8 +246,8 @@ public class Window {
                 pattern[3][4].setColor(Colors.R);
                 break;
 
-            case "Virtus":
-                this.name = name;
+            case 14:
+                this.name = "Virtus";
                 this.difficulty = 5;
                 pattern[0][0].setValue(4);
                 pattern[0][2].setValue(2);
@@ -264,8 +264,8 @@ public class Window {
                 pattern[3][2].setValue(1);
                 break;
 
-            case "Gravitas":
-                this.name = name;
+            case 15:
+                this.name = "Gravitas";
                 this.difficulty = 5;
                 pattern[0][0].setValue(1);
                 pattern[0][2].setValue(3);
@@ -281,8 +281,8 @@ public class Window {
                 pattern[3][4].setValue(1);
                 break;
 
-            case "Firelight":
-                this.name = name;
+            case 16:
+                this.name = "Firelight";
                 this.difficulty = 5;
                 pattern[0][0].setValue(3);
                 pattern[0][1].setValue(4);
@@ -299,8 +299,8 @@ public class Window {
                 pattern[3][4].setValue(6);
                 break;
 
-            case "Shadow Thief":
-                this.name = name;
+            case 17:
+                this.name = "Shadow Thief";
                 this.difficulty = 5;
                 pattern[0][0].setValue(6);
                 pattern[0][1].setColor(Colors.P);
@@ -317,8 +317,8 @@ public class Window {
                 pattern[3][4].setValue(3);
                 break;
 
-            case "Ripples of Light":
-                this.name = name;
+            case 18:
+                this.name = "Ripples of Light";
                 this.difficulty = 5;
                 pattern[0][3].setColor(Colors.R);
                 pattern[0][4].setValue(5);
@@ -336,8 +336,8 @@ public class Window {
                 pattern[3][4].setColor(Colors.R);
                 break;
 
-            case "Firmitas":
-                this.name = name;
+            case 19:
+                this.name = "Firmitas";
                 this.difficulty = 5;
                 pattern[0][0].setColor(Colors.P);
                 pattern[0][1].setValue(6);
@@ -354,8 +354,8 @@ public class Window {
                 pattern[3][4].setValue(4);
                 break;
 
-            case "Aurorae Magnificus":
-                this.name = name;
+            case 20:
+                this.name = "Aurorae Magnificus";
                 this.difficulty = 5;
                 pattern[0][0].setValue(5);
                 pattern[0][1].setColor(Colors.G);
@@ -372,8 +372,8 @@ public class Window {
                 pattern[3][4].setValue(4);
                 break;
 
-            case "Sun Catcher":
-                this.name = name;
+            case 21:
+                this.name = "Sun Catcher";
                 this.difficulty = 3;
                 pattern[0][1].setColor(Colors.B);
                 pattern[0][2].setValue(2);
@@ -387,8 +387,8 @@ public class Window {
                 pattern[3][4].setColor(Colors.P);
                 break;
 
-            case "Fractal Drops":
-                this.name = name;
+            case 22:
+                this.name = "Fractal Drops";
                 this.difficulty = 3;
                 pattern[0][1].setValue(4);
                 pattern[0][3].setColor(Colors.Y);
@@ -402,8 +402,8 @@ public class Window {
                 pattern[3][1].setColor(Colors.Y);
                 break;
 
-            case "Kaleidoscopic Dream":
-                this.name = name;
+            case 23:
+                this.name = "Kaleidoscopic Dream";
                 this.difficulty = 4;
                 pattern[0][0].setColor(Colors.Y);
                 pattern[0][1].setColor(Colors.B);
@@ -419,8 +419,8 @@ public class Window {
                 pattern[3][4].setColor(Colors.Y);
                 break;
 
-            case "Aurora Sagradis":
-                this.name = name;
+            case 24:
+                this.name = "Aurora Sagradis";
                 this.difficulty = 4;
                 pattern[0][0].setColor(Colors.R);
                 pattern[0][2].setColor(Colors.B);
