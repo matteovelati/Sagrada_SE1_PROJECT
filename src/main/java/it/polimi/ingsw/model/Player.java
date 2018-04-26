@@ -44,8 +44,8 @@ public class Player {
         return privateObjective;
     }
 
-    public void chooseWindow(SchemeCard card1, SchemeCard card2){
-        Scanner in;
+    public boolean chooseWindow(SchemeCard card1, SchemeCard card2, int i){
+        /*Scanner in;
         in = new Scanner(System.in);
         System.out.println("Select a SchemeCard");
         System.out.print("1) ");
@@ -56,28 +56,29 @@ public class Player {
         card2.getFront().print();
         System.out.print("\n\n4) ");
         card2.getBack().print();
-        int i = in.nextInt();
+        int i = in.nextInt();*/
         switch(i){
             case 1:
                 this.window = card1.getFront();
                 tokens = window.getDifficulty();
-                break;
+                return true;
             case 2:
                 this.window = card1.getBack();
                 tokens = window.getDifficulty();
-                break;
+                return true;
             case 3:
                 this.window = card2.getFront();
                 tokens = window.getDifficulty();
-                break;
+                return true;
             case 4:
                 this.window = card2.getBack();
                 tokens = window.getDifficulty();
-                break;
+                return true;
             default :
-                System.out.println("Errore selezione finestra");
-                this.chooseWindow(card1, card2);
-                break;
+                return false;
+                /*System.out.println("Errore selezione finestra");
+                this.chooseWindow(card1, card2, i);
+                break;*/
         }
     }
 
@@ -95,8 +96,8 @@ public class Player {
                 return true;
             }
             else{
-                System.out.println("Segnalini favore non sufficienti");
-                this.selectToolCard(toolCards, i);
+                /*System.out.println("Segnalini favore non sufficienti");
+                this.selectToolCard(toolCards, i);*/
                 return false;
             }
         }
@@ -107,34 +108,36 @@ public class Player {
                 return true;
             }
             else{
-                System.out.println("Segnalini favore non sufficienti");
-                toolCardSelected = null;
+                /*System.out.println("Segnalini favore non sufficienti");
+                toolCardSelected = null;*/
                 return false;
             }
         }
     }
 
-    public void putDice(){
-        this.window.print();
+    public boolean putDice(int i, int j){
+        /*this.window.print();
         Scanner in;
         in = new Scanner(System.in);
         System.out.println("Select a row to put the dice");
         int i = in.nextInt();
         System.out.println("Select a column to put the dice");
         in = new Scanner(System.in);
-        int j = in.nextInt();
+        int j = in.nextInt();*/
         if(i >= 0 && i<=3 && j >= 0 && j<= 4) {
             if (this.window.verifyRestriction(dice, i, j)) {
                 this.window.setPattern(dice, i, j);
+                return true;
             } else {
-                System.out.println("Restrizione presente. Non puoi inserire il dado in questa posizione. Scegline un'altra.");
-                this.putDice();
-                return;
+                /*System.out.println("Restrizione presente. Non puoi inserire il dado in questa posizione. Scegline un'altra.");
+                this.putDice();*/
+                return false;
             }
         }
         else{
-            System.out.println("Errore selezione casella.");
-            this.putDice();
+            //System.out.println("Errore selezione casella.");
+            //this.putDice();
+            return false;
         }
     }
 

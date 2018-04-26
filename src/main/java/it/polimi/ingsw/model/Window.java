@@ -620,7 +620,7 @@ public class Window {
         else return false;
     }
 
-    public void print(){
+    /*public void print(){      ---DA SPOSTARE NELLA VIEW
         System.out.println(this.getName() +"  "+this.getDifficulty());
         for(int i=0; i<4; i++){
             System.out.println("\n| - - - | - - - | - - - | - - - | - - - |");
@@ -637,6 +637,6 @@ public class Window {
             }
         }
         System.out.println("\n| - - - | - - - | - - - | - - - | - - - |");
-    }
+    }*/
 
 }

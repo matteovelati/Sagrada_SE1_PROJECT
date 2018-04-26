@@ -24,7 +24,7 @@ public class Round {
         turnNum = 1;
 
         for(int i=0; i<players.size(); i++){
-            System.out.println("Primo turno giocatore: " + /*actualPlayer*/players.get(actualPlayer).getUsername() + "\n");
+            //System.out.println("Primo turno giocatore: " + /*actualPlayer*/players.get(actualPlayer).getUsername() + "\n");
             turn.playerTurn(players.get(actualPlayer), field);
             actualPlayer++;
             if(actualPlayer == players.size())
@@ -37,7 +37,7 @@ public class Round {
             actualPlayer--;
             if(actualPlayer == -1)
                 actualPlayer = players.size()-1;
-            System.out.println("Secondo turno giocatore: " + /*actualPlayer*/players.get(actualPlayer).getUsername() + "\n");
+            //System.out.println("Secondo turno giocatore: " + /*actualPlayer*/players.get(actualPlayer).getUsername() + "\n");
             turn.playerTurn(players.get(actualPlayer), field);
         }
 

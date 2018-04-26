@@ -10,11 +10,11 @@ public class Move {
 
     }
 
-    public int chooseMove1(Player player, Field field){
+    public int chooseMove1(Player player, Field field, int i){
         threshold = field.getDraft().size();
-        Scanner in;
-        in = new Scanner(System.in);
         int j = field.getDraft().size()-1;
+        /*Scanner in;
+        in = new Scanner(System.in);
         System.out.println("Choose your next move");
         System.out.println("You can pick a dice from 1 to " + (j + 1) + ":");
         field.getDraft().print();
@@ -23,7 +23,7 @@ public class Move {
                 "|"+(j+3)+"| "+field.getToolCard()[1].getName()+"  ->PRICE: "+((field.getToolCard()[1].getIsUsed()) ? 2 : 1)+"\n"+field.getToolCard()[1].getDescription()+
                 "|"+(j+4)+"| "+field.getToolCard()[2].getName()+"  ->PRICE: "+((field.getToolCard()[2].getIsUsed()) ? 2 : 1)+"\n"+field.getToolCard()[2].getDescription());
         System.out.println("PRESS |0| PASS YOUR TURN !");
-        int i = in.nextInt()-1;
+        int i = in.nextInt()-1;*/
         if(i >= 0 && i <= j) {
             player.pickDice(field.getDraft(), i);
             return i;
@@ -38,7 +38,7 @@ public class Move {
         }
         else{
             System.out.println("selection error 1\n");
-            return this.chooseMove1(player, field);
+            return this.chooseMove1(player, field, i);
             //return -2;  //Sbagliato! se entra nell'else ritorna sempre -2 perchè è l'ultimo thread che chiude!
         }
     }

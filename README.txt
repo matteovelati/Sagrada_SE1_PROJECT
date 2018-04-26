@@ -1,3 +1,5 @@
+---ZANGA, VELATINHO, GABRISHIBBO--- Inizio correzione model
+
 ---ZANGA--- Correzione classe Move
 
 ---ZANGA--- Aggiunta classe Game + modifica classe Window(modifica del costruttore)
