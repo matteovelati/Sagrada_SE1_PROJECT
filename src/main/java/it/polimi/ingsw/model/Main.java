@@ -8,9 +8,9 @@ public class Main {
 
         ArrayList<Player> players = new ArrayList<Player>();
         Player player1, player2, player3;
-        player1 = new Player("uno");
-        player2 = new Player("due");
-        player3 = new Player("tre");
+        player1 = new Player("Zanga");
+        player2 = new Player("GabriShibbo");
+        player3 = new Player("Velatinho");
         players.add(player1);
         players.add(player2);
         players.add(player3);

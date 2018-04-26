@@ -38,8 +38,8 @@ public class Move {
         }
         else{
             System.out.println("selection error 1\n");
-            this.chooseMove1(player, field);
-            return -2;
+            return this.chooseMove1(player, field);
+            //return -2;  //Sbagliato! se entra nell'else ritorna sempre -2 perchè è l'ultimo thread che chiude!
         }
     }
 

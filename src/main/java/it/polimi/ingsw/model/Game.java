@@ -36,7 +36,7 @@ public class Game {
     public void play(){
         Random r = new Random();
         for(int i=0; i<players.size(); i++){
-            System.out.println("PLAYER "+(i+1));
+            System.out.println("PLAYER "+players.get(i).getUsername());
             players.get(i).chooseWindow(schemeCards.get(r.nextInt(schemeCards.size())), schemeCards.get(r.nextInt(schemeCards.size())));
         }
         for(int i=0; i<10; i++){
