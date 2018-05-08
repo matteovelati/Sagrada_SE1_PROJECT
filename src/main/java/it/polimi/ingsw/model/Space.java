@@ -7,8 +7,10 @@ public class Space {
     private boolean isEmpty;
     private Dice dice;
 
-    public Space(){
-
+    public Space(Colors color, int value){
+        this.color = color;
+        this.value = value;
+        isEmpty = true;
     }
 
     public Colors getColor() {
@@ -27,11 +29,11 @@ public class Space {
         this.value = value;
     }
 
-    public boolean isEmpty() {
+    public boolean getIsEmpty() {
         return isEmpty;
     }
 
-    public void setEmpty(boolean empty) {
+    public void setIsEmpty(boolean empty) {
         isEmpty = empty;
     }
 

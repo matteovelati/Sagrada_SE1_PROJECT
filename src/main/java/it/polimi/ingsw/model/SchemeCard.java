@@ -5,8 +5,9 @@ public class SchemeCard {
     private Window front;
     private Window back;
 
-    public SchemeCard(){
-
+    public SchemeCard(Window front, Window back){
+        this.front = front;
+        this.back = back;
     }
 
     public Window getFront() {
