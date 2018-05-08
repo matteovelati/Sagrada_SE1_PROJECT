@@ -18,7 +18,7 @@ public class Field {
         this.publicObjectives = new ArrayList<PublicObjective>(3);
     }
 
-    public static Field getInstance(ToolCard[] toolCard, PublicObjective[] publicObjectives){
+    public static Field getInstance(){
         if (instance == null)
             instance = new Field();
         return instance;

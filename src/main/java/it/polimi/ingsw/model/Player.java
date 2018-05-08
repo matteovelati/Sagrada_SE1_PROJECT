@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.util.ArrayList;
+
 public class Player {
 
     private String username;
@@ -41,7 +43,7 @@ public class Player {
         return privateObjective;
     }
 
-    public boolean chooseWindow(SchemeCard card1, SchemeCard card2, int i){
+    public boolean setWindow(SchemeCard card1, SchemeCard card2, int i){
         /*Scanner in;
         in = new Scanner(System.in);
         System.out.println("Select a SchemeCard");
@@ -83,7 +85,7 @@ public class Player {
         this.setDice(draft.extract(i));
     }
 
-    public boolean selectToolCard(ToolCard[] toolCards, int i){
+    public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
         if (i >= 0 && i <= 2){
             toolCardSelected = toolCards[i];
         }
