@@ -18,10 +18,12 @@ public class TCFluxRemover extends Card implements ToolCard   {
         super.setDescription("After-drafting, return the die to the Dice Bag and pull ONE die from the bag.\nChoose a value and place the new dice, obeying all placement restrictions, or return it to the Draft Pool.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

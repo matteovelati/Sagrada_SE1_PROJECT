@@ -16,8 +16,13 @@ public class PORowShadeVariety extends Card implements PublicObjective {
         super.setDescription("Rows with no repeated VALUES");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override

@@ -18,10 +18,12 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard   {
         super.setDescription("After drafting, place the die in the spot that is not adjacent to another die.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

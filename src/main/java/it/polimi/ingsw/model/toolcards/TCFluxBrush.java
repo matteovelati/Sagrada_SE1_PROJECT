@@ -18,10 +18,12 @@ public class  TCFluxBrush extends Card implements ToolCard   {
         super.setDescription("After drafting, re-roll the drafted die.\nIf it cannot be placed, return it to the Draft Pool.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

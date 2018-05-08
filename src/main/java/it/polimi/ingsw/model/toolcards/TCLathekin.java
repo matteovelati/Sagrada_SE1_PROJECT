@@ -18,10 +18,12 @@ public class TCLathekin extends Card implements ToolCard   {
         super.setDescription("Move exactly TWO dice, obeying all placement restrictions.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

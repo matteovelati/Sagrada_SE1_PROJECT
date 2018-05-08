@@ -18,10 +18,12 @@ public class TCEglomiseBrush extends Card implements ToolCard   {
         super.setDescription("Move any ONE die in your window ignoring color restrictions.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

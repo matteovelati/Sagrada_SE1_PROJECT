@@ -18,16 +18,18 @@ public class TCRunningPliers extends Card implements ToolCard   {
             " Skip your next turn this round.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }
 
     @Override
     public boolean useToolCard() {
-            return false;
-            }
+        return false;
+    }
 }

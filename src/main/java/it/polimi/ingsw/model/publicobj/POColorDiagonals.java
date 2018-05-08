@@ -16,10 +16,12 @@ public class POColorDiagonals extends Card implements PublicObjective {
         super.setDescription("Count of diagonally adjacent same-color dice");
     }
 
+    @Override
     public int getScore() {
         return score;
     }
 
+    @Override
     public void setScore(int score) {       //va calcolato alla fine!!!
         this.score = score;
     }

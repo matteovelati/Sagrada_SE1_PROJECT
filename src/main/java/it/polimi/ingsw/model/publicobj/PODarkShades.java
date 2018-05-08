@@ -16,8 +16,13 @@ public class PODarkShades extends Card implements PublicObjective {
         super.setDescription("Sets of 5 & 6 anywhere");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override

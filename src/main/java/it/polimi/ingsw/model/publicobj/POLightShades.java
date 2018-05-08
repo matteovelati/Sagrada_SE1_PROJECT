@@ -16,8 +16,13 @@ public class POLightShades extends Card implements PublicObjective {
         super.setDescription("Sets of 1 & 2 anywhere");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override

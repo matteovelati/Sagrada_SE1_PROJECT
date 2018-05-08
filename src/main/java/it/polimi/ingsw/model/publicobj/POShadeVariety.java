@@ -16,8 +16,13 @@ public class POShadeVariety extends Card implements PublicObjective {
         super.setDescription("Sets of one of each VALUE anywhere");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override

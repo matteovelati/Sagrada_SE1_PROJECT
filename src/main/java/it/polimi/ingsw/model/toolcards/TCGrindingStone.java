@@ -18,10 +18,12 @@ public class TCGrindingStone extends Card implements ToolCard {
         super.setDescription("After drafting, flip the die to its opposite side.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

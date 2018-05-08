@@ -16,8 +16,13 @@ public class POMediumShades extends Card implements PublicObjective {
         super.setDescription("Sets of 3 & 4 anywhere");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override

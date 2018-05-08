@@ -18,10 +18,12 @@ public class TCLensCutter extends Card implements ToolCard   {
         super.setDescription("After drafting, swap the drafted die with a die from the Round Track.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

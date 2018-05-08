@@ -19,10 +19,12 @@ public class TCGlazingHammer extends Card implements ToolCard{
         " This may only be used on your second turn before drafting.\n");
     }
 
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
 
+    @Override
     public void setIsUsed(boolean isUsed){
         this.isUsed = isUsed;
     }

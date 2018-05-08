@@ -16,13 +16,17 @@ public class POColorVariety extends Card implements PublicObjective {
         super.setDescription("Sets of one of each COLOR anywhere");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override
     public int calculateScore(){
         return score*4;
     }
-
 }

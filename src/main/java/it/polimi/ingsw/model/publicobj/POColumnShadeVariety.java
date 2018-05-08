@@ -16,8 +16,13 @@ public class POColumnShadeVariety extends Card implements PublicObjective {
         super.setDescription("Columns with no repeated VALUES");
     }
 
+    @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void setScore(int score) {//USELESS
     }
 
     @Override
