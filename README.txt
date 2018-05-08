@@ -1,0 +1,1 @@
+--- ZANGA --- scheletro classi Bag, Colors, Dice, SchemeCard, Space, Window
