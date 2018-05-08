@@ -14,7 +14,7 @@ public class Field {
     private Field(){
         this.roundTrack = RoundTrack.getInstance();
         this.draft = Draft.getInstance();
-        this.toolCards = new ArrayList<ToolCard>(3)
+        this.toolCards = new ArrayList<ToolCard>(3);
         this.publicObjectives = new ArrayList<PublicObjective>(3);
     }
 

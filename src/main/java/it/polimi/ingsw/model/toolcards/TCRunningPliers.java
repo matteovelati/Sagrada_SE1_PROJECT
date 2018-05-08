@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.toolcards;
 
+import it.polimi.ingsw.model.Colors;
 import it.polimi.ingsw.model.ToolCard;
 import it.polimi.ingsw.model.Card;
 

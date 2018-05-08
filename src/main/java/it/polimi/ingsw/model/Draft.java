@@ -27,6 +27,6 @@ public class Draft {
     }
 
     public Dice extract(int i) throws IndexOutOfBoundsException{
-
+        return null;
     }
 }
