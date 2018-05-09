@@ -465,7 +465,7 @@ public class Window {
         this.window[i][j].setDice(dice);
     }
 
-    private boolean colorRestriction(Dice dice, int i, int j){
+    public boolean colorRestriction(Dice dice, int i, int j){
         //restrizione colore su casella selezionata
         if(!window[i][j].getIsEmpty() || (!window[i][j].getColor().equals(dice.getColor()) && !window[i][j].getColor().equals(Colors.W))){
             return false;
@@ -544,7 +544,7 @@ public class Window {
         }
     }
 
-    private boolean numberRestriction(Dice dice, int i, int j){
+    public boolean numberRestriction(Dice dice, int i, int j){
         if(!window[i][j].getIsEmpty() || (window[i][j].getValue() != dice.getValue() && window[i][j].getValue() != 0)){
             return false;
         }
@@ -621,13 +621,98 @@ public class Window {
         }
     }
 
-    public boolean verifyRestriction(Dice dice, int i, int j){
-        if(this.colorRestriction(dice, i, j) && this.numberRestriction(dice, i, j) && this.window[i][j].getIsEmpty()){
+    public boolean positionRestriction(Dice dice, int i, int j){
+
+        if(!window[i][j].getIsEmpty()){
+            return false;
+        }
+        else{
+            if (i == 0) {
+                if (j == 0) {
+                    if (window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty()){
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    if (j == 4) {
+                        if (window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        if (window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                if (i == 3) {
+                    if (j == 0) {
+                        if (window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        if (j == 4) {
+                            if (window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty()) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        } else {
+                            if (window[i][j-1].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty()) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                } else {
+                    if (j == 0) {
+                        if (window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        if (j == 4) {
+                            if (window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty()) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        } else {
+                            if (window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i-1][j+1].getIsEmpty()) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
+
+        if( (i == 0 || i == 3) && (j == 0 || j == 4) && this.colorRestriction(dice, i, j) && this.numberRestriction(dice, i, j) )
+            return true;
+        else
+            return false;
+    }
+
+    public boolean verifyAllRestrictions(Dice dice, int i, int j){
+        if(this.colorRestriction(dice, i, j) && this.numberRestriction(dice, i, j) && this.positionRestriction(dice, i, j) && this.window[i][j].getIsEmpty()){
             return true;
         }
         else return false;
     }
-
 
 
 }

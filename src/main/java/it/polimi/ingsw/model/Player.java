@@ -102,7 +102,7 @@ public class Player {
 
     public boolean putDice(int i, int j){
         if(i >= 0 && i<=3 && j >= 0 && j<= 4) {
-            if (this.window.verifyRestriction(dice, i, j)) {
+            if (this.window.verifyAllRestrictions(dice, i, j)) {
                 this.window.setWindow(dice, i, j);
                 return true;
             } else {

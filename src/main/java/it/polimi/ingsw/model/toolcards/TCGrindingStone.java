@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.ToolCard;
-import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.*;
 
 
 public class TCGrindingStone extends Card implements ToolCard {
@@ -17,6 +14,11 @@ public class TCGrindingStone extends Card implements ToolCard {
         super.setColor(Colors.G);
         super.setName("Grinding Stone");
         super.setDescription("After drafting, flip the die to its opposite side.\n");
+    }
+
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
     }
 
     @Override
@@ -34,12 +36,8 @@ public class TCGrindingStone extends Card implements ToolCard {
         return false;
     }
 
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
 
-    public void flipDice(Dice dice){
+    private void flipDice(Dice dice){
         switch(dice.getValue()){
             case 1:
                 dice.modifyValue(6);

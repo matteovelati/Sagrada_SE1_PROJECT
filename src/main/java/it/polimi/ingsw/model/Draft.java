@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Draft {
 
     private static Draft instance = null;
     private ArrayList<Dice> draft;
+    private Dice dice;
 
     private Draft(){
         draft = new ArrayList<Dice>();
@@ -17,7 +19,9 @@ public class Draft {
         return instance;
     }
 
-    public void setDraft(Dice dice){
+    public void setDraft(Bag bag){
+        Random r = new Random();
+        dice = bag.extract((r.nextInt(bag.getBag().size()) + 1));
         dice.setValue();
         draft.add(dice);
     }

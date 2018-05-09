@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.ToolCard;
-import it.polimi.ingsw.model.Card;
-
+import it.polimi.ingsw.model.*;
 
 public class TCRunningPliers extends Card implements ToolCard   {
     private boolean isUsed;
@@ -16,6 +13,11 @@ public class TCRunningPliers extends Card implements ToolCard   {
         super.setName("Running Pliers");
         super.setDescription("After your first turn, immediately draft a die." +
             " Skip your next turn this round.\n");
+    }
+
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
     }
 
     @Override
@@ -33,8 +35,9 @@ public class TCRunningPliers extends Card implements ToolCard   {
         return false;
     }
 
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
+
+    private void draftDie(Player player, Draft draft, int i){
+        player.pickDice(draft, i);
     }
+
 }

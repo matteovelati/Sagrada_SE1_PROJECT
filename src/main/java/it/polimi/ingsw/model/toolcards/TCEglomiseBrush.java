@@ -1,13 +1,12 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.ToolCard;
-import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.*;
 
 
 public class TCEglomiseBrush extends Card implements ToolCard   {
 
     private boolean isUsed;
+    private Dice dicetmp;
 
     public TCEglomiseBrush(int idNumber){
         super(idNumber);
@@ -16,6 +15,11 @@ public class TCEglomiseBrush extends Card implements ToolCard   {
         super.setColor(Colors.B);
         super.setName("Eglomise Brush");
         super.setDescription("Move any ONE die in your window ignoring color restrictions.\n");
+    }
+
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
     }
 
     @Override
@@ -33,9 +37,16 @@ public class TCEglomiseBrush extends Card implements ToolCard   {
         return false;
     }
 
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
+
+    private void moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
+        dicetmp = window.getWindow()[i][j].getDice();
+        if (window.positionRestriction(dicetmp, x, y) && window.numberRestriction(dicetmp, x, y)){
+            window.getWindow()[x][y].setDice(dicetmp);
+            window.getWindow()[i][j].setDice(null);
+        }
+        //else richiama la scelta
     }
+
+
 
 }

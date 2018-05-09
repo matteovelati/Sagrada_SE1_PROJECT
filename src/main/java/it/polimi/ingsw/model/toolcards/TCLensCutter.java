@@ -18,6 +18,11 @@ public class TCLensCutter extends Card implements ToolCard   {
     }
 
     @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
+
+    @Override
     public boolean getIsUsed() {
         return isUsed;
     }
@@ -32,14 +37,9 @@ public class TCLensCutter extends Card implements ToolCard   {
         return false;
     }
 
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
 
-
-    private void exchangeDice(RoundTrack grid, int i, Draft draft, int j){  //i indice roundtrack, j indice draft
-        dicetmp = grid.changeDice(i, draft.extract(j));
-        draft.addDice(dicetmp);
+    private void swapDice(RoundTrack grid, int i, Draft draft, int j){  //i indice roundtrack, j indice draft
+        dicetmp = grid.changeDice(i, draft.getDraft().get(j));
+        draft.getDraft().set(j, dicetmp);
     }
 }
