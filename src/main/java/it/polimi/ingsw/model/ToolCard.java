@@ -5,5 +5,6 @@ public interface ToolCard{
     boolean useToolCard();
     boolean getIsUsed();
     void setIsUsed(boolean isUsed);
+    int getNumber();
 
 }

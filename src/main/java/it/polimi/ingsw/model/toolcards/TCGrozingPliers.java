@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
 import it.polimi.ingsw.model.ToolCard;
 import it.polimi.ingsw.model.Card;
 
@@ -31,6 +32,28 @@ public class TCGrozingPliers extends Card implements ToolCard   {
     @Override
     public boolean useToolCard() {
         return false;
+    }
+
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
+
+    private boolean increaseValue(Dice dice){
+        if (dice.getValue() != 6) {
+            dice.modifyValue(dice.getValue() + 1);
+            return true;
+        }
+        else
+            return false;
+    }
+    private boolean decreaseValue(Dice dice){
+        if (dice.getValue() != 1) {
+            dice.modifyValue(dice.getValue() - 1);
+            return true;
+        }
+        else
+            return false;
     }
 
 }

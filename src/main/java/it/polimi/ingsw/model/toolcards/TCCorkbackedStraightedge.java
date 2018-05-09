@@ -33,4 +33,9 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard   {
         return false;
         }
 
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
+
 }

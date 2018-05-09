@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
 import it.polimi.ingsw.model.ToolCard;
 import it.polimi.ingsw.model.Card;
 
@@ -31,6 +32,38 @@ public class TCGrindingStone extends Card implements ToolCard {
     @Override
     public boolean useToolCard() {
         return false;
+    }
+
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
+
+    public void flipDice(Dice dice){
+        switch(dice.getValue()){
+            case 1:
+                dice.modifyValue(6);
+                break;
+            case 2:
+                dice.modifyValue(5);
+                break;
+            case 3:
+                dice.modifyValue(4);
+                break;
+            case 4:
+                dice.modifyValue(3);
+                break;
+            case 5:
+                dice.modifyValue(2);
+                break;
+            case 6:
+                dice.modifyValue(1);
+                break;
+            default: //eccezione numero
+                break;
+
+        }
+
     }
 
 }

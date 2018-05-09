@@ -1,13 +1,12 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.ToolCard;
-import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.*;
 
 
 public class TCLensCutter extends Card implements ToolCard   {
 
     private boolean isUsed;
+    private Dice dicetmp;
 
     public TCLensCutter(int idNumber){
         super(idNumber);
@@ -33,4 +32,14 @@ public class TCLensCutter extends Card implements ToolCard   {
         return false;
     }
 
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
+
+
+    private void exchangeDice(RoundTrack grid, int i, Draft draft, int j){  //i indice roundtrack, j indice draft
+        dicetmp = grid.changeDice(i, draft.extract(j));
+        draft.addDice(dicetmp);
+    }
 }

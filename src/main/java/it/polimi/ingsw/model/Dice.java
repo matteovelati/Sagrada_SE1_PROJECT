@@ -24,4 +24,9 @@ public class Dice {
         Random r = new Random();
         this.value = r.nextInt(faces) + 1;
     }
+
+    public void modifyValue(int value){     //metodo toolcard
+        this.value = value;
+    }
+
 }

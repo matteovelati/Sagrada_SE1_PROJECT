@@ -32,4 +32,9 @@ public class  TCTapWheel extends Card implements ToolCard   {
     public boolean useToolCard() {
             return false;
             }
+
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
 }

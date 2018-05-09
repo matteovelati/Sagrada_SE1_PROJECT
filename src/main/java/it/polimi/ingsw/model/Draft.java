@@ -27,6 +27,18 @@ public class Draft {
     }
 
     public Dice extract(int i) throws IndexOutOfBoundsException{
-        return null;
+        try{
+            return draft.remove(i);
+        }
+        catch(IndexOutOfBoundsException e){
+            System.out.println("Errore estrazione");
+            return null;
+        }
     }
+
+    public void addDice(Dice dice){     //metodo toolcard
+        draft.add(dice);
+    }
+
+
 }

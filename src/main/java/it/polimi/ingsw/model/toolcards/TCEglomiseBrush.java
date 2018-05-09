@@ -33,4 +33,9 @@ public class TCEglomiseBrush extends Card implements ToolCard   {
         return false;
     }
 
+    @Override
+    public int getNumber(){
+        return super.getIdNumber();
+    }
+
 }
