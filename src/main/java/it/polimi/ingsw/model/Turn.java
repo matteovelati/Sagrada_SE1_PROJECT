@@ -14,8 +14,10 @@ public class Turn {
         return actualPlayer;
     }
 
-    public void refresh(Player actualPlayer, Player nextPlayer){
-        this.actualPlayer = actualPlayer;
+
+    // AGGIORNA L'ACTUAL PLAYER COL NEXT PLAYER DEL TURNO PRECEDENTE E AGGIORNA IL NEXT PLAYER CHE GLI VIENE PASSATO IN INPUT
+    public void refresh(Player nextPlayer){
+        this.actualPlayer = this.nextPlayer;
         this.nextPlayer = nextPlayer;
     }
 }
