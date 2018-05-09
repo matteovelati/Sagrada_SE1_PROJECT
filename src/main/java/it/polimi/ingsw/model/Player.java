@@ -43,19 +43,8 @@ public class Player {
         return privateObjective;
     }
 
+    /*vengono passate le carte schema mostrate e già il numero di quella selezionata*/
     public boolean setWindow(SchemeCard card1, SchemeCard card2, int i){
-        /*Scanner in;
-        in = new Scanner(System.in);
-        System.out.println("Select a SchemeCard");
-        System.out.print("1) ");
-        card1.getFront().print();
-        System.out.print("\n\n2) ");
-        card1.getBack().print();
-        System.out.print("\n\n3) ");
-        card2.getFront().print();
-        System.out.print("\n\n4) ");
-        card2.getBack().print();
-        int i = in.nextInt();*/
         switch(i){
             case 1:
                 this.window = card1.getFront();
@@ -75,9 +64,6 @@ public class Player {
                 return true;
             default :
                 return false;
-                /*System.out.println("Errore selezione finestra");
-                this.chooseWindow(card1, card2, i);
-                break;*/
         }
     }
 
@@ -87,7 +73,7 @@ public class Player {
 
     public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
         if (i >= 0 && i <= 2){
-            toolCardSelected = toolCards[i];
+            toolCardSelected = toolCards.get(i);
         }
         if(toolCardSelected.getIsUsed()){
             if(this.tokens >= 2) {
@@ -103,7 +89,7 @@ public class Player {
         else{
             if(this.tokens >= 1){
                 this.tokens --;
-                toolCards[i].setIsUsed(true);
+                toolCards.get(i).setIsUsed(true);
                 return true;
             }
             else{
@@ -115,27 +101,17 @@ public class Player {
     }
 
     public boolean putDice(int i, int j){
-        /*this.window.print();
-        Scanner in;
-        in = new Scanner(System.in);
-        System.out.println("Select a row to put the dice");
-        int i = in.nextInt();
-        System.out.println("Select a column to put the dice");
-        in = new Scanner(System.in);
-        int j = in.nextInt();*/
         if(i >= 0 && i<=3 && j >= 0 && j<= 4) {
             if (this.window.verifyRestriction(dice, i, j)) {
                 this.window.setWindow(dice, i, j);
                 return true;
             } else {
-                /*System.out.println("Restrizione presente. Non puoi inserire il dado in questa posizione. Scegline un'altra.");
-                this.putDice();*/
+                /*Restrizione presente*/
                 return false;
             }
         }
         else{
-            //System.out.println("Errore selezione casella.");
-            //this.putDice();
+            //Errore selezione casella
             return false;
         }
     }
