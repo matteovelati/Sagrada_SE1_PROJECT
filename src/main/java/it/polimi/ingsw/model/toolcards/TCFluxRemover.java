@@ -1,6 +1,12 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.Draft;
+import it.polimi.ingsw.model.ToolCard;
+
 import java.util.Random;
 
 public class TCFluxRemover extends Card implements ToolCard   {

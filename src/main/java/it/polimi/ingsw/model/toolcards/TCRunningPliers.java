@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Draft;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.ToolCard;
 
 public class TCRunningPliers extends Card implements ToolCard   {
     private boolean isUsed;

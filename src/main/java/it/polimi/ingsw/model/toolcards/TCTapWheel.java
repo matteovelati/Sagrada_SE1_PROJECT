@@ -1,6 +1,11 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.RoundTrack;
+import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.Window;
 
 
 public class  TCTapWheel extends Card implements ToolCard   {

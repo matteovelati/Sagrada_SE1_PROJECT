@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.ToolCard;
 
 
 public class TCGrindingStone extends Card implements ToolCard {

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class Window {
+public class Window{
 
     private String name;
     private int difficulty;
@@ -713,6 +713,5 @@ public class Window {
         }
         else return false;
     }
-
 
 }
