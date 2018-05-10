@@ -10,6 +10,7 @@ public class GameModel {
     private ArrayList<SchemeCard> schemeCards;
     private Turn turn;
     private States state;
+    private Player actualPlayer;
 
     public GameModel(ArrayList<Player> players, States state){
         this.players = new ArrayList<Player>();
@@ -22,9 +23,13 @@ public class GameModel {
     }
 
 
-    //SETTER (stato)
+    //SETTER (stato e actualPlayer)
     public void setState(States state){
         this.state = state;
+    }
+
+    public void setActualPlayer(int i){
+        actualPlayer = players.get(i);
     }
 
 
@@ -51,6 +56,10 @@ public class GameModel {
 
     public Turn getTurn() {
         return turn;
+    }
+
+    public Player getActualPlayer(){
+        return actualPlayer;
     }
 
 
