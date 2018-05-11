@@ -1,8 +1,11 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.view.cli.ViewCLI;
 
 import java.util.ArrayList;
+
+import static it.polimi.ingsw.model.States.*;
 
 public class GameController implements ControllerObserver {
 
@@ -15,13 +18,12 @@ public class GameController implements ControllerObserver {
 
 
     public void setPlayers(String username){//---------------------------------------------DA FARE
-        ArrayList<Player> players;
+        ArrayList<Player> players = new ArrayList<Player>();
 
         Player p = new Player(username);
         players.add(p);
 
         if(players.size()==4) startGame(players);
-        else
             //aspetta giocatori
     }
 
@@ -31,9 +33,8 @@ public class GameController implements ControllerObserver {
 
 
     private void startGame(ArrayList<Player> players){
-        gameModel = new GameModel(players);
+        gameModel = new GameModel(players, SELECTWINDOW);
         actualPlayer = 0;
-        gameModel.setState(SHOWWINDOWS);
     }
 
     private void changePlayer(){
@@ -48,22 +49,28 @@ public class GameController implements ControllerObserver {
 
         switch(gameModel.getState()){
 
-            case(SHOWWINDOWS):
+            case SELECTWINDOW:
 
-                setWindow(viewCLI.window);
+                //setWindow(viewCLI.getChoose1);
                 changePlayer();
                 gameModel.setActualPlayer(actualPlayer);
 
-                if(gameModel.getActualPlayer().getWindow()) != null){
-                    gameModel.setState(SETTOKENS);
+                if(gameModel.getActualPlayer().getWindow() != null){
+                    gameModel.setState(SELECTCARD);
                 }else{
-                    gameModel.setState(SHOWWINDOWS);
+                    gameModel.setState(SELECTWINDOW);
                 }
 
-    }
+            case SELECTDRAFT:
+                break;
+            case SELECTCARD:
+                break;
+            case ERROR:
+                break;
+            default:
+                break;
 
-    @Override
-    public void update(ViewGUI viewGUI) {
 
+        }
     }
 }
