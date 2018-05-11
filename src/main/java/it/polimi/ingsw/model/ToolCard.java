@@ -6,5 +6,7 @@ public interface ToolCard{
     boolean getIsUsed();
     void setIsUsed(boolean isUsed);
     int getNumber();
+    String getTitle();
+    String getDescr();
 
 }

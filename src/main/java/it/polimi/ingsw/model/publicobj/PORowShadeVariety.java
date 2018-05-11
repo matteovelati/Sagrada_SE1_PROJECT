@@ -21,6 +21,16 @@ public class PORowShadeVariety extends Card implements PublicObjective {
     }
 
     @Override
+    public String getTitle(){
+        return super.getName();
+    }
+
+    @Override
+    public String getDescr(){
+        return super.getDescription();
+    }
+
+    @Override
     public int getScore() {
         return score;
     }

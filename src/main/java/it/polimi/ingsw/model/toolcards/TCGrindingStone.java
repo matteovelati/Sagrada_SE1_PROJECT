@@ -20,6 +20,16 @@ public class TCGrindingStone extends Card implements ToolCard {
     }
 
     @Override
+    public String getTitle(){
+        return super.getName();
+    }
+
+    @Override
+    public String getDescr(){
+        return super.getDescription();
+    }
+
+    @Override
     public int getNumber(){
         return super.getIdNumber();
     }
