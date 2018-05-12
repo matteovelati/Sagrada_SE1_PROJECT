@@ -72,9 +72,9 @@ public class Player {
     }
 
     public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
-        if (i >= 0 && i <= 2){
-            toolCardSelected = toolCards.get(i);
-        }
+
+        toolCardSelected = toolCards.get(i);
+
         if(toolCardSelected.getIsUsed()){
             if(this.tokens >= 2) {
                 this.tokens = this.tokens - 2;

@@ -20,6 +20,7 @@ public class GameModel {
         schemeCards = new ArrayList<SchemeCard>(2);
         turn = new Turn(players.get(0), players.get(1));
         this.state = state;
+        actualPlayer = players.get(0);
     }
 
 
