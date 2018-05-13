@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
 public class ChangePlayer {
 
@@ -17,4 +17,5 @@ public class ChangePlayer {
         }
         return player;
     }
+
 }

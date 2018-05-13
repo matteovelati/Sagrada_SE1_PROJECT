@@ -1,7 +1,4 @@
-package it.polimi.ingsw.controller;
-
-import it.polimi.ingsw.model.Draft;
-import it.polimi.ingsw.model.RoundTrack;
+package it.polimi.ingsw.model;
 
 public class EndRound {
 

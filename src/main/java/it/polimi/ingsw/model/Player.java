@@ -101,20 +101,14 @@ public class Player {
     }
 
     public boolean putDice(int i, int j){
-        if(i >= 0 && i<=3 && j >= 0 && j<= 4) {
-            if (this.window.verifyAllRestrictions(dice, i, j)) {
-                this.window.setWindow(dice, i, j);
-                return true;
-            } else {
-                /*Restrizione presente*/
-                return false;
-            }
-        }
-        else{
-            //Errore selezione casella
+
+        if (this.window.verifyAllRestrictions(dice, i, j)) {
+            this.window.setWindow(dice, i, j);
+            return true;
+        } else {
+            /*Restrizione presente*/
             return false;
         }
     }
-
-
 }
+

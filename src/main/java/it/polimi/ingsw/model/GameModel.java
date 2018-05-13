@@ -11,7 +11,10 @@ public class GameModel {
     private Turn turn;
     private States state;
     private Player actualPlayer;
+    private RoundManager roundManager;
 
+
+    //COSTRUTTORE
     public GameModel(ArrayList<Player> players, States state){
         this.players = new ArrayList<Player>();
         this.players = players;
@@ -21,6 +24,7 @@ public class GameModel {
         turn = new Turn(players.get(0), players.get(1));
         this.state = state;
         actualPlayer = players.get(0);
+        roundManager = RoundManager.getInstance();
     }
 
 
@@ -61,6 +65,10 @@ public class GameModel {
 
     public Player getActualPlayer(){
         return actualPlayer;
+    }
+
+    public RoundManager getRoundManager(){
+        return roundManager;
     }
 
 

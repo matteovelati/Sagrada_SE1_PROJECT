@@ -11,9 +11,6 @@ public class GameController implements ControllerObserver {
 
     private GameModel gameModel;
     private int actualPlayer;
-    private int turn;
-    private int counter;
-    private int firstMove;//----------------------------MEMORIZZA LA PRIMA MOSSA FATTA DA UN GIOCATORE(1:SELEZIONA DADO 2:SCEGLI TOOLCARD)
 
     public GameController(){
 
@@ -32,50 +29,6 @@ public class GameController implements ControllerObserver {
 
     private void startGame(ArrayList<Player> players){
         gameModel = new GameModel(players, SELECTWINDOW);
-        turn = 1;
-        counter = 1;
-        actualPlayer = 0;
-    }
-
-    private void changeActualPlayer(){
-
-        switch(turn) {
-
-            case 1:
-
-                if (counter < gameModel.getPlayers().size()) {
-
-                    actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
-                    counter++;
-
-                } else if (counter == gameModel.getPlayers().size()) {
-                    counter --;
-                    turn = 2;
-                }
-
-                break;
-
-            case 2:
-
-                if(counter > 0){
-
-                    counter--;
-                    actualPlayer = ChangePlayer.antiClockwise(actualPlayer, gameModel.getPlayers().size());
-
-                }else if(counter == 0){
-
-                    counter = 1;
-                    turn = 1;
-                    actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
-                    EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
-
-                }
-                break;
-
-            default:
-                gameModel.setState(ERROR);//---------------------------------------------------------------------ERRORE GESTIONE TURNO
-        }
-
     }
 
 
@@ -84,6 +37,7 @@ public class GameController implements ControllerObserver {
     public void update(ViewCLI viewCLI) {
 
         switch(gameModel.getState()){
+
 
             case SELECTWINDOW:
 
@@ -109,27 +63,40 @@ public class GameController implements ControllerObserver {
 
                 break;
 
+
+
             case SELECTMOVE1:
 
-                firstMove = viewCLI.getChoose1();
+                gameModel.getRoundManager().setFirstMove(viewCLI.getChoose1());
 
-                if(firstMove == 1){
+                if(gameModel.getRoundManager().getFirstMove() == 1){
                     gameModel.setState(SELECTDRAFT);//--------------------------------------PIù CHIARO CHIAMARLA SELECTDICE
                 }
-                else if(firstMove == 2){
+
+                else if(gameModel.getRoundManager().getFirstMove() == 2){
                     gameModel.setState(SELECTCARD);
                 }
-                else if(firstMove == 3){//-----------------------------------------------------PASSA TURNO
-                    firstMove = 0;
-                    changeActualPlayer();
+
+                else if(gameModel.getRoundManager().getFirstMove() == 3){//-----------------------------------------------------PASSA TURNO
+
+                    gameModel.getRoundManager().setFirstMove(0);
+                    actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
                     gameModel.setActualPlayer(actualPlayer);
+
+                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                        EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+
                     gameModel.setState(SELECTMOVE1);
+
                 }
+
                 else{
                     gameModel.setState(ERROR);
                 }
 
                 break;
+
+
 
             case SELECTDRAFT:
 
@@ -138,46 +105,77 @@ public class GameController implements ControllerObserver {
 
                 break;
 
+
+
             case PUTDICEINWINDOW:
 
-                gameModel.playerPutDice(viewCLI.getChoose1(), viewCLI.getChoose2());
+                //CONTROLLO INPUT
+                if(viewCLI.getChoose1() >= 0 && viewCLI.getChoose1() <= 3 && viewCLI.getChoose2() >= 0 && viewCLI.getChoose2() <= 4) {
 
-                //SE LA SELEZIONE DEL DADO è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-                if(firstMove == 1)
-                    gameModel.setState(SELECTMOVE2);
-                else if(firstMove == 2) {
-                    changeActualPlayer();
-                    gameModel.setActualPlayer(actualPlayer);
-                    gameModel.setState(SELECTMOVE1);
+                    if(gameModel.playerPutDice(viewCLI.getChoose1(), viewCLI.getChoose2())) {
+
+                        //SE LA SELEZIONE DEL DADO è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
+                        if (gameModel.getRoundManager().getFirstMove() == 1)
+                            gameModel.setState(SELECTMOVE2);
+
+                        else if (gameModel.getRoundManager().getFirstMove() == 2) {
+
+                            gameModel.getRoundManager().setFirstMove(0);
+                            actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
+                            gameModel.setActualPlayer(actualPlayer);
+
+                            //SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1)
+                                EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+
+                            gameModel.setState(SELECTMOVE1);
+
+                        } else
+                            gameModel.setState(ERROR);//----------------VALORE FIRST MOVE NON RICONOSCIUTO
+                    }
+                    else{
+                        gameModel.setState(ERROR);//---------------------RESTRIZIONE CASELLA PRESENTE
+                    }
                 }
-                else
-                    gameModel.setState(ERROR);
-
+                else{
+                    gameModel.setState(ERROR);//---------------------------ERRORE INPUT
+                }
                 break;
+
+
 
             case SELECTMOVE2://--------------------------------------------------LA VIEW MOSTRERà UNA SOLA MOSSA POSSIBILE(1) E IL PASSATURNO(2)
 
                 if(viewCLI.getChoose1() == 1){
 
                     //SE LA PRIMA MOSSA EFFETTUATA è SELEZIONE DADO LA SECONDA SARà SELEZIONA CARTA E VICEVERSA
-                    if(firstMove == 1)
+                    if(gameModel.getRoundManager().getFirstMove() == 1)
                         gameModel.setState(SELECTCARD);
-                    else if(firstMove == 2)
+                    else if(gameModel.getRoundManager().getFirstMove() == 2)
                         gameModel.setState(SELECTDRAFT);
                     else
                         gameModel.setState(ERROR);
 
                 }
                 else if(viewCLI.getChoose1() == 2){
-                    changeActualPlayer();
+
+                    gameModel.getRoundManager().setFirstMove(0);
+                    actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
                     gameModel.setActualPlayer(actualPlayer);
+
+                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                        EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+
                     gameModel.setState(SELECTMOVE1);
+
                 }
                 else{
                     gameModel.setState(ERROR);
                 }
 
                 break;
+
+
 
             case SELECTCARD:
 
@@ -194,22 +192,33 @@ public class GameController implements ControllerObserver {
 
                 break;
 
+
+
             case USETOOLCARD:
 
                 //--------------------------------------------------------CHIAMA METODO PER L'USO DELLA TOOLCARD
 
                 // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-                if(firstMove == 1) {
-                    changeActualPlayer();
+                if(gameModel.getRoundManager().getFirstMove() == 1) {
+
+                    gameModel.getRoundManager().setFirstMove(0);
+                    actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
                     gameModel.setActualPlayer(actualPlayer);
+
+                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                        EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+
                     gameModel.setState(SELECTMOVE1);
+
                 }
-                else if(firstMove == 2)
+                else if(gameModel.getRoundManager().getFirstMove() == 2)
                     gameModel.setState(SELECTMOVE2);
                 else
                     gameModel.setState(ERROR);
 
                 break;
+
+
 
             case ERROR:
                 break;
