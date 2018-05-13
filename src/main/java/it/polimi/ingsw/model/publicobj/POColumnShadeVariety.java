@@ -45,13 +45,16 @@ public class POColumnShadeVariety extends Card implements PublicObjective {
         int diffvalues = 0;
 
         for(int j = 0; j < 5; j++) {
+            setValuesBag();
+            diffvalues = 0;
             for(int i = 0; i < 4; i++) {
-                if (!valuesBag.remove((Integer)window.getWindow()[i][j].getDice().getValue())) {
-                    setColorsBag();
-                    diffvalues = 0;
-                    break;
+                if (!window.getWindow()[i][j].getIsEmpty()){
+                    if (!valuesBag.remove((Integer) window.getWindow()[i][j].getDice().getValue())) {
+                        setValuesBag();
+                        diffvalues = 0;
+                        break;
+                    } else diffvalues++;
                 }
-                else    diffvalues ++;
             }
             if(diffvalues == 4) diffcolumns ++;
         }
@@ -59,7 +62,7 @@ public class POColumnShadeVariety extends Card implements PublicObjective {
         return score*diffcolumns;
     }
 
-    private void setColorsBag() {
+    private void setValuesBag() {
         valuesBag.clear();
         valuesBag.add(1);
         valuesBag.add(2);

@@ -41,18 +41,22 @@ public class PODarkShades extends Card implements PublicObjective {
     @Override
     public int calculateScore(Window window) {
         ArrayList<Integer> dicelist = new ArrayList<>(2);
+        dicelist.add(0);
+        dicelist.add(0);
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
-                switch (window.getWindow()[i][j].getDice().getValue()) {
-                    case 5:
-                        dicelist.set(0, dicelist.get(0) + 1);
-                        break;
-                    case 6:
-                        dicelist.set(1, dicelist.get(1) + 1);
-                        break;
-                    default:    //casella vuota (case 1,2,3,4)
-                        break;
+                if (!window.getWindow()[i][j].getIsEmpty()) {
+                    switch (window.getWindow()[i][j].getDice().getValue()) {
+                        case 5:
+                            dicelist.set(0, dicelist.get(0) + 1);
+                            break;
+                        case 6:
+                            dicelist.set(1, dicelist.get(1) + 1);
+                            break;
+                        default:    //casella vuota (case 1,2,3,4)
+                            break;
+                    }
                 }
             }
         }

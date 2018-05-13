@@ -46,13 +46,16 @@ public class POColumnColorVariety extends Card implements PublicObjective {
         int diffcolors = 0;
 
         for(int j = 0; j < 5; j++) {
+            setColorsBag();
+            diffcolors = 0;
             for(int i = 0; i < 4; i++) {
-                if (!colorsBag.remove(window.getWindow()[i][j].getDice().getColor())) {
-                    setColorsBag();
-                    diffcolors = 0;
-                    break;
+                if (!window.getWindow()[i][j].getIsEmpty()) {
+                    if (!colorsBag.remove(window.getWindow()[i][j].getDice().getColor())) {
+                        setColorsBag();
+                        diffcolors = 0;
+                        break;
+                    } else diffcolors++;
                 }
-                else    diffcolors ++;
             }
             if(diffcolors == 4) diffcolumns ++;
         }
