@@ -84,4 +84,12 @@ public class RoundManager {
         return actualPlayer;
 
     }
+
+    public void endRound(Draft draft, RoundTrack roundTrack){
+
+        //DA GESTIRE IL CASO IN CUI I DADI RIMASTI NELLA DRAFT SIANO PIù DI UNO
+
+        roundTrack.setGrid(draft.getDraft().get(0));
+
+    }
 }

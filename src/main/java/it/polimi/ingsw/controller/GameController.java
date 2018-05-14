@@ -84,7 +84,7 @@ public class GameController implements ControllerObserver {
                     gameModel.setActualPlayer(actualPlayer);
 
                     if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                        EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+                        gameModel.getRoundManager().endRound(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
 
                     gameModel.setState(SELECTMOVE1);
 
@@ -125,8 +125,10 @@ public class GameController implements ControllerObserver {
                             gameModel.setActualPlayer(actualPlayer);
 
                             //SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1)
-                                EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
+                                gameModel.setState(ENDROUND);
+                                break;
+                            }
 
                             gameModel.setState(SELECTMOVE1);
 
@@ -163,8 +165,10 @@ public class GameController implements ControllerObserver {
                     actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
                     gameModel.setActualPlayer(actualPlayer);
 
-                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                        EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1) {//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                        gameModel.setState(ENDROUND);
+                        break;
+                    }
 
                     gameModel.setState(SELECTMOVE1);
 
@@ -205,8 +209,10 @@ public class GameController implements ControllerObserver {
                     actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
                     gameModel.setActualPlayer(actualPlayer);
 
-                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                        EndRound.refreshDraft(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1) {//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                        gameModel.setState(ENDROUND);
+                        break;
+                    }
 
                     gameModel.setState(SELECTMOVE1);
 
@@ -219,6 +225,22 @@ public class GameController implements ControllerObserver {
                 break;
 
 
+
+            case ENDROUND:
+
+                gameModel.getRoundManager().endRound(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+
+                if(gameModel.getField().getRoundTrack().getRound() == 10)
+                    gameModel.setState(SCORECALCULATION);
+                else
+                    gameModel.setState(SELECTMOVE1);
+
+                break;
+
+
+
+            case SCORECALCULATION:
+                break;
 
             case ERROR:
                 break;
