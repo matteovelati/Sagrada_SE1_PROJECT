@@ -89,7 +89,7 @@ public class RoundManager {
 
         //DA GESTIRE IL CASO IN CUI I DADI RIMASTI NELLA DRAFT SIANO PIù DI UNO
 
-        roundTrack.setGrid(draft.getDraft().get(0));
+        roundTrack.setGrid(draft.getDraft().remove(0));
 
     }
 }
