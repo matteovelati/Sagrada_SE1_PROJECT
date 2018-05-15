@@ -1,11 +1,8 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.Draft;
-import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -13,6 +10,8 @@ public class  TCFluxBrush extends Card implements ToolCard   {
 
     private boolean isUsed;
     private Dice dicetmp;
+    private int calls = 2;
+    private int flag = 1;
 
     public TCFluxBrush(int idNumber){
         super(idNumber);
@@ -49,8 +48,27 @@ public class  TCFluxBrush extends Card implements ToolCard   {
     }
 
     @Override
-    public boolean useToolCard() {
-        return false;
+    public int getCalls(){
+        return calls;
+    }
+
+    @Override
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        //arraylist in 0 indice dado draft; 1,2 le i,j della new pos
+        if (flag == 1){
+            flag = 2;
+            reRoll(gameModel.getField().getDraft(), input.get(0));
+            if(!getIsUsed())
+                setIsUsed(true);
+            return true;
+        }
+        else if (flag == 2){
+            flag = 1;
+            gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+            return(gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
+        }
+        else
+            return false;
     }
 
 

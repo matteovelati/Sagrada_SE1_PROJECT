@@ -13,8 +13,7 @@ public class PORowColorVariety extends Card implements PublicObjective {
     private int score;
     private ArrayList<Colors> colorsBag = new ArrayList<>(5);
 
-    public PORowColorVariety(int idNumber){
-        super(idNumber);
+    public PORowColorVariety(){
         this.score = 6;
         super.setIdNumber(8);
         super.setName("Row Color Variety");

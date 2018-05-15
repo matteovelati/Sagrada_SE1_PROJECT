@@ -11,8 +11,7 @@ public class POColorVariety extends Card implements PublicObjective {
 
     private int score;
 
-    public POColorVariety(int idNumber){
-        super(idNumber);
+    public POColorVariety(){
         this.score = 4;
         super.setIdNumber(5);
         super.setName("Color Variety");

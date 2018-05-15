@@ -12,8 +12,7 @@ public class POColumnShadeVariety extends Card implements PublicObjective {
     private int score;
     private ArrayList<Integer> valuesBag = new ArrayList<>(6);
 
-    public POColumnShadeVariety(int idNumber){
-        super(idNumber);
+    public POColumnShadeVariety(){
         this.score = 4;
         super.setIdNumber(7);
         super.setName("Column Shade Variety");

@@ -25,8 +25,9 @@ public class Dice {
         this.value = r.nextInt(faces) + 1;
     }
 
-    public void modifyValue(int value){     //metodo toolcard
+    public boolean modifyValue(int value){     //metodo toolcard
         this.value = value;
+        return true;
     }
 
 }

@@ -1,11 +1,8 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.Draft;
-import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -13,6 +10,7 @@ public class TCGlazingHammer extends Card implements ToolCard{
 
     private boolean isUsed;
     private Dice dicetmp;
+    private int calls = 1;
 
     public TCGlazingHammer(int idNumber){
         super(idNumber);
@@ -50,9 +48,21 @@ public class TCGlazingHammer extends Card implements ToolCard{
     }
 
     @Override
-    public boolean useToolCard() {
-        return false;
+    public int getCalls(){
+        return calls;
+    }
+
+    @Override
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        if (gameModel.getRoundManager().getTurn() == 2 && gameModel.getRoundManager().getFirstMove() == 2 /*ha selezionato una toolcard*/){
+            reRoll(gameModel.getField().getDraft());
+            if(!getIsUsed())
+                setIsUsed(true);
+            return true;
         }
+        else
+            return false;
+    }
 
 
     private void reRoll(Draft draft){

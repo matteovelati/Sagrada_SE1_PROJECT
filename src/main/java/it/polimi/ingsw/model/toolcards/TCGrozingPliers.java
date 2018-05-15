@@ -1,17 +1,16 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.*;
+
+import java.util.ArrayList;
 
 
 public class TCGrozingPliers extends Card implements ToolCard   {
 
     private boolean isUsed;
+    private int calls = 1;
 
-    public TCGrozingPliers(int idNumber){
-        super(idNumber);
+    public TCGrozingPliers(){
         this.isUsed = false;
         super.setIdNumber(1);
         super.setColor(Colors.P);
@@ -45,22 +44,38 @@ public class TCGrozingPliers extends Card implements ToolCard   {
     }
 
     @Override
-    public boolean useToolCard() {
-        return false;
+    public int getCalls(){
+        return calls;
     }
 
-    private boolean increaseValue(Dice dice){
-        if (dice.getValue() != 6) {
-            dice.modifyValue(dice.getValue() + 1);
+    @Override
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        // arraylist: in 0 mettere '1' per increamentare; in 1 posizione dado draft
+        boolean check;
+        if (input.get(0) == 1)
+            check = (increaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
+        else
+            check = (decreaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
+        if (check){
+            if(!getIsUsed())
+                setIsUsed(true);
             return true;
         }
         else
             return false;
     }
+
+    private boolean increaseValue(Dice dice){
+        if (dice.getValue() != 6) {
+            return(dice.modifyValue(dice.getValue() + 1));
+        }
+        else
+            return false;
+    }
+
     private boolean decreaseValue(Dice dice){
         if (dice.getValue() != 1) {
-            dice.modifyValue(dice.getValue() - 1);
-            return true;
+            return(dice.modifyValue(dice.getValue() - 1));
         }
         else
             return false;

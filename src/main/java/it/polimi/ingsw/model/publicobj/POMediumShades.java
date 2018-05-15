@@ -11,8 +11,7 @@ public class POMediumShades extends Card implements PublicObjective {
 
     private int score;
 
-    public POMediumShades(int idNumber){
-        super(idNumber);
+    public POMediumShades(){
         this.score = 2;
         super.setIdNumber(2);
         super.setName("Medium Shades");

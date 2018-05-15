@@ -7,6 +7,10 @@ public abstract class Card {
     private Colors color;
     private int idNumber;
 
+    public Card(){
+
+    }
+
     public Card(int idNumber){
         this.idNumber = idNumber;
     }

@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class POColumnShadeVarietyTest {
 
-    private PublicObjective po = new POColumnShadeVariety(7);
+    private PublicObjective po = new POColumnShadeVariety();
     private Window window;
 
     @Before
@@ -76,12 +76,6 @@ public class POColumnShadeVarietyTest {
         window.setWindow(dice11, 3, 2);
         window.setWindow(dice14, 3, 3);
         window.setWindow(dice13, 3, 4);
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 5; j++) {
-                if  (i == 2 && j == 2) window.getWindow()[i][j].setIsEmpty(true);
-                else    window.getWindow()[i][j].setIsEmpty(false);
-            }
-        }
     }
 
     @Test

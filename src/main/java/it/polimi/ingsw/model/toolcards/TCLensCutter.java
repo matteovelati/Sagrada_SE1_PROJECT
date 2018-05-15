@@ -1,17 +1,15 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.Draft;
-import it.polimi.ingsw.model.RoundTrack;
-import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.*;
+
+import java.util.ArrayList;
 
 
 public class TCLensCutter extends Card implements ToolCard   {
 
     private boolean isUsed;
     private Dice dicetmp;
+    private int calls = 1;
 
     public TCLensCutter(int idNumber){
         super(idNumber);
@@ -48,8 +46,17 @@ public class TCLensCutter extends Card implements ToolCard   {
     }
 
     @Override
-    public boolean useToolCard() {
-        return false;
+    public int getCalls(){
+        return calls;
+    }
+
+    @Override
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        //arraylist in 0 indice dado draft, in 1 indice dado roundtrack
+        swapDice(gameModel.getField().getRoundTrack(), input.get(1), gameModel.getField().getDraft(), input.get(0));
+        if(!getIsUsed())
+            setIsUsed(true);
+        return true;
     }
 
 

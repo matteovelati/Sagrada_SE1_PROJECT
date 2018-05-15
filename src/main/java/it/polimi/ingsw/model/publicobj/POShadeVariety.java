@@ -11,8 +11,7 @@ public class POShadeVariety extends Card implements PublicObjective {
 
     private int score;
 
-    public POShadeVariety(int idNumber){
-        super(idNumber);
+    public POShadeVariety(){
         this.score = 5;
         super.setIdNumber(4);
         super.setName("Shade Variety");

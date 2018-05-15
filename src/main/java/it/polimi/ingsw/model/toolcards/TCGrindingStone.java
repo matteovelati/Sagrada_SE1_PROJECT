@@ -1,14 +1,14 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.*;
+
+import java.util.ArrayList;
 
 
 public class TCGrindingStone extends Card implements ToolCard {
 
     private boolean isUsed;
+    private int calls = 1;
 
     public TCGrindingStone(int idNumber) {
         super(idNumber);
@@ -45,8 +45,16 @@ public class TCGrindingStone extends Card implements ToolCard {
     }
 
     @Override
-    public boolean useToolCard() {
-        return false;
+    public int getCalls(){
+        return calls;
+    }
+
+    @Override
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        flipDice(gameModel.getField().getDraft().getDraft().get( input.get(0) ));
+        if (!getIsUsed())
+            setIsUsed(true);
+        return true;
     }
 
 

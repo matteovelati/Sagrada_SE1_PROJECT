@@ -11,8 +11,7 @@ public class POLightShades extends Card implements PublicObjective {
 
     private int score;
 
-    public POLightShades(int idNumber){
-        super(idNumber);
+    public POLightShades(){
         this.score = 2;
         super.setIdNumber(1);
         super.setName("Light Shades");

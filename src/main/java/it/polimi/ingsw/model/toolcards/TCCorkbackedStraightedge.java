@@ -1,17 +1,15 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.Draft;
-import it.polimi.ingsw.model.ToolCard;
-import it.polimi.ingsw.model.Window;
+import it.polimi.ingsw.model.*;
+
+import java.util.ArrayList;
 
 
 public class TCCorkbackedStraightedge extends Card implements ToolCard   {
 
     private boolean isUsed;
     private Dice dicetmp;
+    private int calls = 1;
 
     public TCCorkbackedStraightedge(int idNumber){
         super(idNumber);
@@ -48,16 +46,27 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard   {
     }
 
     @Override
-    public boolean useToolCard() {
-        return false;
-        }
+    public int getCalls(){
+        return calls;
+    }
+
+    @Override
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        //arraylisy: in 0 indice dado draft; in 1,2 le i,j della nuova posizione
+        return placeDice(gameModel.getActualPlayer().getWindow(), input.get(1), input.get(2), gameModel.getField().getDraft(), input.get(0));
+    }
 
 
-    private void placeDice(Window window, int x, int y, Draft draft, int i){ //estrae il dado direttamente in questo metodo
+    private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft
         dicetmp = draft.extract(i);
         if (window.colorRestriction(dicetmp, x, y) && window.numberRestriction(dicetmp, x, y)){
             window.getWindow()[x][y].setDice(dicetmp);
+            if(!getIsUsed())
+                setIsUsed(true);
+            return true;
         }
+        else
+            return false;
     }
 
 }

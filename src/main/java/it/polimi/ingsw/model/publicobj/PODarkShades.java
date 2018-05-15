@@ -11,8 +11,7 @@ public class PODarkShades extends Card implements PublicObjective {
 
     private int score;
 
-    public PODarkShades(int idNumber){
-        super(idNumber);
+    public PODarkShades(){
         this.score = 2;
         super.setIdNumber(3);
         super.setName("Dark Shades");
