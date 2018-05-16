@@ -10,8 +10,7 @@ public class TCGrindingStone extends Card implements ToolCard {
     private boolean isUsed;
     private int calls = 1;
 
-    public TCGrindingStone(int idNumber) {
-        super(idNumber);
+    public TCGrindingStone() {
         this.isUsed = false;
         super.setIdNumber(10);
         super.setColor(Colors.G);
@@ -51,6 +50,7 @@ public class TCGrindingStone extends Card implements ToolCard {
 
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
+        //arraylist in 0 la posizione del dado nella draft
         flipDice(gameModel.getField().getDraft().getDraft().get( input.get(0) ));
         if (!getIsUsed())
             setIsUsed(true);

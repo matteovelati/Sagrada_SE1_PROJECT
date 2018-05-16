@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class TCGrozingPliersTest {
+public class TCCorkbackedStraightedgeTest {
 
-    private ToolCard tc = new TCGrozingPliers();
+    private ToolCard tc = new TCCorkbackedStraightedge();
     private GameModel gameModel;
     private Dice dice1, dice2, dice3, dice4, dice5, dice6, dice7, dice8;
     private Player player1;
@@ -72,50 +72,46 @@ public class TCGrozingPliersTest {
     public void useToolCard1() {
 
         ArrayList<Integer> input = new ArrayList<>();
-        input.add(-1);
         input.add(0);
-        int value = gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue();
+        input.add(3);
+        input.add(4);
 
         assertTrue(tc.useToolCard(gameModel, input));
-        assertEquals(value -1, gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue());
+        assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice1);
     }
 
     @Test
     public void useToolCard2() {
 
         ArrayList<Integer> input = new ArrayList<>();
-        input.add(-1);
+        input.add(0);
+        input.add(2);
         input.add(4);
-        int value = gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue();
 
-
-        assertFalse(tc.useToolCard(gameModel, input));
-        assertEquals(value, gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue());
-
-
+        assertTrue(tc.useToolCard(gameModel, input));
+        assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice1);
     }
 
     @Test
     public void useToolCard3() {
 
         ArrayList<Integer> input = new ArrayList<>();
-        input.add(0);
+        input.add(1);
+        input.add(2);
         input.add(4);
-        int value = gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue();
 
-        assertTrue(tc.useToolCard(gameModel, input));
-        assertEquals(value + 1, gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue());
+        assertFalse(tc.useToolCard(gameModel, input));
+        assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice());
     }
 
     @Test
     public void useToolCard4() {
 
         ArrayList<Integer> input = new ArrayList<>();
-        input.add(0);
-        input.add(1);
-        int value = gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue();
+        input.add(4);
+        input.add(2);
+        input.add(2);
 
         assertFalse(tc.useToolCard(gameModel, input));
-        assertEquals(value, gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue());
     }
 }

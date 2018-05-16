@@ -11,8 +11,7 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard   {
     private Dice dicetmp;
     private int calls = 1;
 
-    public TCCorkbackedStraightedge(int idNumber){
-        super(idNumber);
+    public TCCorkbackedStraightedge(){
         this.isUsed = false;
         super.setIdNumber(9);
         super.setColor(Colors.Y);
@@ -56,10 +55,9 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard   {
         return placeDice(gameModel.getActualPlayer().getWindow(), input.get(1), input.get(2), gameModel.getField().getDraft(), input.get(0));
     }
 
-
     private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft
         dicetmp = draft.extract(i);
-        if (window.colorRestriction(dicetmp, x, y) && window.numberRestriction(dicetmp, x, y)){
+        if (window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.spaceColorRestriction(dicetmp, x, y) && window.spaceNumberRestriction(dicetmp, x, y)){
             window.getWindow()[x][y].setDice(dicetmp);
             if(!getIsUsed())
                 setIsUsed(true);
@@ -68,5 +66,4 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard   {
         else
             return false;
     }
-
 }

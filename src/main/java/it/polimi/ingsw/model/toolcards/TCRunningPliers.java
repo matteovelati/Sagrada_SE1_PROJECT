@@ -9,8 +9,7 @@ public class TCRunningPliers extends Card implements ToolCard   {
     private boolean isUsed;
     private int calls = 1;
 
-    public TCRunningPliers(int idNumber){
-        super(idNumber);
+    public TCRunningPliers(){
         this.isUsed = false;
         super.setIdNumber(8);
         super.setColor(Colors.R);

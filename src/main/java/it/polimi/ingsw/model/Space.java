@@ -43,6 +43,9 @@ public class Space {
 
     public void setDice(Dice dice) {
         this.dice = dice;
-        setIsEmpty(false);
+        if (dice == null)
+            setIsEmpty(true);
+        else
+            setIsEmpty(false);
     }
 }

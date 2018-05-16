@@ -465,253 +465,129 @@ public class Window{
         this.window[i][j].setDice(dice);
     }
 
-    public boolean colorRestriction(Dice dice, int i, int j){
-        //restrizione colore su casella selezionata
-        if(!window[i][j].getIsEmpty() || (!window[i][j].getColor().equals(dice.getColor()) && !window[i][j].getColor().equals(Colors.W))){
-            return false;
+    public boolean neighboursColorRestriction(Dice dice, int i, int j){
+        //return false se a N S E W c'è un dado dello stesso colore
+        if (i == 0) {
+            if (j == 0)
+                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+            else {
+                if (j == 4)
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                else
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+            }
         }
-        //restrizione colore su caselle adiacenti N S O E
         else {
-            if (i == 0) {
-                if (j == 0) {
-                    if ((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor()))) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else {
-                    if (j == 4) {
-                        if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor()))) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor()))) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
+            if (i == 3) {
+                if (j == 0)
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())));
+                else {
+                    if (j == 4)
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())));
+                    else
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())));
                 }
-            } else {
-                if (i == 3) {
-                    if (j == 0) {
-                        if ((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor()))) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (j == 4) {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor()))) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor()))) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
-                } else {
-                    if (j == 0) {
-                        if ((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor()))) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (j == 4) {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor()))) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor()))) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
+            }
+            else {
+                if (j == 0)
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                else {
+                    if (j == 4)
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                    else
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
                 }
             }
         }
     }
 
-    public boolean numberRestriction(Dice dice, int i, int j){
-        if(!window[i][j].getIsEmpty() || (window[i][j].getValue() != dice.getValue() && window[i][j].getValue() != 0)){
-            return false;
+    public boolean neighboursNumberRestriction(Dice dice, int i, int j){
+        //return false se a N S E W c'è un dado dello stesso numero
+        if (i == 0) {
+            if (j == 0)
+                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+            else {
+                if (j == 4)
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                else
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+            }
         }
-        else{
-            if (i == 0) {
-                if (j == 0) {
-                    if ((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue())) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else {
-                    if (j == 4) {
-                        if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue())) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue())) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
+        else {
+            if (i == 3) {
+                if (j == 0)
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()));
+                else {
+                    if (j == 4)
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()));
+                    else
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()));
                 }
-            } else {
-                if (i == 3) {
-                    if (j == 0) {
-                        if ((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue())) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (j == 4) {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue())) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue())) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
-                } else {
-                    if (j == 0) {
-                        if ((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue())) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (j == 4) {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue())) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            if ((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue())) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
+            }
+            else {
+                if (j == 0)
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                else {
+                    if (j == 4)
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                    else
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
                 }
             }
         }
     }
 
-    public boolean positionRestriction(Dice dice, int i, int j){
-
-        if(!window[i][j].getIsEmpty()){
-            return false;
+    public boolean neighboursPositionRestriction(int i, int j){
+        //return false se non vi sono dadi adiacienti
+        if (i == 0) {
+            if (j == 0)
+                return!(window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty());
+            else {
+                if (j == 4)
+                    return!(window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty());
+                else
+                    return!(window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty());
+            }
         }
-        else{
-            if (i == 0) {
-                if (j == 0) {
-                    if (window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty()){
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else {
-                    if (j == 4) {
-                        if (window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
+        else {
+            if (i == 3) {
+                if (j == 0)
+                    return!(window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty());
+                else {
+                    if (j == 4)
+                        return!(window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty());
+                    else
+                        return!(window[i][j-1].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty());
                 }
             } else {
-                if (i == 3) {
-                    if (j == 0) {
-                        if (window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (j == 4) {
-                            if (window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty()) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            if (window[i][j-1].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty()) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
-                } else {
-                    if (j == 0) {
-                        if (window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    } else {
-                        if (j == 4) {
-                            if (window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty()) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        } else {
-                            if (window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i-1][j+1].getIsEmpty()) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
-                    }
+                if (j == 0)
+                    return!(window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty());
+                else {
+                    if (j == 4)
+                        return!(window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty());
+                    else
+                        return!(window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i-1][j+1].getIsEmpty());
                 }
             }
         }
+    }
+
+    public boolean spaceColorRestriction(Dice dice, int i, int j){
+        return !(!window[i][j].getIsEmpty() || (!window[i][j].getColor().equals(dice.getColor()) && !window[i][j].getColor().equals(Colors.W)));
+
+    }
+
+    public boolean spaceNumberRestriction(Dice dice, int i, int j){
+        return !(!window[i][j].getIsEmpty() || (window[i][j].getValue() != dice.getValue() && window[i][j].getValue() != 0));
+
     }
 
     public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
-
-        if( (i == 0 || i == 3) && (j == 0 || j == 4) && this.colorRestriction(dice, i, j) && this.numberRestriction(dice, i, j) )
-            return true;
-        else
-            return false;
+        return ( (i == 0 || i == 3) && (j == 0 || j == 4) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j) );
     }
 
     public boolean verifyAllRestrictions(Dice dice, int i, int j){
-        if(this.colorRestriction(dice, i, j) && this.numberRestriction(dice, i, j) && this.positionRestriction(dice, i, j) && this.window[i][j].getIsEmpty()){
-            return true;
-        }
-        else return false;
+        return (this.neighboursColorRestriction(dice, i, j) && this.neighboursNumberRestriction(dice, i, j) && this.neighboursPositionRestriction(i, j) && this.spaceColorRestriction(dice, i, j) && this.spaceNumberRestriction(dice, i, j));
     }
 
 }

@@ -9,12 +9,11 @@ public class TCFluxRemover extends Card implements ToolCard   {
 
     private boolean isUsed;
     private Dice dicetmp;
-    private int calls = 2;
+    private int calls = 3;
     private int flag = 1;
 
 
-    public TCFluxRemover(int idNumber){
-        super(idNumber);
+    public TCFluxRemover(){
         this.isUsed = false;
         super.setIdNumber(11);
         super.setColor(Colors.P);
@@ -55,20 +54,23 @@ public class TCFluxRemover extends Card implements ToolCard   {
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice i del dado nella draft, in 1 il nuovo valore, in 2,3 le i,j della new pos
-        boolean check;
         if (flag == 1) {
             flag = 2;
-            secondChance(gameModel.getBag(), gameModel.getField().getDraft(), input.get(0), input.get(1));
+            mixDie(gameModel.getBag(), gameModel.getField().getDraft(), input.get(0));
             return true;
         }
         else if (flag == 2){
+            flag = 3;
+            setDicetmp(gameModel.getField().getDraft(), input.get(0), input.get(1));
+            if(!getIsUsed())
+                setIsUsed(true);
+            return true;
+        }
+        else if (flag == 3){
             flag = 1;
-            gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
-            check = gameModel.getActualPlayer().putDice(input.get(2), input.get(3));
-            if (check) {
-                if(!getIsUsed())
-                    setIsUsed(true);
-                return true;
+            if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) {
+                gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+                return(gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
             }
             else
                 return false;
@@ -78,15 +80,17 @@ public class TCFluxRemover extends Card implements ToolCard   {
     }
 
 
-    private void secondChance(Bag bag, Draft draft, int i, int value){   //i posizione del dado nella draft
-
+    private void mixDie(Bag bag, Draft draft, int i){   //i posizione del dado nella draft
         Random r = new Random();
         dicetmp = draft.getDraft().get(i);
         bag.getBag().add(dicetmp);
         dicetmp = bag.extract((r.nextInt(bag.getBag().size()) + 1));
-        dicetmp.modifyValue(value);
+        dicetmp.setValue();
         draft.getDraft().set(i, dicetmp);
+    }
 
-        //implemento qua o nella classe chiamante l'azione di inserire il dado?
+    private void setDicetmp(Draft draft, int i, int value){
+        dicetmp = draft.getDraft().get(i);
+        dicetmp.modifyValue(value);
     }
 }

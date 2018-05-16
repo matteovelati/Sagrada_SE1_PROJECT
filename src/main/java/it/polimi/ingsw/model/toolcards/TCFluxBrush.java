@@ -13,8 +13,7 @@ public class  TCFluxBrush extends Card implements ToolCard   {
     private int calls = 2;
     private int flag = 1;
 
-    public TCFluxBrush(int idNumber){
-        super(idNumber);
+    public TCFluxBrush(){
         this.isUsed = false;
         super.setIdNumber(6);
         super.setColor(Colors.P);
@@ -64,8 +63,12 @@ public class  TCFluxBrush extends Card implements ToolCard   {
         }
         else if (flag == 2){
             flag = 1;
-            gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
-            return(gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
+            if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2))) {
+                gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+                return (gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
+            }
+            return
+                    false;
         }
         else
             return false;

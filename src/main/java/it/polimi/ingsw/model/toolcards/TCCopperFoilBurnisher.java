@@ -11,8 +11,7 @@ public class TCCopperFoilBurnisher extends Card implements ToolCard   {
     private Dice dicetmp;
     private int calls = 1;
 
-    public TCCopperFoilBurnisher(int idNumber){
-        super(idNumber);
+    public TCCopperFoilBurnisher(){
         this.isUsed = false;
         super.setIdNumber(3);
         super.setColor(Colors.R);
@@ -59,7 +58,7 @@ public class TCCopperFoilBurnisher extends Card implements ToolCard   {
 
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
         dicetmp = window.getWindow()[i][j].getDice();
-        if (window.positionRestriction(dicetmp, x, y) && window.colorRestriction(dicetmp, x, y)){
+        if (window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.neighboursPositionRestriction(x, y) && window.spaceColorRestriction(dicetmp, x, y)){
             window.getWindow()[x][y].setDice(dicetmp);
             window.getWindow()[i][j].setDice(null);
             if(!getIsUsed())

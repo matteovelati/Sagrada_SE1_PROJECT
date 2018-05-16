@@ -11,8 +11,7 @@ public class TCEglomiseBrush extends Card implements ToolCard   {
     private Dice dicetmp;
     private int calls = 1;
 
-    public TCEglomiseBrush(int idNumber){
-        super(idNumber);
+    public TCEglomiseBrush(){
         this.isUsed = false;
         super.setIdNumber(2);
         super.setColor(Colors.B);
@@ -58,7 +57,7 @@ public class TCEglomiseBrush extends Card implements ToolCard   {
 
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
         dicetmp = window.getWindow()[i][j].getDice();
-        if (window.positionRestriction(dicetmp, x, y) && window.numberRestriction(dicetmp, x, y)){
+        if (window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.neighboursPositionRestriction(x, y) && window.spaceNumberRestriction(dicetmp, x, y)){
             window.getWindow()[x][y].setDice(dicetmp);
             window.getWindow()[i][j].setDice(null);
             if(!getIsUsed())

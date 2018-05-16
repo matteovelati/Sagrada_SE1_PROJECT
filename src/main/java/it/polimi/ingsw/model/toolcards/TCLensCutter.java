@@ -11,8 +11,7 @@ public class TCLensCutter extends Card implements ToolCard   {
     private Dice dicetmp;
     private int calls = 1;
 
-    public TCLensCutter(int idNumber){
-        super(idNumber);
+    public TCLensCutter(){
         this.isUsed = false;
         super.setIdNumber(5);
         super.setColor(Colors.G);

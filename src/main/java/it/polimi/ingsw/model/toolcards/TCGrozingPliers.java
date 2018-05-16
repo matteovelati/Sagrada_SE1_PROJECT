@@ -50,12 +50,12 @@ public class TCGrozingPliers extends Card implements ToolCard   {
 
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        // arraylist: in 0 mettere '1' per increamentare; in 1 posizione dado draft
+        // arraylist: in 0 mettere '-1' per decreamentare; in 1 posizione dado draft
         boolean check;
-        if (input.get(0) == 1)
-            check = (increaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
-        else
+        if (input.get(0) == -1)
             check = (decreaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
+        else
+            check = (increaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
         if (check){
             if(!getIsUsed())
                 setIsUsed(true);

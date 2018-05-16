@@ -92,4 +92,8 @@ public class RoundManager {
         roundTrack.setGrid(draft.getDraft().remove(0));
 
     }
+
+    public void setTurn(int turn) { //metodo toolcardtest (glazinghammer)
+        this.turn = turn;
+    }
 }

@@ -12,8 +12,7 @@ public class TCGlazingHammer extends Card implements ToolCard{
     private Dice dicetmp;
     private int calls = 1;
 
-    public TCGlazingHammer(int idNumber){
-        super(idNumber);
+    public TCGlazingHammer(){
         this.isUsed = false;
         super.setIdNumber(7);
         super.setColor(Colors.B);
