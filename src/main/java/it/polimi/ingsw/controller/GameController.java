@@ -23,8 +23,8 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     }
 
     @Override
-    public void addObserver(SubjectView view){
-        gameModel.addObserver((ViewObserver) view);
+    public void addObserver(RemoteView view) throws RemoteException{
+        gameModel.addObserver(view);
     }
 
     @Override
@@ -39,13 +39,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case LOBBY:
                 gameModel.setPlayers(new Player(view.getUser()));
-                System.out.println("YOU HAVE BEEN ADDED TO THIS GAME!");
-                for(Player x : gameModel.getPlayers()){
-                    System.out.println(x.getUsername());
-                    System.out.println(gameModel.getPlayers().size());
-                }
                 if(gameModel.getPlayers().size() == 2){
-                    System.out.println("ARE YOU READY? THE GAME IS STARTING...");
                     gameModel.setState(SELECTWINDOW);
                 }
                 else{

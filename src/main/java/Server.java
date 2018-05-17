@@ -13,6 +13,6 @@ public class Server {
         Registry registry = LocateRegistry.getRegistry();
         registry.bind("network", network);
 
-        System.out.println("Waiting for invocations from client...");
+        System.out.println("Hi! I'm the Sagrada server!\n\nI'm waiting for players...");
     }
 }

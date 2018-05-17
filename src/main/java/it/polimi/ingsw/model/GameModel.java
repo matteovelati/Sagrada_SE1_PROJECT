@@ -1,10 +1,16 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.view.cli.RemoteView;
+import it.polimi.ingsw.view.cli.ViewObserver;
+
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class GameModel extends SubjectGameModel implements Serializable {
+public class GameModel implements RemoteGameModel, Serializable {
+
+    private List<RemoteView> list = new ArrayList<RemoteView>();
 
     private ArrayList<Player> players;
     private Field field;
@@ -17,7 +23,7 @@ public class GameModel extends SubjectGameModel implements Serializable {
 
     public GameModel(ArrayList<Player> players, States state){}
     //COSTRUTTORE
-    public GameModel(States state){
+    public GameModel(States state) {
         this.players = new ArrayList<Player>();
         field = Field.getInstance();
         bag = Bag.getInstance();
@@ -26,9 +32,13 @@ public class GameModel extends SubjectGameModel implements Serializable {
         roundManager = RoundManager.getInstance();
     }
 
-    public void setPlayers(Player player){
+    public void setPlayers(Player player) throws RemoteException {
         this.players.add(player);
+        list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
         if(players.size() == 2) {
+            for(RemoteView x : list){
+                x.print("ARE YOU READY?! THE GAME IS STARTING...");
+            }
             actualPlayer = this.players.get(0);
         }
     }
@@ -36,7 +46,7 @@ public class GameModel extends SubjectGameModel implements Serializable {
     //SETTER (stato e actualPlayer)
     public void setState(States state) throws RemoteException {
         this.state = state;
-        notifyObservers(this);
+        notifyObservers();
     }
 
     public void setActualPlayer(int i){
@@ -45,30 +55,31 @@ public class GameModel extends SubjectGameModel implements Serializable {
 
 
     //GETTER (tutti)
+    @Override
     public States getState(){
         return state;
     }
-
+    @Override
     public ArrayList<Player> getPlayers() {
         return players;
     }
-
+    @Override
     public Field getField() {
         return field;
     }
-
+    @Override
     public Bag getBag() {
         return bag;
     }
-
+    @Override
     public ArrayList<SchemeCard> getSchemeCards() {
         return schemeCards;
     }
-
+    @Override
     public Player getActualPlayer(){
         return actualPlayer;
     }
-
+    @Override
     public RoundManager getRoundManager(){
         return roundManager;
     }
@@ -104,4 +115,25 @@ public class GameModel extends SubjectGameModel implements Serializable {
     }
 
 
+    @Override
+    public void notifyObservers() throws RemoteException {
+        for(RemoteView observer: getObservers()) {
+            observer.update(this);
+        }
+    }
+
+    @Override
+    public List<RemoteView> getObservers() throws RemoteException {
+        return list;
+    }
+
+    @Override
+    public void addObserver(RemoteView observer) throws RemoteException {
+        list.add(observer);
+    }
+
+    @Override
+    public void removeObserver(RemoteView observer) throws RemoteException {
+        list.remove(observer);
+    }
 }

@@ -2,14 +2,16 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.RemoteGameModel;
 import it.polimi.ingsw.model.States;
 import it.polimi.ingsw.view.View;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
-public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Serializable {
+public class ViewCLI extends UnicastRemoteObject implements ViewObserver, RemoteView, Serializable {
 
     private States oldState;
     private States state;
@@ -19,7 +21,7 @@ public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Se
     private int choose1;
     private int choose2;
 
-    private GameModel gameModel;
+    private RemoteGameModel gameModel;
 
     private RemoteGameController network;
 
@@ -67,32 +69,33 @@ public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Se
     public void run() throws InterruptedException, RemoteException {
 
             while(!endGame) {
-                //gameModel = network.getGameModel();
-                //System.out.println(state);
-                if (!oldState.equals(gameModel.getState())) {
                     int tmp;
                     if (gameModel.getState().equals(States.ERROR)) {
                         System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY");
                     } else {
                         state = gameModel.getState();
-                        oldState = state;
                     }
 
                     switch (state) {
                         case LOBBY:
-                            System.out.println("WAIT OTHER PLAYERS JOIN THE GAME!");
+                            if(!state.equals(oldState)) {
+                                System.out.println("WAIT OTHER PLAYERS JOIN THE GAME!");
+                                oldState = state;
+                            }
                             break;
                         case SELECTWINDOW:
-                            System.out.println("SELECT YOUR WINDOW!");
-                            PrintSchemeCard.print(gameModel.getSchemeCards());
-                            input = new Scanner(System.in);
-                            setChoose1(input.nextInt());
-                            network.update(this);
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
+                                System.out.println("SELECT YOUR WINDOW!");
+                                PrintSchemeCard.print(gameModel.getSchemeCards());
+                                input = new Scanner(System.in);
+                                setChoose1(input.nextInt());
+                                network.update(this);
+                            }
                             break;
                         case SELECTMOVE1:
-                            tmp = ShowGameStuff.print(gameModel);
+                            tmp = ShowGameStuff.print((GameModel) gameModel);
                             while (tmp != 0) {
-                                tmp = ShowGameStuff.print(gameModel);
+                                tmp = ShowGameStuff.print((GameModel) gameModel);
                             }
                             PrintSelectMove1.print();
                             input = new Scanner(System.in);
@@ -100,9 +103,9 @@ public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Se
                             network.update(this);
                             break;
                         case SELECTMOVE2:
-                            tmp = ShowGameStuff.print(gameModel);
+                            tmp = ShowGameStuff.print((GameModel) gameModel);
                             while (tmp != 0) {
-                                tmp = ShowGameStuff.print(gameModel);
+                                tmp = ShowGameStuff.print((GameModel) gameModel);
                             }
                             PrintSelectMove2.print();
                             input = new Scanner(System.in);
@@ -120,9 +123,9 @@ public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Se
                             network.update(this);
                             break;
                         case SELECTDRAFT:
-                            tmp = ShowGameStuff.print(gameModel);
+                            tmp = ShowGameStuff.print((GameModel) gameModel);
                             while (tmp != 0) {
-                                tmp = ShowGameStuff.print(gameModel);
+                                tmp = ShowGameStuff.print((GameModel) gameModel);
                             }
                             System.out.println("SELECT A DICE");
                             PrintDraft.print(gameModel.getField().getDraft());
@@ -131,9 +134,9 @@ public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Se
                             network.update(this);
                             break;
                         case SELECTCARD:
-                            tmp = ShowGameStuff.print(gameModel);
+                            tmp = ShowGameStuff.print((GameModel) gameModel);
                             while (tmp != 0) {
-                                tmp = ShowGameStuff.print(gameModel);
+                                tmp = ShowGameStuff.print((GameModel) gameModel);
                             }
                             System.out.println("SELECT A TOOLCARD");
                             PrintToolCard.print(gameModel.getField().getToolCards());
@@ -159,14 +162,19 @@ public class ViewCLI extends SubjectView implements ViewObserver, RemoteView, Se
                             System.out.println("ERRORE INVIO VIEW");
                             break;
                     }
-                }
+
             }
         }
 
 
+   @Override
+   public void print(String s){
+       System.out.println(s);
+   }
+
     @Override
-    public void update(GameModel gameModel) throws RemoteException {
-        this.gameModel = network.getGameModel();
+    public void update(RemoteGameModel gameModel) throws RemoteException {
+        this.gameModel = gameModel;
     }
 
 
