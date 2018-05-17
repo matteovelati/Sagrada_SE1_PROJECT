@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class Window{
+import java.io.Serializable;
+
+public class Window implements Serializable {
 
     private String name;
     private int difficulty;

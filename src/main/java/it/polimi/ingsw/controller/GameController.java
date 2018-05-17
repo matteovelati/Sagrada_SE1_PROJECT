@@ -1,49 +1,63 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.cli.RemoteView;
+import it.polimi.ingsw.view.cli.SubjectView;
 import it.polimi.ingsw.view.cli.ViewCLI;
+import it.polimi.ingsw.view.cli.ViewObserver;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 import static it.polimi.ingsw.model.States.*;
 
-public class GameController implements ControllerObserver {
+public class GameController extends UnicastRemoteObject implements ControllerObserver, RemoteGameController {
 
     private GameModel gameModel;
     private int actualPlayer;
 
-    public GameController(){
-
+    public GameController() throws RemoteException{
+        gameModel = new GameModel(LOBBY);
     }
-
-
-    public void setPlayers(String username){//---------------------------------------------DA FARE
-        ArrayList<Player> players = new ArrayList<Player>();
-
-        Player p = new Player(username);
-        players.add(p);
-
-        if(players.size()==4) startGame(players);
-            //aspetta giocatori
-    }
-
-    private void startGame(ArrayList<Player> players){
-        gameModel = new GameModel(players, SELECTWINDOW);
-    }
-
-
 
     @Override
-    public void update(ViewCLI viewCLI) {
+    public void addObserver(SubjectView view){
+        gameModel.addObserver((ViewObserver) view);
+    }
+
+    @Override
+    public GameModel getGameModel() throws RemoteException {
+        return gameModel;
+    }
+
+    @Override
+    public void update(RemoteView view) throws RemoteException {
 
         switch(gameModel.getState()){
 
+            case LOBBY:
+                gameModel.setPlayers(new Player(view.getUser()));
+                System.out.println("YOU HAVE BEEN ADDED TO THIS GAME!");
+                for(Player x : gameModel.getPlayers()){
+                    System.out.println(x.getUsername());
+                    System.out.println(gameModel.getPlayers().size());
+                }
+                if(gameModel.getPlayers().size() == 2){
+                    System.out.println("ARE YOU READY? THE GAME IS STARTING...");
+                    gameModel.setState(SELECTWINDOW);
+                }
+                else{
+                    gameModel.setState(LOBBY);
+                }
+                break;
 
             case SELECTWINDOW:
 
-                if(viewCLI.getChoose1() > 0 && viewCLI.getChoose1() < 5) {//---------------------VERIFICA SULL'INPUT
+                if(view.getChoose1() > 0 && view.getChoose1() < 5) {//---------------------VERIFICA SULL'INPUT
 
-                    if(gameModel.playerSetWindow(viewCLI.getChoose1())) {//----------------------SETTA LA WINDOW SELEZIONATA
+                    if(gameModel.playerSetWindow(view.getChoose1())) {//----------------------SETTA LA WINDOW SELEZIONATA
 
                         actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());//-----------CAMBIO IL PLAYER
                         gameModel.setActualPlayer(actualPlayer);
@@ -67,7 +81,7 @@ public class GameController implements ControllerObserver {
 
             case SELECTMOVE1:
 
-                gameModel.getRoundManager().setFirstMove(viewCLI.getChoose1());
+                gameModel.getRoundManager().setFirstMove(view.getChoose1());
 
                 if(gameModel.getRoundManager().getFirstMove() == 1){
                     gameModel.setState(SELECTDRAFT);//--------------------------------------PIù CHIARO CHIAMARLA SELECTDICE
@@ -100,7 +114,7 @@ public class GameController implements ControllerObserver {
 
             case SELECTDRAFT:
 
-                gameModel.playerPickDice(viewCLI.getChoose1());
+                gameModel.playerPickDice(view.getChoose1());
                 gameModel.setState(PUTDICEINWINDOW);
 
                 break;
@@ -110,9 +124,9 @@ public class GameController implements ControllerObserver {
             case PUTDICEINWINDOW:
 
                 //CONTROLLO INPUT
-                if(viewCLI.getChoose1() >= 0 && viewCLI.getChoose1() <= 3 && viewCLI.getChoose2() >= 0 && viewCLI.getChoose2() <= 4) {
+                if(view.getChoose1() >= 0 && view.getChoose1() <= 3 && view.getChoose2() >= 0 && view.getChoose2() <= 4) {
 
-                    if(gameModel.playerPutDice(viewCLI.getChoose1(), viewCLI.getChoose2())) {
+                    if(gameModel.playerPutDice(view.getChoose1(), view.getChoose2())) {
 
                         //SE LA SELEZIONE DEL DADO è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
                         if (gameModel.getRoundManager().getFirstMove() == 1)
@@ -148,7 +162,7 @@ public class GameController implements ControllerObserver {
 
             case SELECTMOVE2://--------------------------------------------------LA VIEW MOSTRERà UNA SOLA MOSSA POSSIBILE(1) E IL PASSATURNO(2)
 
-                if(viewCLI.getChoose1() == 1){
+                if(view.getChoose1() == 1){
 
                     //SE LA PRIMA MOSSA EFFETTUATA è SELEZIONE DADO LA SECONDA SARà SELEZIONA CARTA E VICEVERSA
                     if(gameModel.getRoundManager().getFirstMove() == 1)
@@ -159,7 +173,7 @@ public class GameController implements ControllerObserver {
                         gameModel.setState(ERROR);
 
                 }
-                else if(viewCLI.getChoose1() == 2){
+                else if(view.getChoose1() == 2){
 
                     gameModel.getRoundManager().setFirstMove(0);
                     actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
@@ -183,9 +197,9 @@ public class GameController implements ControllerObserver {
 
             case SELECTCARD:
 
-                if (viewCLI.getChoose1() > 0 && viewCLI.getChoose1() < 4){//----------VERIFICA INPUT
+                if (view.getChoose1() > 0 && view.getChoose1() < 4){//----------VERIFICA INPUT
 
-                    if(gameModel.playerSelectToolCard(viewCLI.getChoose1()-1)){
+                    if(gameModel.playerSelectToolCard(view.getChoose1()-1)){
                         gameModel.setState(USETOOLCARD);
                     }else{
                         gameModel.setState(ERROR);//----------------------------------SEGNALINI FAVORE NON SUFFICIENTI

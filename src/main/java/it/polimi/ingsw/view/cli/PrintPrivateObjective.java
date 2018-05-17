@@ -2,7 +2,9 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.PrivateObjective;
 
-public class PrintPrivateObjective {
+import java.io.Serializable;
+
+public class PrintPrivateObjective implements Serializable {
 
     public static void print(PrivateObjective privateObjective){
         System.out.println("TITLE: "+ privateObjective.getName());

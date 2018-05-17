@@ -1,8 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Bag {
+public class Bag implements Serializable {
 
     private static Bag instance;
     private ArrayList<Dice> bag;

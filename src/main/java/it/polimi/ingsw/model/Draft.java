@@ -1,9 +1,10 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Draft {
+public class Draft implements Serializable {
 
     private static Draft instance = null;
     private ArrayList<Dice> draft;

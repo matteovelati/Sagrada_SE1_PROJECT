@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class PrivateObjective extends Card {
+import java.io.Serializable;
+
+public class PrivateObjective extends Card implements Serializable {
 
     public PrivateObjective(Colors color){
         super(color);

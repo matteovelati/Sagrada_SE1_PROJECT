@@ -1,6 +1,8 @@
 package it.polimi.ingsw.view.cli;
 
-public class PrintSelectMove2 {
+import java.io.Serializable;
+
+public class PrintSelectMove2 implements Serializable {
 
     public static void print(){
         System.out.println("CHOOSE YOUR MOOVE!");

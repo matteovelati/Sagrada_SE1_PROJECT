@@ -2,7 +2,9 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.Draft;
 
-public class PrintDraft {
+import java.io.Serializable;
+
+public class PrintDraft implements Serializable {
 
     public static void print(Draft draft){
         for(int i=0; i<draft.getDraft().size(); i++){

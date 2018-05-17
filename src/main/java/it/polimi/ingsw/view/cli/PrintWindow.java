@@ -2,7 +2,9 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.Window;
 
-public class PrintWindow {
+import java.io.Serializable;
+
+public class PrintWindow implements Serializable {
 
     public static void print(Window window){
         System.out.println(window.getName() +"  "+window.getDifficulty());

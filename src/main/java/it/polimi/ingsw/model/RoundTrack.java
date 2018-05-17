@@ -1,9 +1,10 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class RoundTrack {
+public class RoundTrack implements Serializable {
 
     private static RoundTrack instance = null;
     private ArrayList<Dice> grid;

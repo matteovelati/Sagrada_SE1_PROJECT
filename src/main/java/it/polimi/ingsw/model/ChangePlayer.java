@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class ChangePlayer {
+import java.io.Serializable;
+
+public class ChangePlayer implements Serializable {
 
     public static int clockwise(int player, int size){
         player ++;

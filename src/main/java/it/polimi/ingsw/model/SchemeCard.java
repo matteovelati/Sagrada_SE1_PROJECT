@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class SchemeCard {
+import java.io.Serializable;
+
+public class SchemeCard implements Serializable {
 
     private Window front;
     private Window back;

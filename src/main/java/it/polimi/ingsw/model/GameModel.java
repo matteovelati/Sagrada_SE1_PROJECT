@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class GameModel {
+public class GameModel extends SubjectGameModel implements Serializable {
 
     private ArrayList<Player> players;
     private Field field;
@@ -13,22 +15,28 @@ public class GameModel {
     private RoundManager roundManager;
 
 
+    public GameModel(ArrayList<Player> players, States state){}
     //COSTRUTTORE
-    public GameModel(ArrayList<Player> players, States state){
+    public GameModel(States state){
         this.players = new ArrayList<Player>();
-        this.players = players;
         field = Field.getInstance();
         bag = Bag.getInstance();
         schemeCards = new ArrayList<SchemeCard>(2);
         this.state = state;
-        actualPlayer = players.get(0);
         roundManager = RoundManager.getInstance();
     }
 
+    public void setPlayers(Player player){
+        this.players.add(player);
+        if(players.size() == 2) {
+            actualPlayer = this.players.get(0);
+        }
+    }
 
     //SETTER (stato e actualPlayer)
-    public void setState(States state){
+    public void setState(States state) throws RemoteException {
         this.state = state;
+        notifyObservers(this);
     }
 
     public void setActualPlayer(int i){

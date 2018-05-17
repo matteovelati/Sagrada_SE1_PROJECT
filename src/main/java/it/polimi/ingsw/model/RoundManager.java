@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class RoundManager {
+import java.io.Serializable;
+
+public class RoundManager implements Serializable {
 
     private static RoundManager instance = null;
 
