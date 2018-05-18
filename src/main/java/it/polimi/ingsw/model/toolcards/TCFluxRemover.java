@@ -2,10 +2,11 @@ package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class TCFluxRemover extends Card implements ToolCard   {
+public class TCFluxRemover extends Card implements ToolCard {
 
     private boolean isUsed;
     private Dice dicetmp;

@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -27,7 +28,7 @@ public class TCCopperFoilBurnisherTest {
     player1 = new Player("matteo");
     players.add(player1);
     state = States.SELECTMOVE1;
-    gameModel = new GameModel(players, state);
+    gameModel = new GameModel(state);
 
     dice1 = new Dice(Colors.R);    //00
     dice1.modifyValue(5);
@@ -53,8 +54,13 @@ public class TCCopperFoilBurnisherTest {
     gameModel.getField().getDraft().addDice(dice5);
 
     window1 = new Window(5);
-    schemeCard1 = new SchemeCard(window1, null);
-    schemeCard2 = new SchemeCard(null, null);
+    schemeCard1 = new SchemeCard(3);
+    schemeCard2 = new SchemeCard(1);
+    try {
+        gameModel.setPlayers(player1);      //cade perchè va creata la partita
+    } catch (RemoteException e) {
+        e.printStackTrace();
+    }
     gameModel.getActualPlayer().setWindow(schemeCard1, schemeCard2, 1);
     gameModel.getActualPlayer().getWindow().setWindow(dice1, 0, 0);
     gameModel.getActualPlayer().getWindow().setWindow(dice2, 0, 1);

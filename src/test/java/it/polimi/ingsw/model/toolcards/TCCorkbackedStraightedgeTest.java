@@ -53,8 +53,8 @@ public class TCCorkbackedStraightedgeTest {
         gameModel.getField().getDraft().addDice(dice5);
 
         window1 = new Window(5);
-        schemeCard1 = new SchemeCard(window1, null);
-        schemeCard2 = new SchemeCard(null, null);
+        schemeCard1 = new SchemeCard(3);
+        schemeCard2 = new SchemeCard(1);
         gameModel.getActualPlayer().setWindow(schemeCard1, schemeCard2, 1);
         gameModel.getActualPlayer().getWindow().setWindow(dice1, 0, 0);
         gameModel.getActualPlayer().getWindow().setWindow(dice2, 0, 1);

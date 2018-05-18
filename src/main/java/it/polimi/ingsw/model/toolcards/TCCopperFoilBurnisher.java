@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.*;
 import java.util.ArrayList;
 
 
-public class TCCopperFoilBurnisher extends Card implements ToolCard   {
+public class TCCopperFoilBurnisher extends Card implements ToolCard  {
 
     private boolean isUsed;
     private Dice dicetmp;

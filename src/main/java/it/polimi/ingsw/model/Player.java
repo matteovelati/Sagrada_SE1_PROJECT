@@ -14,14 +14,7 @@ public class Player implements Serializable {
 
     public Player(String username){
         this.username = username;
-    }
-
-    public void setPrivateObjective(PrivateObjective privateObjective) {
-        this.privateObjective = privateObjective;
-    }
-
-    public void setDice(Dice dice){
-        this.dice = dice;
+        setPrivateObjective();
     }
 
     public Dice getDice() {
@@ -42,6 +35,10 @@ public class Player implements Serializable {
 
     public PrivateObjective getPrivateObjective() {
         return privateObjective;
+    }
+
+    public void setDice(Dice dice){
+        this.dice = dice;
     }
 
     /*vengono passate le carte schema mostrate e già il numero di quella selezionata*/
@@ -68,24 +65,20 @@ public class Player implements Serializable {
         }
     }
 
-    public void pickDice(Draft draft, int i){
-        this.setDice(draft.extract(i));
+    public void setPrivateObjective() {
+        this.privateObjective = new PrivateObjective();
     }
 
     public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
 
         toolCardSelected = toolCards.get(i);
-
         if(toolCardSelected.getIsUsed()){
             if(this.tokens >= 2) {
                 this.tokens = this.tokens - 2;
                 return true;
             }
-            else{
-                /*System.out.println("Segnalini favore non sufficienti");
-                this.selectToolCard(toolCards, i);*/
+            else
                 return false;
-            }
         }
         else{
             if(this.tokens >= 1){
@@ -93,12 +86,13 @@ public class Player implements Serializable {
                 toolCards.get(i).setIsUsed(true);
                 return true;
             }
-            else{
-                /*System.out.println("Segnalini favore non sufficienti");
-                toolCardSelected = null;*/
+            else
                 return false;
-            }
         }
+    }
+
+    public void pickDice(Draft draft, int i){
+        this.setDice(draft.extract(i));
     }
 
     public boolean putDice(int i, int j){
@@ -106,10 +100,9 @@ public class Player implements Serializable {
         if (this.window.verifyAllRestrictions(dice, i, j)) {
             this.window.setWindow(dice, i, j);
             return true;
-        } else {
-            /*Restrizione presente*/
-            return false;
         }
+        else
+            return false;
     }
 }
 

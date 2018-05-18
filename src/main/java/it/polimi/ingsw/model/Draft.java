@@ -22,7 +22,7 @@ public class Draft implements Serializable {
 
     public void setDraft(Bag bag){
         Random r = new Random();
-        dice = bag.extract((r.nextInt(bag.getBag().size()) + 1));
+        dice = bag.extract((r.nextInt(bag.getBag().size())));
         dice.setValue();
         draft.add(dice);
     }

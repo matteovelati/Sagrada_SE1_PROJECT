@@ -9,7 +9,9 @@ public class PrintToolCard implements Serializable {
 
     public static void print(ArrayList<ToolCard> toolCards){
         for(int i=0; i<toolCards.size(); i++){
-            //ho bisogno della descrizione e difficoltà
+            System.out.println("Title: " + toolCards.get(i).getTitle());
+            System.out.println("Description: " + toolCards.get(i).getDescr());
         }
     }
 }
+

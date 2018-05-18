@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameModel implements RemoteGameModel, Serializable {
 
-    private List<RemoteView> list = new ArrayList<RemoteView>();
-
+    private List<RemoteView> list = new ArrayList<>();
     private ArrayList<Player> players;
     private Field field;
     private Bag bag;
@@ -24,16 +24,32 @@ public class GameModel implements RemoteGameModel, Serializable {
     public GameModel(ArrayList<Player> players, States state){}
     //COSTRUTTORE
     public GameModel(States state) {
-        this.players = new ArrayList<Player>();
+        this.players = new ArrayList<>();
+        this.state = state;
         field = Field.getInstance();
         bag = Bag.getInstance();
-        schemeCards = new ArrayList<SchemeCard>(2);
-        this.state = state;
         roundManager = RoundManager.getInstance();
+        schemeCards = new ArrayList<>();
+    }
+
+    public void setSchemeCards(){
+        ArrayList<Integer> allSchemeCards = new ArrayList<>();
+        Random r = new Random();
+        for (int x=1; x<13; x++){
+            allSchemeCards.add(x);
+        }
+        for (int i=0; i<2*players.size(); i++){
+            schemeCards.add(new SchemeCard(allSchemeCards.remove(r.nextInt(allSchemeCards.size()))));
+        }
     }
 
     public void setPlayers(Player player) throws RemoteException {
         this.players.add(player);
+        if (players.size() == 2) {        //da mettere poi a 4 o quando scade il timer
+            setSchemeCards();
+            for (int i = 0; i < 2*players.size()+1; i++)
+                field.setDraft();
+        }
         list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
         if(players.size() == 2) {
             for(RemoteView x : list){

@@ -2,10 +2,11 @@ package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class TCGrozingPliers extends Card implements ToolCard   {
+public class TCGrozingPliers extends Card implements ToolCard {
 
     private boolean isUsed;
     private int calls = 1;
