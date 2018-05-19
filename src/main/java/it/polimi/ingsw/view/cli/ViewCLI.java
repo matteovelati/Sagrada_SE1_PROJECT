@@ -157,7 +157,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             break;
                         case USETOOLCARD:
                             if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
-                                //PrintUseToolCard.print(gameModel, gameModel.getActualPlayer().);
+                                PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
                                 network.update(this);
                             }
                             break;

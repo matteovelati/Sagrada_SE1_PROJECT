@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard implements Serializable {
 
-    public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choises){
+    public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
 
         Scanner input;
 
@@ -22,16 +22,16 @@ public class PrintUseToolCard implements Serializable {
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT THE ROW OF THE DICE TO MOVE");
                 input = new Scanner(System.in);
-                choises.add(input.nextInt());
+                choices.add(input.nextInt());
                 System.out.println("SELECT THE COLUMN OF THE DICE TO MOVE");
                 input = new Scanner(System.in);
-                choises.add(input.nextInt());
+                choices.add(input.nextInt());
                 System.out.println("SELECT THE NEW ROW OF THE DICE");
                 input = new Scanner(System.in);
-                choises.add(input.nextInt());
+                choices.add(input.nextInt());
                 System.out.println("SELECT THE NEW COLUMN OF THE DICE");
                 input = new Scanner(System.in);
-                choises.add(input.nextInt());
+                choices.add(input.nextInt());
                 break;
             case 4:
                 break;
@@ -43,7 +43,8 @@ public class PrintUseToolCard implements Serializable {
                 break;
             case 8:
                 break;
-            case 9:
+            case 9:                 //CORK BACKED STRAIGHTEDGE
+                PrintDraft.print(gameModel.getField().getDraft());
                 break;
             case 10:
                 break;
