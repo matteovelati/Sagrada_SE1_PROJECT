@@ -11,6 +11,7 @@ public class Player implements Serializable {
     private PrivateObjective privateObjective;
     private Dice dice;
     private ToolCard toolCardSelected;
+    private int finalScore;
 
     public Player(String username){
         this.username = username;
@@ -40,6 +41,12 @@ public class Player implements Serializable {
     public ToolCard getToolCardSelected() {
         return toolCardSelected;
     }
+
+    public int getFinalScore(){
+        return finalScore;
+    }
+
+
 
     public void setDice(Dice dice){
         this.dice = dice;
@@ -72,6 +79,12 @@ public class Player implements Serializable {
     public void setPrivateObjective() {
         this.privateObjective = new PrivateObjective();
     }
+
+    public void setFinalScore(int finalScore){
+        this.finalScore = finalScore;
+    }
+
+
 
     public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
 
