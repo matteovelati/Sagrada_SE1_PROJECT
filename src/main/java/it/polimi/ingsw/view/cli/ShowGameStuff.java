@@ -1,12 +1,14 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.RemoteGameModel;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class ShowGameStuff {
 
-    public static int print(GameModel gameModel){
+    public static int print(GameModel gameModel) {
 
         System.out.println("WHAT DO YOU WANT TO DO?");
         System.out.println("1) SEE YOUR WINDOW");

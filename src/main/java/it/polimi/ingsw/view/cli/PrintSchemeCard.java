@@ -7,15 +7,10 @@ import java.util.ArrayList;
 
 public class PrintSchemeCard implements Serializable {
 
-    public static void print(ArrayList<SchemeCard> schemeCards){
-        int j=1;
-        for(int i=0; i<schemeCards.size(); i++){
-            System.out.println(j +")");
-            PrintWindow.print(schemeCards.get(i).getFront());
-            j++;
-            System.out.println(j +")");
-            PrintWindow.print(schemeCards.get(i).getBack());
-            j++;
-        }
+    public static void print(SchemeCard schemeCard1, SchemeCard schemeCard2) {
+            System.out.println("1)");
+            PrintWindow.print(schemeCard1.getFront());
+            System.out.println("2)");
+            PrintWindow.print(schemeCard2.getBack());
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.RemoteGameModel;
 import it.polimi.ingsw.model.States;
 import it.polimi.ingsw.view.View;
@@ -9,6 +10,7 @@ import it.polimi.ingsw.view.View;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ViewCLI extends UnicastRemoteObject implements ViewObserver, RemoteView, Serializable {
@@ -20,6 +22,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
     private boolean endGame;
     private int choose1;
     private int choose2;
+    private ArrayList<Integer> choises;
 
     private RemoteGameModel gameModel;
 
@@ -58,6 +61,11 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
         return endGame;
     }
 
+    @Override
+    public ArrayList<Integer> getChoises() throws RemoteException{
+        return choises;
+    }
+
     public void setChoose1(int choose1){
         this.choose1 = choose1;
     }
@@ -66,16 +74,11 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
         this.choose2 = choose2;
     }
 
-    public void run() throws InterruptedException, RemoteException {
+    public void run() throws InterruptedException, RemoteException { //TRA UN PLAYER E L'ALTRO IL GAME CONTROLLER DEVE CHIAMARE IL SET STATE IN MODO TALE DA AGGIORNARE IL GAME MODEL!!!
 
             while(!endGame) {
-                    int tmp;
-                    if (gameModel.getState().equals(States.ERROR)) {
-                        System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY");
-                    } else {
-                        state = gameModel.getState();
-                    }
-
+                int tmp;
+                state = gameModel.getState();
                     switch (state) {
                         case LOBBY:
                             if(!state.equals(oldState)) {
@@ -84,79 +87,99 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case SELECTWINDOW:
-                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
                                 System.out.println("SELECT YOUR WINDOW!");
-                                PrintSchemeCard.print(gameModel.getSchemeCards());
+                                PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
                                 input = new Scanner(System.in);
                                 setChoose1(input.nextInt());
                                 network.update(this);
+                                oldState = state;
                             }
                             break;
                         case SELECTMOVE1:
-                            tmp = ShowGameStuff.print((GameModel) gameModel);
-                            while (tmp != 0) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
                                 tmp = ShowGameStuff.print((GameModel) gameModel);
+                                while (tmp != 0) {
+                                    tmp = ShowGameStuff.print((GameModel) gameModel);
+                                }
+                                PrintSelectMove1.print();
+                                input = new Scanner(System.in);
+                                setChoose1(input.nextInt());
+                                network.update(this);
+                                oldState = state;
                             }
-                            PrintSelectMove1.print();
-                            input = new Scanner(System.in);
-                            setChoose1(input.nextInt());
-                            network.update(this);
                             break;
                         case SELECTMOVE2:
-                            tmp = ShowGameStuff.print((GameModel) gameModel);
-                            while (tmp != 0) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
                                 tmp = ShowGameStuff.print((GameModel) gameModel);
+                                while (tmp != 0) {
+                                    tmp = ShowGameStuff.print((GameModel) gameModel);
+                                }
+                                PrintSelectMove2.print();
+                                input = new Scanner(System.in);
+                                setChoose1(input.nextInt());
+                                network.update(this);
+                                oldState = state;
                             }
-                            PrintSelectMove2.print();
-                            input = new Scanner(System.in);
-                            setChoose1(input.nextInt());
-                            network.update(this);
                             break;
                         case PUTDICEINWINDOW:
-                            PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                            System.out.println("CHOOSE A ROW TO PUT YOUR DICE");
-                            input = new Scanner(System.in);
-                            setChoose1(input.nextInt());
-                            System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE");
-                            input = new Scanner(System.in);
-                            setChoose2(input.nextInt());
-                            network.update(this);
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                                PrintWindow.print(gameModel.getActualPlayer().getWindow());
+                                System.out.println("CHOOSE A ROW TO PUT YOUR DICE");
+                                input = new Scanner(System.in);
+                                setChoose1(input.nextInt());
+                                System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE");
+                                input = new Scanner(System.in);
+                                setChoose2(input.nextInt());
+                                network.update(this);
+                                oldState = state;
+                            }
                             break;
                         case SELECTDRAFT:
-                            tmp = ShowGameStuff.print((GameModel) gameModel);
-                            while (tmp != 0) {
-                                tmp = ShowGameStuff.print((GameModel) gameModel);
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                                System.out.println("SELECT A DICE");
+                                PrintDraft.print(gameModel.getField().getDraft());
+                                input = new Scanner(System.in);
+                                setChoose1(input.nextInt());
+                                network.update(this);
+                                oldState = state;
                             }
-                            System.out.println("SELECT A DICE");
-                            PrintDraft.print(gameModel.getField().getDraft());
-                            input = new Scanner(System.in);
-                            setChoose1(input.nextInt());
-                            network.update(this);
                             break;
                         case SELECTCARD:
-                            tmp = ShowGameStuff.print((GameModel) gameModel);
-                            while (tmp != 0) {
-                                tmp = ShowGameStuff.print((GameModel) gameModel);
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                                System.out.println("SELECT A TOOLCARD");
+                                PrintToolCard.print(gameModel.getField().getToolCards());
+                                input = new Scanner(System.in);
+                                setChoose1(input.nextInt());
+                                network.update(this);
+                                oldState = state;
                             }
-                            System.out.println("SELECT A TOOLCARD");
-                            PrintToolCard.print(gameModel.getField().getToolCards());
-                            input = new Scanner(System.in);
-                            setChoose1(input.nextInt());
-                            network.update(this);
                             break;
                         case USETOOLCARD:
-                            //Da decidere assieme come farlo
-                            network.update(this);
+                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                                //PrintUseToolCard.print(gameModel, gameModel.getActualPlayer().);
+                                network.update(this);
+                            }
                             break;
                         case ENDROUND:
-                            System.out.println("END OF ROUND " + gameModel.getField().getRoundTrack().getRound());
-                            network.update(this);
+                            if(!state.equals(oldState)) {
+                                System.out.println("END OF ROUND " + gameModel.getField().getRoundTrack().getRound());
+                                network.update(this);
+                                oldState = state;
+                            }
                             break;
                         case SCORECALCULATION:
-                            network.update(this);
+                            if(!state.equals(oldState)) {
+                                network.update(this);
+                                oldState = state;
+                            }
                             break;
                         case ERROR:
-                            network.update(this);
+                            if(!state.equals(oldState)) {
+                                System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY!");
+                                network.update(this);
+                                oldState = state;
+                            }
                             break;
                         default:
                             System.out.println("ERRORE INVIO VIEW");
