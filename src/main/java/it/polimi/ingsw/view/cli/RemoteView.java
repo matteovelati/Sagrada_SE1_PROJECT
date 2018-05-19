@@ -17,7 +17,7 @@ public interface RemoteView extends Remote {
 
     public boolean getEndGame() throws RemoteException;
 
-    public ArrayList<Integer> getChoises() throws RemoteException;
+    public ArrayList<Integer> getChoices() throws RemoteException;
 
     public void update(RemoteGameModel gameModel) throws RemoteException;
 

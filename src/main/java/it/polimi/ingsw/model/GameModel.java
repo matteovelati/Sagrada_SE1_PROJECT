@@ -131,6 +131,12 @@ public class GameModel implements RemoteGameModel, Serializable {
     }
 
 
+    //CHIAMA IL METODO DEL GIOCATORE CHE USA LA TOOLCARD GIà SELEZIONATA
+    public boolean playerUseToolCard(ArrayList<Integer> input){
+        return actualPlayer.useToolCard(this, input);
+    }
+
+
     @Override
     public void notifyObservers() throws RemoteException {
         for(RemoteView observer: getObservers()) {

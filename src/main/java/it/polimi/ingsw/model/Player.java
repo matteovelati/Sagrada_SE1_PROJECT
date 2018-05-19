@@ -37,6 +37,10 @@ public class Player implements Serializable {
         return privateObjective;
     }
 
+    public ToolCard getToolCardSelected() {
+        return toolCardSelected;
+    }
+
     public void setDice(Dice dice){
         this.dice = dice;
     }
@@ -103,6 +107,11 @@ public class Player implements Serializable {
         }
         else
             return false;
+    }
+
+    //CHIAMA IL METODO DELLA USETOOLCARD SELEZIONATA
+    public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input){
+        return toolCardSelected.useToolCard(gameModel, input);
     }
 }
 

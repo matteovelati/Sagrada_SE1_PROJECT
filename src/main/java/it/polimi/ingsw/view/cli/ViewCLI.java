@@ -22,7 +22,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
     private boolean endGame;
     private int choose1;
     private int choose2;
-    private ArrayList<Integer> choises;
+    private ArrayList<Integer> choices;
 
     private RemoteGameModel gameModel;
 
@@ -62,8 +62,8 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
     }
 
     @Override
-    public ArrayList<Integer> getChoises() throws RemoteException{
-        return choises;
+    public ArrayList<Integer> getChoices() throws RemoteException{
+        return choices;
     }
 
     public void setChoose1(int choose1){

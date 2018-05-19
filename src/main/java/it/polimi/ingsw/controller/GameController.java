@@ -208,28 +208,44 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case USETOOLCARD:
 
-                //--------------------------------------------------------CHIAMA METODO PER L'USO DELLA TOOLCARD
+                if(gameModel.playerUseToolCard(view.getChoices())) {
 
-                // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-                if(gameModel.getRoundManager().getFirstMove() == 1) {
+                    //SE LA TOOLCARD CONSISTE IN UNA SOLA FASE PASSA ALLA FASE DI GIOCO SUCCESSIVA, ALTRIMENTI PASSA ALLA SECONDA FASE DELLA TOOLCARD
+                    if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1) {
 
-                    gameModel.getRoundManager().setFirstMove(0);
-                    actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                    gameModel.setActualPlayer(actualPlayer);
+                        // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
+                        if (gameModel.getRoundManager().getFirstMove() == 1) {
 
-                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1) {//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                        gameModel.setState(ENDROUND);
-                        break;
+                            gameModel.getRoundManager().setFirstMove(0);
+                            actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
+                            gameModel.setActualPlayer(actualPlayer);
+
+                            //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
+                                gameModel.setState(ENDROUND);
+                                break;
+                            }
+
+                            gameModel.setState(SELECTMOVE1);
+
+                        } else if (gameModel.getRoundManager().getFirstMove() == 2)
+                            gameModel.setState(SELECTMOVE2);
+                        else
+                            gameModel.setState(ERROR);
                     }
-
-                    gameModel.setState(SELECTMOVE1);
-
+                    else{
+                        gameModel.setState(USETOOLCARD2);
+                    }
                 }
-                else if(gameModel.getRoundManager().getFirstMove() == 2)
-                    gameModel.setState(SELECTMOVE2);
-                else
-                    gameModel.setState(ERROR);
+                else {
+                    gameModel.setState(ERROR);//ERRORE NELL'USO DELLA TOOLCARD
+                }
 
+                break;
+
+
+
+            case USETOOLCARD2:
                 break;
 
 
