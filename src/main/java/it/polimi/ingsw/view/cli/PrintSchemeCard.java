@@ -8,13 +8,13 @@ import java.util.ArrayList;
 public class PrintSchemeCard implements Serializable {
 
     public static void print(SchemeCard schemeCard1, SchemeCard schemeCard2) {
-            System.out.println("1)");
+            System.out.println("\n1)");
             PrintWindow.print(schemeCard1.getFront());
-            System.out.println("2)");
+            System.out.println("\n2)");
             PrintWindow.print(schemeCard1.getBack());
-            System.out.println("3)");
+            System.out.println("\n3)");
             PrintWindow.print(schemeCard2.getFront());
-            System.out.println("4)");
+            System.out.println("\n4)");
             PrintWindow.print(schemeCard2.getBack());
     }
 }
