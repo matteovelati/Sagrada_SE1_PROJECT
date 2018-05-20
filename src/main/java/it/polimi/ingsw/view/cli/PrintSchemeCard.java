@@ -11,6 +11,10 @@ public class PrintSchemeCard implements Serializable {
             System.out.println("1)");
             PrintWindow.print(schemeCard1.getFront());
             System.out.println("2)");
+            PrintWindow.print(schemeCard1.getBack());
+            System.out.println("3)");
+            PrintWindow.print(schemeCard2.getFront());
+            System.out.println("4)");
             PrintWindow.print(schemeCard2.getBack());
     }
 }

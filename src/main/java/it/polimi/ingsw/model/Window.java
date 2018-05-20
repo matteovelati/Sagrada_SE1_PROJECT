@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 public class Window implements Serializable {
 
+    private boolean isEmpty;
     private String name;
     private int difficulty;
     private Space[][] window;
 
     public Window(int x){
+        isEmpty = true;
         window = new Space[4][5];
         for(int i=0; i<4; i++){
             for(int j=0; j<5; j++){
@@ -443,6 +445,10 @@ public class Window implements Serializable {
         }
     }
 
+    public boolean getIsEmpty(){
+        return isEmpty;
+    }
+
     public String getName() {
         return name;
     }
@@ -463,8 +469,14 @@ public class Window implements Serializable {
         return window;
     }
 
+    public void setIsEmpty(boolean isEmpty){
+        this.isEmpty = isEmpty;
+    }
+
     public void setWindow(Dice dice, int i, int j){
         this.window[i][j].setDice(dice);
+        this.window[i][j].setColor(dice.getColor());
+        this.window[i][j].setValue(dice.getValue());
     }
 
     public boolean neighboursColorRestriction(Dice dice, int i, int j){

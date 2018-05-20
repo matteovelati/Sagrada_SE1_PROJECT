@@ -114,7 +114,13 @@ public class Player implements Serializable {
 
     public boolean putDice(int i, int j){
 
-        if (this.window.verifyAllRestrictions(dice, i, j)) {
+        if(this.window.getIsEmpty()){
+            this.window.setWindow(dice, i, j);
+            this.window.setIsEmpty(false);
+            return true;
+        }
+
+        else if (this.window.verifyAllRestrictions(dice, i, j)) {
             this.window.setWindow(dice, i, j);
             return true;
         }

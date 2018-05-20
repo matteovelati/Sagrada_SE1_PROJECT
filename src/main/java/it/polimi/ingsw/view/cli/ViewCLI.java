@@ -30,6 +30,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
 
 
     public ViewCLI(RemoteGameController network) throws RemoteException {
+        choices = new ArrayList<Integer>();
         endGame = false;
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
@@ -39,6 +40,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
         gameModel = network.getGameModel();
         network.addObserver(this);
         network.update(this);
+
     }
 
     @Override
@@ -74,9 +76,9 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
         this.choose2 = choose2;
     }
 
-    public void run() throws InterruptedException, RemoteException { //TRA UN PLAYER E L'ALTRO IL GAME CONTROLLER DEVE CHIAMARE IL SET STATE IN MODO TALE DA AGGIORNARE IL GAME MODEL!!!
+    public void run() throws RemoteException { //TRA UN PLAYER E L'ALTRO IL GAME CONTROLLER DEVE CHIAMARE IL SET STATE IN MODO TALE DA AGGIORNARE IL GAME MODEL!!!
 
-            while(!endGame) {
+
                 int tmp;
                 state = gameModel.getState();
                     switch (state) {
@@ -87,17 +89,17 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case SELECTWINDOW:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 System.out.println("SELECT YOUR WINDOW!");
                                 PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
                                 input = new Scanner(System.in);
                                 setChoose1(input.nextInt());
-                                network.update(this);
                                 oldState = state;
+                                network.update(this);
                             }
                             break;
                         case SELECTMOVE1:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 tmp = ShowGameStuff.print((GameModel) gameModel);
                                 while (tmp != 0) {
                                     tmp = ShowGameStuff.print((GameModel) gameModel);
@@ -110,7 +112,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case SELECTMOVE2:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 tmp = ShowGameStuff.print((GameModel) gameModel);
                                 while (tmp != 0) {
                                     tmp = ShowGameStuff.print((GameModel) gameModel);
@@ -123,7 +125,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case PUTDICEINWINDOW:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                                 System.out.println("CHOOSE A ROW TO PUT YOUR DICE");
                                 input = new Scanner(System.in);
@@ -136,7 +138,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case SELECTDRAFT:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 System.out.println("SELECT A DICE");
                                 PrintDraft.print(gameModel.getField().getDraft());
                                 input = new Scanner(System.in);
@@ -146,7 +148,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case SELECTCARD:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 System.out.println("SELECT A TOOLCARD");
                                 PrintToolCard.print(gameModel.getField().getToolCards());
                                 input = new Scanner(System.in);
@@ -156,8 +158,20 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case USETOOLCARD:
-                            if(user.equals(gameModel.getActualPlayer().getUsername()) && !state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+                                network.update(this);
+                            }
+                            break;
+                        case USETOOLCARD2:
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
+                                PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+                                network.update(this);
+                            }
+                            break;
+                        case USETOOLCARD3:
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
+                                PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
                                 network.update(this);
                             }
                             break;
@@ -186,7 +200,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             break;
                     }
 
-            }
+            //}
         }
 
 
@@ -198,6 +212,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
     @Override
     public void update(RemoteGameModel gameModel) throws RemoteException {
         this.gameModel = gameModel;
+        this.run();
     }
 
 

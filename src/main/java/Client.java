@@ -16,12 +16,8 @@ public class Client {
 
             RemoteGameController centralNetwork = (RemoteGameController) registry.lookup(remoteObj);
 
-            ViewCLI view = new ViewCLI(centralNetwork);
-            try {
-                view.run();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+           ViewCLI view = new ViewCLI(centralNetwork);
+
 
 
         }
