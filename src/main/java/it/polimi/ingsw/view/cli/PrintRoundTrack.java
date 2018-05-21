@@ -10,5 +10,6 @@ public class PrintRoundTrack implements Serializable {
         for(int i=0; i<roundTrack.getGrid().size(); i++){
             System.out.println(i+1 +") "+roundTrack.getGrid().get(i).getColor() + roundTrack.getGrid().get(i).getValue());
         }
+        System.out.println();
     }
 }

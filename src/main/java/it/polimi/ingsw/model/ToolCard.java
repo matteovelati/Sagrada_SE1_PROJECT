@@ -10,6 +10,7 @@ public interface ToolCard{
     int getNumber();
     String getTitle();
     String getDescr();
+    Colors getColor();
     int getCalls();
 
 }

@@ -8,7 +8,8 @@ public class PrintDraft implements Serializable {
 
     public static void print(Draft draft){
         for(int i=0; i<draft.getDraft().size(); i++){
-            System.out.println(i+1 +") "+ draft.getDraft().get(i).getColor() + draft.getDraft().get(i).getValue());
+            System.out.println(i+1 +") "+ draft.getDraft().get(i).getValue() + draft.getDraft().get(i).getColor());
         }
+        System.out.println();
     }
 }

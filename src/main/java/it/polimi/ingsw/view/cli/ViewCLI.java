@@ -189,7 +189,7 @@ public class ViewCLI extends UnicastRemoteObject implements ViewObserver, Remote
                             }
                             break;
                         case ERROR:
-                            if(!state.equals(oldState)) {
+                            if(user.equals(gameModel.getActualPlayer().getUsername())) {
                                 System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY!");
                                 network.update(this);
                                 oldState = state;

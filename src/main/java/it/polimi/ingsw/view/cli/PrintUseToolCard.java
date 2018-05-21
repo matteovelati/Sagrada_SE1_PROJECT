@@ -27,7 +27,7 @@ public class PrintUseToolCard implements Serializable {
                 else{
                     choices.add(1);
                 }
-                System.out.println("WICH DICE DO YOU WANT TO MODIFY?");
+                System.out.println("WHICH DICE DO YOU WANT TO MODIFY?");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
                 choices.add(input.nextInt());

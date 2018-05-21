@@ -8,6 +8,6 @@ public class PrintSelectMove1 implements Serializable {
         System.out.println("CHOOSE YOUR MOVE!");
         System.out.println("1) PICK A DICE FROM THE DRAFT");
         System.out.println("2) USE A TOOLCARD");
-        System.out.println("3) END YOUR TURN");
+        System.out.println("3) END YOUR TURN\n");
     }
 }

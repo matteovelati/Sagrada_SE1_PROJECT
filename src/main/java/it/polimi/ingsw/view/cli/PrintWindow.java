@@ -43,7 +43,7 @@ public class PrintWindow implements Serializable {
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(ANSI_RED + ANSI_REVERSE + " [" + window.getWindow()[i][j].getDice().getValue() + " " + window.getWindow()[i][j].getDice().getColor() + "] " + ANSI_BOLD);
+                            System.out.print(" " + ANSI_RED + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]" + ANSI_BOLD + " ");
                             System.out.print("|");
                         }
                         break;
@@ -53,7 +53,7 @@ public class PrintWindow implements Serializable {
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(ANSI_GREEN  + ANSI_REVERSE + " [" + window.getWindow()[i][j].getDice().getValue() + " " + window.getWindow()[i][j].getDice().getColor() + "] "+ ANSI_BOLD);
+                            System.out.print(" " + ANSI_GREEN  + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
                             System.out.print("|");
                         }
                         break;
@@ -63,7 +63,7 @@ public class PrintWindow implements Serializable {
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(ANSI_PURPLE + ANSI_REVERSE + " [" + window.getWindow()[i][j].getDice().getValue() + " " + window.getWindow()[i][j].getDice().getColor() + "] "+ ANSI_BOLD);
+                            System.out.print(" " +ANSI_PURPLE + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
                             System.out.print("|");
                         }
                         break;
@@ -73,7 +73,7 @@ public class PrintWindow implements Serializable {
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(ANSI_BLUE + ANSI_REVERSE + " [" + window.getWindow()[i][j].getDice().getValue() + " " + window.getWindow()[i][j].getDice().getColor() + "] "+ ANSI_BOLD);
+                            System.out.print(" "+ANSI_BLUE + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
                             System.out.print("|");
                         }
                         break;
@@ -83,7 +83,7 @@ public class PrintWindow implements Serializable {
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(ANSI_YELLOW + ANSI_REVERSE + " [" + window.getWindow()[i][j].getDice().getValue() + " " + window.getWindow()[i][j].getDice().getColor() + "] "+ ANSI_BOLD);
+                            System.out.print(" " + ANSI_YELLOW + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
                             System.out.print("|");
                         }
                         break;
@@ -93,13 +93,13 @@ public class PrintWindow implements Serializable {
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" [" + window.getWindow()[i][j].getDice().getValue() + " " + window.getWindow()[i][j].getDice().getColor() + "] "+ ANSI_BOLD);
+                            System.out.print(" [" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
                             System.out.print("|");
                         }
                         break;
                 }
             }
         }
-        System.out.println("\n| - - - | - - - | - - - | - - - | - - - |" + ANSI_RESET);
+        System.out.println("\n| - - - | - - - | - - - | - - - | - - - |\n" + ANSI_RESET);
     }
 }
