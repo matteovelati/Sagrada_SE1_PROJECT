@@ -475,41 +475,39 @@ public class Window implements Serializable {
 
     public void setWindow(Dice dice, int i, int j){
         this.window[i][j].setDice(dice);
-        this.window[i][j].setColor(dice.getColor());
-        this.window[i][j].setValue(dice.getValue());
     }
 
     public boolean neighboursColorRestriction(Dice dice, int i, int j){
         //return false se a N S E W c'è un dado dello stesso colore
         if (i == 0) {
             if (j == 0)
-                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
             else {
                 if (j == 4)
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
                 else
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
             }
         }
         else {
             if (i == 3) {
                 if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())));
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())));
                 else {
                     if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())));
                     else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())));
                 }
             }
             else {
                 if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
                 else {
                     if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
                     else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getColor().equals(dice.getColor())));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
                 }
             }
         }
@@ -518,34 +516,34 @@ public class Window implements Serializable {
     public boolean neighboursNumberRestriction(Dice dice, int i, int j){
         //return false se a N S E W c'è un dado dello stesso numero
         if (i == 0) {
-            if (j == 0)
-                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+            if (j == 0)                                                //.getDice().getValue()
+                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
             else {
                 if (j == 4)
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
                 else
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
             }
         }
         else {
             if (i == 3) {
                 if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()));
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()));
                 else {
                     if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()));
                     else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()));
                 }
             }
             else {
                 if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
                 else {
                     if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
                     else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getValue() == dice.getValue()));
+                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
                 }
             }
         }
@@ -597,7 +595,7 @@ public class Window implements Serializable {
     }
 
     public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
-        return ( (i == 0 || i == 3) && (j == 0 || j == 4) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j) );
+        return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j) );
     }
 
     public boolean verifyAllRestrictions(Dice dice, int i, int j){

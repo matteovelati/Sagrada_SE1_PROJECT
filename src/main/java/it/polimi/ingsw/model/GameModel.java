@@ -43,13 +43,13 @@ public class GameModel implements RemoteGameModel, Serializable {
         }
     }
 
+    public void setDraft(){
+        for (int i = 0; i < 2*players.size()+1; i++)
+            field.setDraft();
+    }
+
     public void setPlayers(Player player) throws RemoteException {
         this.players.add(player);
-        if (players.size() == 2) {        //da mettere poi a 4 o quando scade il timer
-            setSchemeCards();
-            for (int i = 0; i < 2*players.size()+1; i++)
-                field.setDraft();
-        }
         list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
         if(players.size() == 2) {
             for(RemoteView x : list){
