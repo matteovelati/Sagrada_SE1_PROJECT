@@ -1,15 +1,10 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.RemoteView;
-import it.polimi.ingsw.view.cli.SubjectView;
-import it.polimi.ingsw.view.cli.ViewCLI;
-import it.polimi.ingsw.view.cli.ViewObserver;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 
 import static it.polimi.ingsw.model.States.*;
 
@@ -19,19 +14,45 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     private int actualPlayer;
     private States beforeError;
 
+
     public GameController() throws RemoteException{
         gameModel = new GameModel(LOBBY);
     }
+
 
     @Override
     public void addObserver(RemoteView view) throws RemoteException{
         gameModel.addObserver(view);
     }
 
+
     @Override
     public GameModel getGameModel() throws RemoteException {
         return gameModel;
     }
+
+
+    private void scoreCalculation(){
+
+        int score;
+
+        for(int i=0; i<gameModel.getPlayers().size(); i++) {
+
+            //calcolo punteggio degli obiettivi privati
+            score = gameModel.getActualPlayer().getPrivateObjective().calculateScore(gameModel.getActualPlayer());
+
+            //calcolo punteggio degli obietivi pubblici
+            for (int j = 0; j < 2; j++) {
+                score = score + gameModel.getField().getPublicObjectives().get(j).calculateScore(gameModel.getActualPlayer().getWindow());
+            }
+
+            gameModel.getActualPlayer().setFinalScore(score);
+
+            actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());//-----------CAMBIO IL PLAYER
+            gameModel.setActualPlayer(actualPlayer);
+        }
+    }
+
 
     @Override
     public void update(RemoteView view) throws RemoteException {
@@ -39,14 +60,20 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         switch(gameModel.getState()){
 
             case LOBBY:
+
                 gameModel.setPlayers(new Player(view.getUser()));
+
                 if(gameModel.getPlayers().size() == 2){
+                    gameModel.setDraft();
+                    gameModel.setSchemeCards();
                     gameModel.setState(SELECTWINDOW);
                 }
                 else{
                     gameModel.setState(LOBBY);
                 }
                 break;
+
+
 
             case SELECTWINDOW:
 
@@ -90,7 +117,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     gameModel.setState(SELECTCARD);
                 }
 
-                else if(gameModel.getRoundManager().getFirstMove() == 3){//-----------------------------------------------------PASSA TURNO
+                else if(gameModel.getRoundManager().getFirstMove() == 0){//-----------------------------------------------------PASSA TURNO
 
                     gameModel.getRoundManager().setFirstMove(0);
                     actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
@@ -115,7 +142,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case SELECTDRAFT:
 
-                gameModel.playerPickDice(view.getChoose1());
+                gameModel.playerPickDice(view.getChoose1()-1);
                 gameModel.setState(PUTDICEINWINDOW);
 
                 break;
@@ -127,10 +154,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                 //CONTROLLO INPUT
                 if(view.getChoose1() > 0 && view.getChoose1() < 5 && view.getChoose2() > 0 && view.getChoose2() < 6) {
 
-                    int i = view.getChoose1()-1;
-                    int j = view.getChoose2()-1;
-
-                    if(gameModel.playerPutDice(i, j)) {
+                    if(gameModel.playerPutDice(view.getChoose1()-1, view.getChoose2()-1)) {
 
                         //SE LA SELEZIONE DEL DADO è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
                         if (gameModel.getRoundManager().getFirstMove() == 1)
@@ -187,7 +211,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     }
 
                 }
-                else if(view.getChoose1() == 2){
+                else if(view.getChoose1() == 0){
 
                     gameModel.getRoundManager().setFirstMove(0);
                     actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
@@ -216,9 +240,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if (view.getChoose1() > 0 && view.getChoose1() < 4){//----------VERIFICA INPUT
 
-                    int i = view.getChoose1()-1;
-
-                    if(gameModel.playerSelectToolCard(i)){
+                    if(gameModel.playerSelectToolCard(view.getChoose1()-1)){
                         gameModel.setState(USETOOLCARD);
                     }else{
                         beforeError = gameModel.getState();
@@ -373,34 +395,18 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 gameModel.getRoundManager().endRound(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
 
-                if(gameModel.getField().getRoundTrack().getRound() == 10)
-                    gameModel.setState(SCORECALCULATION);
-                else
-                    gameModel.setState(SELECTMOVE1);
+                if(gameModel.getField().getRoundTrack().getRound() == 10) {
 
-                break;
+                    scoreCalculation();
+                    gameModel.setState(ENDMATCH);
 
-
-
-            case SCORECALCULATION:
-
-                int score;
-
-                for(int i=0; i<gameModel.getPlayers().size(); i++) {
-
-                    score = gameModel.getActualPlayer().getPrivateObjective().calculateScore(gameModel.getActualPlayer());
-
-                    for (int j = 0; j < 2; j++) {
-                        score = score + gameModel.getField().getPublicObjectives().get(j).calculateScore(gameModel.getActualPlayer().getWindow());
-                    }
-
-                    gameModel.getActualPlayer().setFinalScore(score);
-
-                    actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());//-----------CAMBIO IL PLAYER
-                    gameModel.setActualPlayer(actualPlayer);
                 }
+                else {
 
-                gameModel.setState(ENDMATCH);
+                    gameModel.setDraft();
+                    gameModel.setState(SELECTMOVE1);
+                    
+                }
 
                 break;
 
@@ -408,7 +414,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case ENDMATCH:
 
-                //SERVE??
+                //display risultati
                 break;
 
 
