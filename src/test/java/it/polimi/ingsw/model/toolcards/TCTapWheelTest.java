@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -141,4 +141,4 @@ public class TCTapWheelTest {
         assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(8)][input.get(9)].getDice());
     }
 
-}
+}*/

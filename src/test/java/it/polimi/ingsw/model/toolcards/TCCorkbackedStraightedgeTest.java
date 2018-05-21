@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -114,4 +114,4 @@ public class TCCorkbackedStraightedgeTest {
 
         assertFalse(tc.useToolCard(gameModel, input));
     }
-}
+}*/

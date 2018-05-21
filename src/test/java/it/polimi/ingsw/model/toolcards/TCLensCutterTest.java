@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -85,4 +85,4 @@ public class TCLensCutterTest {
         assertFalse(gameModel.getField().getDraft().getDraft().contains( gameModel.getField().getRoundTrack().getGrid().get(input.get(1)) ));
         assertFalse(gameModel.getField().getRoundTrack().getGrid().contains( gameModel.getField().getDraft().getDraft().get(input.get(0)) ));
     }
-}
+}*/

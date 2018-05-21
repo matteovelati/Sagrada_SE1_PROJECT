@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -138,4 +138,4 @@ public class TCCopperFoilBurnisherTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertNotNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice());
     }
-}
+}*/

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -118,4 +118,4 @@ public class TCGrozingPliersTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertEquals(value, gameModel.getField().getDraft().getDraft().get(input.get(1)).getValue());
     }
-}
+}*/

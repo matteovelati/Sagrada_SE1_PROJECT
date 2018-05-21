@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -107,4 +107,4 @@ public class TCGlazingHammerTest {
 
         assertFalse(tc.useToolCard(gameModel, input));
     }
-}
+}*/

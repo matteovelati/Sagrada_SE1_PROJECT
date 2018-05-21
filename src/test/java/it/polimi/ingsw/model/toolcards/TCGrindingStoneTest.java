@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -85,4 +85,4 @@ public class TCGrindingStoneTest {
         assertEquals(7 - value, gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue());
     }
 
-}
+}*/

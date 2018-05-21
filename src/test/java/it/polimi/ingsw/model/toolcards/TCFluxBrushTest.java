@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -108,4 +108,4 @@ public class TCFluxBrushTest {
         assertEquals(gameModel.getField().getDraft().getDraft().get(input.get(0)).getColor(), dice4.getColor());
         assertTrue(gameModel.getField().getDraft().getDraft().contains(dice4));
     }
-}
+}*/

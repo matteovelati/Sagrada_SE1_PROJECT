@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -132,4 +132,4 @@ public class TCLathekinTest {
         assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
         assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(4)][input.get(5)].getIsEmpty());
     }
-}
+}*/

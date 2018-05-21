@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -158,4 +158,4 @@ public class TCEglomiseBrushTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice());
     }
-}
+}*/

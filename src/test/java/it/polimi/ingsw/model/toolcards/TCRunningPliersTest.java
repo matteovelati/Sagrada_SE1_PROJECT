@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.toolcards;
+/*package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -110,4 +110,4 @@ public class TCRunningPliersTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getField().getDraft().getDraft().contains(dice3));
     }
-}
+}*/
