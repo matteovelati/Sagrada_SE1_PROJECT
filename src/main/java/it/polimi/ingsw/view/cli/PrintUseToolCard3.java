@@ -18,10 +18,10 @@ public class PrintUseToolCard3 implements Serializable {
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT A ROW TO PUT THE DICE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT A COLUMN TO PUT THE DICE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             default :
                 System.out.println("ERRORE");

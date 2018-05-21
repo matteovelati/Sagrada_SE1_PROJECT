@@ -30,22 +30,22 @@ public class PrintUseToolCard implements Serializable {
                 System.out.println("WHICH DICE DO YOU WANT TO MODIFY?");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             case 2: case 3:                 //EGLOMISE BRUSH & COPPER FOIL BURNISHER
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT THE ROW OF THE DICE TO MOVE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE COLUMN OF THE DICE TO MOVE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE NEW ROW OF THE DICE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE NEW COLUMN OF THE DICE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             /*case 3:                 //COPPER FOIL BURNISHER
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
@@ -67,32 +67,32 @@ public class PrintUseToolCard implements Serializable {
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT THE ACTUAL ROW");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE ACTUAL COLUMN");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE NEW ROW");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE NEW COLUMN");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             case 5:                 //LENS CUTTER
                 System.out.println("SELECT A DICE FROM THE DRAFT");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT A DICE FROM THE ROUNDTRACK");
                 PrintRoundTrack.print(gameModel.getField().getRoundTrack());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             case 6:                 //FLUX BRUSH
                 System.out.println("SELECT A DICE FROM THE DRAFT TO RE-ROLL");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             case 7:                 //GLAZING HAMMER
                 //Vengono mischiati i dadi nella draft
@@ -101,26 +101,26 @@ public class PrintUseToolCard implements Serializable {
                 System.out.println("SELECT A DICE FROM THE DRAFT");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             case 9:                 //CORK BACKED STRAIGHTEDGE
                 PrintDraft.print(gameModel.getField().getDraft());
                 System.out.println("SELECT A DICE FROM THE DRAFT");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT A ROW TO PUT THE DICE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT A COLUMN TO PUT THE DICE");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             case 10:                //GRINDING STONE
                 System.out.println("SELECT A DICE IN THE DRAFT TO FLIP");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
            /* case 11:                //FLUX REMOVER
                 System.out.println("SELECT A DICE FROM THE DRAFT");
@@ -132,23 +132,23 @@ public class PrintUseToolCard implements Serializable {
                 System.out.println("SELECT A DICE FROM THE ROUNDRACK");
                 PrintRoundTrack.print(gameModel.getField().getRoundTrack());
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 //aggiungo un numero a caso per la volontà della seconda mossa
                 choices.add(2);
                 System.out.println("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT THE ACTUAL ROW");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE ACTUAL COLUMN");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE NEW ROW");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 System.out.println("SELECT THE NEW COLUMN");
                 input = new Scanner(System.in);
-                choices.add(input.nextInt());
+                choices.add(input.nextInt()-1);
                 break;
             default:
                 break;
