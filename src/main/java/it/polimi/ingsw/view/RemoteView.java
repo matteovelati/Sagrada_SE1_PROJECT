@@ -1,6 +1,5 @@
-package it.polimi.ingsw.view.cli;
+package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.GameModel;
 import it.polimi.ingsw.model.RemoteGameModel;
 
 import java.rmi.Remote;

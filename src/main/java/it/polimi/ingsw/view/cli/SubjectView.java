@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.controller.ControllerObserver;
+import it.polimi.ingsw.view.RemoteView;
 
 import java.util.ArrayList;
 import java.util.List;

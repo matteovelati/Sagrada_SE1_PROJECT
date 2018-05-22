@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.view.cli.RemoteView;
-import it.polimi.ingsw.view.cli.ViewCLI;
+import it.polimi.ingsw.view.RemoteView;
 
 import java.rmi.RemoteException;
 
