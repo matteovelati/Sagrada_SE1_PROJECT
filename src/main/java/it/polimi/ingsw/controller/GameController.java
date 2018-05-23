@@ -16,7 +16,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
     public GameController() throws RemoteException{
-        gameModel = new GameModel(LOBBY);
+        gameModel = GameModel.getInstance(LOBBY);
     }
 
 
@@ -54,6 +54,15 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     }
 
 
+    private void nextPlayer(){
+
+        gameModel.getRoundManager().setFirstMove(0);
+        actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
+        gameModel.setActualPlayer(actualPlayer);
+
+    }
+
+
     @Override
     public void update(RemoteView view) throws RemoteException {
 
@@ -88,6 +97,8 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                         if (gameModel.getActualPlayer().getWindow() != null) {
                             gameModel.setState(SELECTMOVE1);
                         } else {
+                            gameModel.getSchemeCards().remove(0);
+                            gameModel.getSchemeCards().remove(0);
                             gameModel.setState(SELECTWINDOW);
                         }
                     }else {
@@ -119,12 +130,12 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 else if(gameModel.getRoundManager().getFirstMove() == 0){//-----------------------------------------------------PASSA TURNO
 
-                    gameModel.getRoundManager().setFirstMove(0);
-                    actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                    gameModel.setActualPlayer(actualPlayer);
+                    nextPlayer();
 
-                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                        gameModel.getRoundManager().endRound(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
+                    if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1) {//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+                        gameModel.setState(ENDROUND);
+                        break;
+                    }
 
                     gameModel.setState(SELECTMOVE1);
 
@@ -162,9 +173,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                         else if (gameModel.getRoundManager().getFirstMove() == 2) {
 
-                            gameModel.getRoundManager().setFirstMove(0);
-                            actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                            gameModel.setActualPlayer(actualPlayer);
+                            nextPlayer();
 
                             //SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
                             if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
@@ -213,9 +222,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                 }
                 else if(view.getChoose1() == 0){
 
-                    gameModel.getRoundManager().setFirstMove(0);
-                    actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                    gameModel.setActualPlayer(actualPlayer);
+                    nextPlayer();
 
                     //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
                     if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1) {
@@ -267,9 +274,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                         // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
                         if (gameModel.getRoundManager().getFirstMove() == 1) {
 
-                            gameModel.getRoundManager().setFirstMove(0);
-                            actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                            gameModel.setActualPlayer(actualPlayer);
+                            nextPlayer();
 
                             //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
                             if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
@@ -311,9 +316,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                         // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
                         if (gameModel.getRoundManager().getFirstMove() == 1) {
 
-                            gameModel.getRoundManager().setFirstMove(0);
-                            actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                            gameModel.setActualPlayer(actualPlayer);
+                            nextPlayer();
 
                             //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
                             if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
@@ -355,9 +358,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                         // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
                         if (gameModel.getRoundManager().getFirstMove() == 1) {
 
-                            gameModel.getRoundManager().setFirstMove(0);
-                            actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
-                            gameModel.setActualPlayer(actualPlayer);
+                            nextPlayer();
 
                             //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
                             if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
