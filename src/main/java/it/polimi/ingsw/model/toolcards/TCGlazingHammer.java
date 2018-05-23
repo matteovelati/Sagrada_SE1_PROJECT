@@ -10,7 +10,7 @@ import java.util.Random;
 public class TCGlazingHammer extends Card implements ToolCard {
 
     private boolean isUsed;
-    private Dice dicetmp;
+    //private Dice dicetmp;
     private int calls = 1;
 
     public TCGlazingHammer(){
@@ -68,9 +68,10 @@ public class TCGlazingHammer extends Card implements ToolCard {
     private void reRoll(Draft draft){
         Random r = new Random();
         for (int i=0; i<draft.getDraft().size(); i++) {
-            dicetmp = draft.getDraft().get(i);
+            draft.getDraft().get(i).modifyValue(r.nextInt(6) + 1);
+            /*dicetmp = draft.getDraft().get(i);
             dicetmp.modifyValue(r.nextInt(6) + 1);
-            draft.getDraft().set(i, dicetmp);
+            draft.getDraft().set(i, dicetmp);*/
         }
     }
 }

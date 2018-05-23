@@ -52,14 +52,18 @@ public class TCRunningPliers extends Card implements ToolCard {
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice dado draft
-        if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getFirstMove() == 1 /*ha selezionato un dado*/){
-            draftDie(gameModel.getActualPlayer(), gameModel.getField().getDraft(), input.get(0));
-            if(!getIsUsed())
-                setIsUsed(true);
-            return true;
+        //IN 0 (-1) PER ANNULLARE
+        if (input.get(0) != -1) {
+            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getFirstMove() == 1 /*ha selezionato un dado*/) {
+                draftDie(gameModel.getActualPlayer(), gameModel.getField().getDraft(), input.get(0));
+                if (!getIsUsed())
+                    setIsUsed(true);
+                return true;
+            } else
+                return false;
         }
         else
-            return false;
+            return false;   //con questo false NON deve richiamare il metodo
     }
 
 

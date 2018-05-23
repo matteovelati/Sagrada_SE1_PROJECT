@@ -10,7 +10,8 @@ public class TCLensCutter extends Card implements ToolCard {
 
     private boolean isUsed;
     private Dice dicetmp;
-    private int calls = 1;
+    private int calls = 2;
+    private int flag = 1;
 
     public TCLensCutter(){
         this.isUsed = false;
@@ -52,11 +53,26 @@ public class TCLensCutter extends Card implements ToolCard {
 
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist in 0 indice dado draft, in 1 indice dado roundtrack
-        swapDice(gameModel.getField().getRoundTrack(), input.get(1), gameModel.getField().getDraft(), input.get(0));
-        if(!getIsUsed())
-            setIsUsed(true);
-        return true;
+        //arraylist in 0 indice dado draft, in 1 indice dado roundtrack, in 2,3 le i,j della new pos
+        //IN 0 (-1) PER ANNULLARE
+        if (input.get(0) != -1) {
+            if (flag == 1) {
+                flag = 2;
+                swapDice(gameModel.getField().getRoundTrack(), input.get(1), gameModel.getField().getDraft(), input.get(0));
+                if (!getIsUsed())
+                    setIsUsed(true);
+                return true;
+            } else if (flag == 2) {
+                if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) {
+                    gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+                    return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
+                } else
+                    return false;
+            } else
+                return false;
+        }
+        else
+            return false; //questo false NON deve richiamare il metodo
     }
 
 

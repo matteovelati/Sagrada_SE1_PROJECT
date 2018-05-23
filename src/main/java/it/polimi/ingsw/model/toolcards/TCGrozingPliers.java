@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class TCGrozingPliers extends Card implements ToolCard {
 
     private boolean isUsed;
-    private int calls = 1;
+    private int calls = 3;
+    private int flag = 1;
 
     public TCGrozingPliers(){
         this.isUsed = false;
@@ -51,19 +52,33 @@ public class TCGrozingPliers extends Card implements ToolCard {
 
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        // arraylist: in 0 mettere '-1' per decreamentare; in 1 posizione dado draft
+        // arraylist: in 0 posizione dado draft; in 1 mettere '-1' per decreamentare; in 2,3 le i,j della new pos
+        //IN 0 (-1) PER ANNULLARE
         boolean check;
-        if (input.get(0) == -1)
-            check = (decreaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
-        else
-            check = (increaseValue(gameModel.getField().getDraft().getDraft().get( input.get(1) )));
-        if (check){
-            if(!getIsUsed())
-                setIsUsed(true);
-            return true;
+        if (input.get(0) != -1) {
+            if (flag == 1) {
+                flag = 2;
+                if (input.get(0) == -1)
+                    check = (decreaseValue(gameModel.getField().getDraft().getDraft().get(input.get(1))));
+                else
+                    check = (increaseValue(gameModel.getField().getDraft().getDraft().get(input.get(1))));
+                if (check) {
+                    if (!getIsUsed())
+                        setIsUsed(true);
+                    return true;
+                } else
+                    return false;
+            } else if (flag == 2) {
+                if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) {
+                    gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+                    return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
+                } else
+                    return false;
+            } else
+                return false;
         }
         else
-            return false;
+            return false; //questo false NON deve richiamare il metodo
     }
 
     private boolean increaseValue(Dice dice){

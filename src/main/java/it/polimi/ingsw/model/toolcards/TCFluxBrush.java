@@ -55,24 +55,27 @@ public class  TCFluxBrush extends Card implements ToolCard {
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice dado draft; 1,2 le i,j della new pos
-        if (flag == 1){
-            flag = 2;
-            reRoll(gameModel.getField().getDraft(), input.get(0));
-            if(!getIsUsed())
-                setIsUsed(true);
-            return true;
-        }
-        else if (flag == 2){
-            flag = 1;
-            if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2))) {
-                gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
-                return (gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
+        //IN 0 (-1) PER ANNULLARE
+        if (input.get(0) != -1) {
+            if (flag == 1) {
+                flag = 2;
+                reRoll(gameModel.getField().getDraft(), input.get(0));
+                if (!getIsUsed())
+                    setIsUsed(true);
+                return true;
+            } else if (flag == 2) {
+                flag = 1;
+                if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2))) {
+                    gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+                    return (gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
+                }
+                return false;
             }
-            return
-                    false;
+            else
+                return false;
         }
         else
-            return false;
+            return false; //questo false NON deve richiamare il metodo
     }
 
 
