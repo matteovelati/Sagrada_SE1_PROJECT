@@ -13,9 +13,9 @@ public class Player implements Serializable {
     private ToolCard toolCardSelected;
     private int finalScore;
 
-    public Player(String username){
+    public Player(String username, Colors color){
         this.username = username;
-        setPrivateObjective();
+        setPrivateObjective(color);
     }
 
     public Dice getDice() {
@@ -76,8 +76,8 @@ public class Player implements Serializable {
         }
     }
 
-    public void setPrivateObjective() {
-        this.privateObjective = new PrivateObjective();
+    public void setPrivateObjective(Colors color) {
+        this.privateObjective = new PrivateObjective(color);
     }
 
     public void setFinalScore(int finalScore){

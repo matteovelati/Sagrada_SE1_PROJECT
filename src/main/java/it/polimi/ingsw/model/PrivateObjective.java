@@ -8,8 +8,8 @@ public class PrivateObjective extends Card implements Serializable {
 
     private ArrayList<Colors> allColors = new ArrayList<>(0);
 
-    public PrivateObjective(){
-        Colors colortmp;
+    public PrivateObjective(Colors color){
+        /*Colors colortmp;
         if (allColors.isEmpty()) {
             allColors.add(Colors.B);
             allColors.add(Colors.Y);
@@ -18,34 +18,34 @@ public class PrivateObjective extends Card implements Serializable {
             allColors.add(Colors.P);
         }
         Collections.shuffle(allColors);
-        colortmp = allColors.remove(0);
+        colortmp = allColors.remove(0);*/
 
 
         super.setIdNumber(0);
-        switch (colortmp){
+        switch (color){
             case B:
                 super.setName("Shades of Blue");
-                super.setDescription("Private sum of values on blue dice");
+                super.setDescription("Private sum of values on BLUE dice\n");
                 super.setColor(Colors.B);
                 break;
             case G:
                 super.setName("Shades of Green");
-                super.setDescription("Private sum of values on green dice\n");
+                super.setDescription("Private sum of values on GREEN dice\n");
                 super.setColor(Colors.G);
                 break;
             case P:
                 super.setName("Shades of Purple");
-                super.setDescription("Private sum of values on purple dice\n");
+                super.setDescription("Private sum of values on PURPLE dice\n");
                 super.setColor(Colors.P);
                 break;
             case R:
                 super.setName("Shades of Red");
-                super.setDescription("Private sum of values on red dice\n");
+                super.setDescription("Private sum of values on RED dice\n");
                 super.setColor(Colors.R);
                 break;
             case Y:
                 super.setName("Shades of Yellow");
-                super.setDescription("Private sum of values on yellow dice\n");
+                super.setDescription("Private sum of values on YELLOW dice\n");
                 super.setColor(Colors.Y);
                 break;
             default:
@@ -53,7 +53,7 @@ public class PrivateObjective extends Card implements Serializable {
                 break;
         }
     }
-    
+
     public int calculateScore(Player player){                   //+1 per ogni dado dello stesso colore,
         int score = 0;                                          //+n segnalini favore residui,
         for (int i = 0; i < 4; i++){                            //-1 per ogni casella vuota

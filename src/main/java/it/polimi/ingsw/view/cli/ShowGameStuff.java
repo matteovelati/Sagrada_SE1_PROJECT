@@ -16,7 +16,8 @@ public class ShowGameStuff {
         System.out.println("3) SEE THE TOOLCARDS");
         System.out.println("4) SEE THE PUBLIC OBJECTIVES");
         System.out.println("5) SEE YOUR PRIVATE OBJECTIVES");
-        System.out.println("6) SEE THE WINDOWS OF OTHER PLAYERS");
+        System.out.println("6) SEE THE ROUNDTRACK");
+        System.out.println("7) SEE THE WINDOWS OF OTHER PLAYERS");
         System.out.println("0) CONTINUE WITH YOUR TURN");
 
         Scanner input = new Scanner(System.in);
@@ -39,6 +40,9 @@ public class ShowGameStuff {
                 PrintPrivateObjective.print(gameModel.getActualPlayer().getPrivateObjective());
                 break;
             case 6:
+                PrintRoundTrack.print(gameModel.getField().getRoundTrack());
+                break;
+            case 7:
                 for(int i=0; i<gameModel.getPlayers().size(); i++){
                     if(!gameModel.getPlayers().get(i).equals(gameModel.getActualPlayer())){
                         System.out.println(gameModel.getPlayers().get(i).getUsername() +"'s WINDOW");

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.view.RemoteView;
 
+import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -32,4 +33,6 @@ public interface RemoteGameModel extends Remote {
     public Player getActualPlayer() throws RemoteException;
 
     public RoundManager getRoundManager() throws RemoteException;
+
+    public ArrayList<Colors> getAllColors() throws RemoteException;
 }

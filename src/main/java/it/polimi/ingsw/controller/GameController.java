@@ -69,9 +69,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         switch(gameModel.getState()){
 
             case LOBBY:
-
-                gameModel.setPlayers(new Player(view.getUser()));
-
+                gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
                 if(gameModel.getPlayers().size() == 2){
                     gameModel.setDraft();
                     gameModel.setSchemeCards();

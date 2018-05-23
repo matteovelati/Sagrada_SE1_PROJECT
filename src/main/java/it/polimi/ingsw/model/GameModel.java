@@ -5,6 +5,7 @@ import it.polimi.ingsw.view.RemoteView;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -12,26 +13,33 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     private List<RemoteView> list = new ArrayList<>();
     private ArrayList<Player> players;
+    private ArrayList<Colors> allColors = new ArrayList<>(5);
     private Field field;
     private Bag bag;
     private ArrayList<SchemeCard> schemeCards;
     private States state;
     private Player actualPlayer;
     private RoundManager roundManager;
+    private static GameModel instance;
 
 
-    public GameModel(ArrayList<Player> players, States state){}
-    //COSTRUTTORE
-    public GameModel(States state) {
+    private GameModel(States state) {
         this.players = new ArrayList<>();
         this.state = state;
         field = Field.getInstance();
         bag = Bag.getInstance();
         roundManager = RoundManager.getInstance();
-        schemeCards = new ArrayList<>();
+        setAllColors();
+    }
+
+    public static GameModel getInstance(States state){
+        if (instance == null)
+            instance = new GameModel(state);
+        return instance;
     }
 
     public void setSchemeCards(){
+        schemeCards = new ArrayList<>();
         ArrayList<Integer> allSchemeCards = new ArrayList<>();
         Random r = new Random();
         for (int x=1; x<13; x++){
@@ -68,6 +76,13 @@ public class GameModel implements RemoteGameModel, Serializable {
         actualPlayer = players.get(i);
     }
 
+    private void setAllColors(){
+        allColors.add(Colors.B);
+        allColors.add(Colors.Y);
+        allColors.add(Colors.G);
+        allColors.add(Colors.R);
+        allColors.add(Colors.P);
+    }
 
     //GETTER (tutti)
     @Override
@@ -98,19 +113,16 @@ public class GameModel implements RemoteGameModel, Serializable {
     public RoundManager getRoundManager(){
         return roundManager;
     }
-
-
-    //SETTA L'ARRAY DI 2 SCHEMECARD DA MOSTRARE AL PLAYER PER LA SCELTA
-    public void showSchemeCard(){
-
+    @Override
+    public ArrayList<Colors> getAllColors(){
+        Collections.shuffle(allColors);
+        return allColors;
     }
-
 
     //CHIAMA IL METODO DEL GIOCATORE CHE SETTA LA WINDOW SCELTA (i)
     public boolean playerSetWindow(int i){
         return actualPlayer.setWindow(schemeCards.get(0), schemeCards.get(1), i);
     }
-
 
     //CHIAMA IL METODO DEL GIOCATORE CHE SELEZIONA IL DADO SCELTO (i)
     public void playerPickDice(int i){

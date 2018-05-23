@@ -85,7 +85,7 @@ public class TCFluxRemover extends Card implements ToolCard {
         Random r = new Random();
         dicetmp = draft.getDraft().get(i);
         bag.getBag().add(dicetmp);
-        dicetmp = bag.extract((r.nextInt(bag.getBag().size()) + 1));
+        dicetmp = bag.extract(r.nextInt(bag.getBag().size()));
         dicetmp.setValue();
         draft.getDraft().set(i, dicetmp);
     }
