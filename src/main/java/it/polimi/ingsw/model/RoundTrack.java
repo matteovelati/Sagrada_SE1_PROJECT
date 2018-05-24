@@ -9,9 +9,11 @@ public class RoundTrack implements Serializable {
     private static RoundTrack instance = null;
     private ArrayList<Dice> grid;
     private Dice dicetmp;
+    private int round;
 
     private RoundTrack(){
         grid = new ArrayList<Dice>(10);
+        round = 1;
     }
 
     public static RoundTrack getInstance(){
@@ -21,15 +23,11 @@ public class RoundTrack implements Serializable {
     }
 
     public void setGrid(Dice dice){
-
-        if(this.getRound() < 10) {
             grid.add(dice);
-        }
+    }
 
-        else{
-            System.out.println("Error");
-        }
-
+    public void incrementRound(){
+        round++;
     }
 
     public ArrayList<Dice> getGrid(){
@@ -37,7 +35,7 @@ public class RoundTrack implements Serializable {
     }
 
     public int getRound(){
-        return grid.size() + 1;
+        return round;
     }
 
     public Dice changeDice(int i, Dice dice){       //metodo toolcard

@@ -145,7 +145,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 return;
             }
             if(state.equals(States.SELECTCARD)){
-                System.out.println("SELECT A TOOLCARD");
+                System.out.println("SELECT A TOOLCARD (-1 TO ABORT)");
                 PrintToolCard.print(gameModel.getField().getToolCards());
                 input = new Scanner(System.in);
                 setChoose1(input.nextInt());

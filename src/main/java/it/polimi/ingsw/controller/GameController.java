@@ -11,7 +11,7 @@ import static it.polimi.ingsw.model.States.*;
 public class GameController extends UnicastRemoteObject implements ControllerObserver, RemoteGameController {
 
     private GameModel gameModel;
-    private int actualPlayer;
+    private int actualPlayer, check;
     private States beforeError;
 
 
@@ -36,7 +36,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
         int score;
 
-        for(int i=0; i<gameModel.getPlayers().size(); i++) {
+        for(Player players : gameModel.getPlayers()) {
 
             //calcolo punteggio degli obiettivi privati
             score = gameModel.getActualPlayer().getPrivateObjective().calculateScore(gameModel.getActualPlayer());
@@ -60,6 +60,43 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         actualPlayer = gameModel.getRoundManager().changeActualPlayer(actualPlayer, gameModel.getPlayers().size());
         gameModel.setActualPlayer(actualPlayer);
 
+    }
+
+
+    private boolean setNextState() throws RemoteException {
+        // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
+        if (gameModel.getRoundManager().getFirstMove() == 1 || gameModel.getActualPlayer().getToolCardSelected().getForceTurn()) {
+
+            nextPlayer();
+
+            //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
+                gameModel.setState(ENDROUND);
+                return false;
+            }
+
+            gameModel.setState(SELECTMOVE1);
+
+        } else if (gameModel.getRoundManager().getFirstMove() == 2)
+            gameModel.setState(SELECTMOVE2);
+
+        return true;
+    }
+
+
+    private void checkError(int i) throws RemoteException {
+
+        if(i!=-1){
+            beforeError = gameModel.getState();
+            System.out.println("ERRORE");
+            gameModel.setState(ERROR);//ERRORE NELL'USO DELLA TOOLCARD
+        }else{
+            if (check == 1) {
+                gameModel.setState(SELECTMOVE1);
+            } else if(check == 2) {
+                gameModel.setState(SELECTMOVE2);
+            }
+        }
     }
 
 
@@ -123,6 +160,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                 }
 
                 else if(gameModel.getRoundManager().getFirstMove() == 2){
+                    check = 1;
                     gameModel.setState(SELECTCARD);
                 }
 
@@ -207,8 +245,10 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                 if(view.getChoose1() == 1){
 
                     //SE LA PRIMA MOSSA EFFETTUATA è SELEZIONE DADO LA SECONDA SARà SELEZIONA CARTA E VICEVERSA
-                    if(gameModel.getRoundManager().getFirstMove() == 1)
+                    if(gameModel.getRoundManager().getFirstMove() == 1) {
+                        check = 2;
                         gameModel.setState(SELECTCARD);
+                    }
                     else if(gameModel.getRoundManager().getFirstMove() == 2)
                         gameModel.setState(SELECTDRAFT);
                     else {
@@ -245,17 +285,22 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if (view.getChoose1() > 0 && view.getChoose1() < 4){//----------VERIFICA INPUT
 
-                    if(gameModel.playerSelectToolCard(view.getChoose1()-1)){
-                        gameModel.setState(USETOOLCARD);
-                    }else{
-                        beforeError = gameModel.getState();
-                        System.out.println("SELECTCARD segnalini favore non sufficienti/n");
-                        gameModel.setState(ERROR);//----------------------------------SEGNALINI FAVORE NON SUFFICIENTI
+                    if(check==2 && gameModel.getField().getToolCards().getForceTurn()){
+                        gameModel.setState(SELECTCARD);
+                        break;
                     }
-                }else{
-                    beforeError = gameModel.getState();
-                    System.out.println("SELECTCARD input non corretto/n");
-                    gameModel.setState(ERROR);//--------------------------------------INPUT NON CORRETTO
+                    else{
+                        if(gameModel.playerSelectToolCard(view.getChoose1()-1)){
+                            gameModel.setState(USETOOLCARD);
+                        }else{
+                            beforeError = gameModel.getState();
+                            System.out.println("SELECTCARD segnalini favore non sufficienti/n");
+                            gameModel.setState(ERROR);//----------------------------------SEGNALINI FAVORE NON SUFFICIENTI
+                        }
+                    }
+                }
+                else{
+                    checkError(view.getChoose1());
                 }
 
                 break;
@@ -268,36 +313,14 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                     //SE LA TOOLCARD CONSISTE IN UNA SOLA FASE PASSA ALLA FASE DI GIOCO SUCCESSIVA, ALTRIMENTI PASSA ALLA SECONDA FASE DELLA TOOLCARD
                     if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1) {
-
-                        // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-                        if (gameModel.getRoundManager().getFirstMove() == 1) {
-
-                            nextPlayer();
-
-                            //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
-                                gameModel.setState(ENDROUND);
-                                break;
-                            }
-
-                            gameModel.setState(SELECTMOVE1);
-
-                        } else if (gameModel.getRoundManager().getFirstMove() == 2)
-                            gameModel.setState(SELECTMOVE2);
-                        else {
-                            beforeError = gameModel.getState();
-                            System.out.println("USETOOLCARD valore first move non riconosciuto/n");
-                            gameModel.setState(ERROR);
-                        }
-                    }
-                    else{
+                        if(!setNextState())
+                            break;
+                    } else{
                         gameModel.setState(USETOOLCARD2);
                     }
                 }
                 else {
-                    beforeError = gameModel.getState();
-                    System.out.println("USETOOLCARD errore nell'uso della toolcard/n");
-                    gameModel.setState(ERROR);//ERRORE NELL'USO DELLA TOOLCARD
+                    checkError(view.getChoices().get(0));
                 }
 
                 break;
@@ -310,29 +333,9 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                     //SE LA TOOLCARD CONSISTE IN DUE FASI PASSA ALLA FASE DI GIOCO SUCCESSIVA, ALTRIMENTI PASSA ALLA TERZA FASE DELLA TOOLCARD
                     if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 2) {
-
-                        // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-                        if (gameModel.getRoundManager().getFirstMove() == 1) {
-
-                            nextPlayer();
-
-                            //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
-                                gameModel.setState(ENDROUND);
+                            if (!setNextState())
                                 break;
-                            }
-
-                            gameModel.setState(SELECTMOVE1);
-
-                        } else if (gameModel.getRoundManager().getFirstMove() == 2)
-                            gameModel.setState(SELECTMOVE2);
-                        else {
-                            beforeError = gameModel.getState();
-                            System.out.println("USETOOLCARD2 valore first move non riconosciuto/n");
-                            gameModel.setState(ERROR);
-                        }
-                    }
-                    else{
+                    }else{
                         gameModel.setState(USETOOLCARD3);
                     }
                 }
@@ -350,34 +353,10 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if(gameModel.playerUseToolCard(view.getChoices())) {
 
-                    //SE LA TOOLCARD CONSISTE IN 3 FASI PASSA ALLA FASE DI GIOCO SUCCESSIVA, ALTRIMENTI PASSA ALLO STATO DI ERRORE
+                    //SE LA TOOLCARD CONSISTE IN 3 FASI PASSA ALLA FASE DI GIOCO SUCCESSIVA
                     if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 3) {
-
-                        // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-                        if (gameModel.getRoundManager().getFirstMove() == 1) {
-
-                            nextPlayer();
-
-                            //---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
-                            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getCounter() == 1) {
-                                gameModel.setState(ENDROUND);
-                                break;
-                            }
-
-                            gameModel.setState(SELECTMOVE1);
-
-                        } else if (gameModel.getRoundManager().getFirstMove() == 2)
-                            gameModel.setState(SELECTMOVE2);
-                        else {
-                            beforeError = gameModel.getState();
-                            System.out.println("TOOLCARD3 valore first move non riconosciuto");
-                            gameModel.setState(ERROR);
-                        }
-                    }
-                    else{
-                        beforeError = gameModel.getState();
-                        System.out.println("TOOLCARD3 calls > 3");
-                        gameModel.setState(ERROR);//-----------ERRORE SE CALLS è > 3
+                        if(!setNextState())
+                            break;
                     }
                 }
                 else {
@@ -394,11 +373,9 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 gameModel.getRoundManager().endRound(gameModel.getField().getDraft(), gameModel.getField().getRoundTrack());
 
-                if(gameModel.getField().getRoundTrack().getRound() == 10) {
-
+                if(gameModel.getField().getRoundTrack().getRound() == 11) {
                     scoreCalculation();
                     gameModel.setState(ENDMATCH);
-
                 }
                 else {
 
