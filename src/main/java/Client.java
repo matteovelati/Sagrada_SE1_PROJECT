@@ -16,6 +16,6 @@ public class Client {
 
         RemoteGameController centralNetwork = (RemoteGameController) registry.lookup(remoteObj);
 
-       ViewCLI view = new ViewCLI(centralNetwork);
+       new ViewCLI(centralNetwork);
     }
 }

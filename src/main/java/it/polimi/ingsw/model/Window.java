@@ -474,9 +474,17 @@ public class Window implements Serializable {
     }
 
     public void setWindow(Dice dice, int i, int j){
-        boolean check;
+        boolean check = true;
         this.window[i][j].setDice(dice);
-        
+        for (Space[] matrix : window){
+            for (Space space : matrix){
+                if (!space.getIsEmpty()){
+                    this.setIsEmpty(false);
+                    return;
+                }
+            }
+        }
+        this.setIsEmpty(true);
     }
 
     public boolean neighboursColorRestriction(Dice dice, int i, int j){

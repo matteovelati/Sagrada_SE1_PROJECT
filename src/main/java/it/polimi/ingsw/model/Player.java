@@ -115,7 +115,6 @@ public class Player implements Serializable {
         if(this.window.getIsEmpty()){
             if (this.window.verifyFirstDiceRestriction(dice, i, j)) {
                 this.window.setWindow(dice, i, j);
-                this.window.setIsEmpty(false);
                 return true;
             }
             else

@@ -31,14 +31,17 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     public ViewCLI(RemoteGameController network) throws RemoteException {
         choices = new ArrayList<>();
         endGame = false;
-        input = new Scanner(System.in);
-        System.out.println("ENTER YOUR USERNAME:");
-        user = input.next();
-        this.network = network;
+        setUser();
         gameModel = network.getGameModel();
         network.addObserver(this);
         network.update(this);
+    }
 
+    @Override
+    public void setUser() throws RemoteException {
+        input = new Scanner(System.in);
+        System.out.println("ENTER YOUR USERNAME:");
+        this.user = input.next().toUpperCase();
     }
 
     @Override
@@ -79,6 +82,12 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
         if(state.equals(States.LOBBY)){
             System.out.println("WAIT OTHER PLAYERS JOIN THE GAME");
+            return;
+        }
+        if(state.equals(States.USERERROR)){
+            System.out.println("NOT VALID USERNAME");
+            setUser();
+            network.update(this);
             return;
         }
         if(state.equals(States.ENDROUND)){

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public interface RemoteView extends Remote {
 
+    public void setUser() throws RemoteException;
+
     public String getUser() throws RemoteException;
 
     public int getChoose1() throws RemoteException;
@@ -21,4 +23,5 @@ public interface RemoteView extends Remote {
     public void update(RemoteGameModel gameModel) throws RemoteException;
 
     public void print(String string) throws RemoteException;
+
 }
