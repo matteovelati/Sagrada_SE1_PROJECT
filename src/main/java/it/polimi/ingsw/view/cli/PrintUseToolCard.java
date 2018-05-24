@@ -113,7 +113,7 @@ public class PrintUseToolCard implements Serializable {
             case 7:                 //GLAZING HAMMER
                 //Vengono mischiati i dadi nella draft
                 break;
-            case 8: case 11:                 //RUNNING PLIERS & FLUX REMOVER
+            case 11:                 //FLUX REMOVER
                 System.out.println("SELECT A DICE FROM THE DRAFT");
                 System.out.println(stop);
                 PrintDraft.print(gameModel.getField().getDraft());
@@ -125,7 +125,7 @@ public class PrintUseToolCard implements Serializable {
                 }
                 choices.add(tmp-1);
                 break;
-            case 9:                 //CORK BACKED STRAIGHTEDGE
+            case 8: case 9:          //RUNNING PLIERS & CORK BACKED STRAIGHTEDGE
                 System.out.println("SELECT A DICE FROM THE DRAFT");
                 System.out.println(stop);
                 PrintDraft.print(gameModel.getField().getDraft());

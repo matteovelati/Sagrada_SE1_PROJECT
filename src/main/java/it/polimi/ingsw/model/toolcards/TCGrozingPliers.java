@@ -76,7 +76,8 @@ public class TCGrozingPliers extends Card implements ToolCard {
                     return false;
             } else if (flag == 2) {
                 flag = 1;
-                if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) {
+                if ((gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) ||
+                        (gameModel.getActualPlayer().getWindow().getIsEmpty() && gameModel.getActualPlayer().getWindow().verifyFirstDiceRestriction(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3)))) {
                     gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
                     return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
                 } else

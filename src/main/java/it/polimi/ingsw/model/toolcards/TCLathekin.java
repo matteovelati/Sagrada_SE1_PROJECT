@@ -98,7 +98,7 @@ public class TCLathekin extends Card implements ToolCard {
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
         dicetmp = window.getWindow()[i][j].getDice();
         window.getWindow()[i][j].setDice(null);
-        if (window.verifyAllRestrictions(dicetmp, x, y)){
+        if ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y))){
             window.getWindow()[x][y].setDice(dicetmp);
             return true;
         }

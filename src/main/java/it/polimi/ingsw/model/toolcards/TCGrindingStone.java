@@ -69,7 +69,8 @@ public class TCGrindingStone extends Card implements ToolCard {
                 return true;
             } else if (flag == 2) {
                 flag = 1;
-                if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2))) {
+                if ((gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2))) ||
+                        (gameModel.getActualPlayer().getWindow().getIsEmpty() && gameModel.getActualPlayer().getWindow().verifyFirstDiceRestriction(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2)))) {
                     gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
                     return (gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
                 } else

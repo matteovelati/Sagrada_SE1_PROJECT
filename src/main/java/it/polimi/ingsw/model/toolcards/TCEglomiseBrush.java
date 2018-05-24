@@ -69,7 +69,8 @@ public class TCEglomiseBrush extends Card implements ToolCard {
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
         dicetmp = window.getWindow()[i][j].getDice();
         window.getWindow()[i][j].setDice(null);
-        if (window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.neighboursPositionRestriction(x, y) && window.spaceNumberRestriction(dicetmp, x, y)){
+        if ((window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.neighboursPositionRestriction(x, y) && window.spaceNumberRestriction(dicetmp, x, y)) ||
+                (window.getIsEmpty() && window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.spaceNumberRestriction(dicetmp, x, y))){
             window.getWindow()[x][y].setDice(dicetmp);
             if(!getIsUsed())
                 setIsUsed(true);

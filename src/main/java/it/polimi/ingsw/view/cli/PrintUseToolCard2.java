@@ -17,7 +17,7 @@ public class PrintUseToolCard2 implements Serializable {
         int tmp;
 
         switch (toolCard.getNumber()){
-            case 1: case 5: case 10:           //GROZING PLIERS & LENS CUTTER & GRINDING STONE
+            case 1: case 5: case 10:         //GROZING PLIERS & LENS CUTTER & GRINDING STONE
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT A ROW TO PUT THE DIE");
                 System.out.println(STOP);

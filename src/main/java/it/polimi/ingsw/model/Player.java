@@ -84,14 +84,12 @@ public class Player implements Serializable {
         this.finalScore = finalScore;
     }
 
-
-
     public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
 
         toolCardSelected = toolCards.get(i);
         if(toolCardSelected.getIsUsed()){
             if(this.tokens >= 2) {
-                this.tokens = this.tokens - 2;
+                //this.tokens = this.tokens - 2;
                 return true;
             }
             else
@@ -99,8 +97,8 @@ public class Player implements Serializable {
         }
         else{
             if(this.tokens >= 1){
-                this.tokens --;
-                toolCards.get(i).setIsUsed(true);
+                //this.tokens --;
+                //toolCards.get(i).setIsUsed(true);
                 return true;
             }
             else

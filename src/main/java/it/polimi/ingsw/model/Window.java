@@ -474,7 +474,9 @@ public class Window implements Serializable {
     }
 
     public void setWindow(Dice dice, int i, int j){
+        boolean check;
         this.window[i][j].setDice(dice);
+        
     }
 
     public boolean neighboursColorRestriction(Dice dice, int i, int j){
