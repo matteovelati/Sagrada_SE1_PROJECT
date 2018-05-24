@@ -8,7 +8,9 @@ import java.util.ArrayList;
 public class TCRunningPliers extends Card implements ToolCard {
 
     private boolean isUsed;
-    private int calls = 1;
+    private int calls = 2;
+    private int flag = 1;
+    private boolean forceTurn = false;
 
     public TCRunningPliers(){
         this.isUsed = false;
@@ -50,20 +52,40 @@ public class TCRunningPliers extends Card implements ToolCard {
     }
 
     @Override
+    public boolean getForceTurn() {
+        return forceTurn;
+    }
+
+    @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist in 0 indice dado draft
+        //arraylist in 0 indice dado draft; in 1,2 le i,j della new pos
         //IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
-            if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getFirstMove() == 1 /*ha selezionato un dado*/) {
-                draftDie(gameModel.getActualPlayer(), gameModel.getField().getDraft(), input.get(0));
-                if (!getIsUsed())
-                    setIsUsed(true);
-                return true;
-            } else
+            if (flag == 1) {
+                if (gameModel.getRoundManager().getTurn() == 1 && gameModel.getRoundManager().getFirstMove() == 1 /*ha selezionato un dado*/) {
+                    draftDie(gameModel.getActualPlayer(), gameModel.getField().getDraft(), input.get(0));
+                    if (!getIsUsed())
+                        setIsUsed(true);
+                    flag = 2;
+                    return true;
+                } else
+                    return false;
+            }
+            if (flag == 2){
+                flag = 1;
+                if (gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(1), input.get(2))) {
+                    gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
+                    return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
+                } else
+                    return false;
+            }
+            else
                 return false;
         }
-        else
+        else {
+            flag = 1;
             return false;   //con questo false NON deve richiamare il metodo
+        }
     }
 
 

@@ -13,6 +13,7 @@ public class  TCFluxBrush extends Card implements ToolCard {
     private Dice dicetmp;
     private int calls = 2;
     private int flag = 1;
+    private boolean forceTurn = true;
 
     public TCFluxBrush(){
         this.isUsed = false;
@@ -53,6 +54,11 @@ public class  TCFluxBrush extends Card implements ToolCard {
     }
 
     @Override
+    public boolean getForceTurn() {
+        return forceTurn;
+    }
+
+    @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice dado draft; 1,2 le i,j della new pos
         //IN 0 (-1) PER ANNULLARE
@@ -74,8 +80,10 @@ public class  TCFluxBrush extends Card implements ToolCard {
             else
                 return false;
         }
-        else
+        else {
+            flag = 1;
             return false; //questo false NON deve richiamare il metodo
+        }
     }
 
 

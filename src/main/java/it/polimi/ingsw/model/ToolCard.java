@@ -12,5 +12,6 @@ public interface ToolCard{
     String getDescr();
     Colors getColor();
     int getCalls();
+    boolean getForceTurn();
 
 }

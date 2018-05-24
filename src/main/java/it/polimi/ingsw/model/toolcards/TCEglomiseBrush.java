@@ -11,6 +11,7 @@ public class TCEglomiseBrush extends Card implements ToolCard {
     private boolean isUsed;
     private Dice dicetmp;
     private int calls = 1;
+    private boolean forceTurn = false;
 
     public TCEglomiseBrush(){
         this.isUsed = false;
@@ -48,6 +49,11 @@ public class TCEglomiseBrush extends Card implements ToolCard {
     @Override
     public int getCalls(){
         return calls;
+    }
+
+    @Override
+    public boolean getForceTurn() {
+        return forceTurn;
     }
 
     @Override

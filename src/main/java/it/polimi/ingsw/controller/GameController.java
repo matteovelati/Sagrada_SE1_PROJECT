@@ -285,7 +285,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if (view.getChoose1() > 0 && view.getChoose1() < 4){//----------VERIFICA INPUT
 
-                    if(check==2 && gameModel.getField().getToolCards().getForceTurn()){
+                    if(check==2 && gameModel.getField().getToolCards().get(view.getChoose1()-1).getForceTurn()){
                         gameModel.setState(SELECTCARD);
                         break;
                     }
@@ -340,9 +340,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     }
                 }
                 else {
-                    beforeError = gameModel.getState();
-                    System.out.println("USETOOLCARD2 errore nell'uso della toolcard");
-                    gameModel.setState(ERROR);//ERRORE NELL'USO DELLA TOOLCARD
+                    checkError(view.getChoices().get(0));
                 }
 
                 break;
@@ -360,9 +358,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     }
                 }
                 else {
-                    beforeError = gameModel.getState();
-                    System.out.println("USETOOLCARD 3 errore nell'uso della toolcard");
-                    gameModel.setState(ERROR);//ERRORE NELL'USO DELLA TOOLCARD
+                    checkError(view.getChoices().get(0));
                 }
 
                 break;
