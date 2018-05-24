@@ -105,21 +105,14 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
         switch(gameModel.getState()){
 
-            case LOBBY: case USERERROR:
+            case LOBBY:
 
-                for (int i = 0; i < gameModel.getPlayers().size(); i++) {
-                    if (gameModel.getPlayers().get(i).getUsername().equals(view.getUser())) {
-                        gameModel.setState(USERERROR);
-                        return;
-                    }
-                }
                 gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
-                if(gameModel.getPlayers().size() == 2){
+                if (gameModel.getPlayers().size() == 2) {
                     gameModel.setDraft();
                     gameModel.setSchemeCards();
                     gameModel.setState(SELECTWINDOW);
-                }
-                else{
+                } else {
                     gameModel.setState(LOBBY);
                 }
                 break;

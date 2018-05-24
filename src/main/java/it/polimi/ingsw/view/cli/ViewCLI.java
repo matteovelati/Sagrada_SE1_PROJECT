@@ -31,9 +31,13 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     public ViewCLI(RemoteGameController network) throws RemoteException {
         choices = new ArrayList<>();
         endGame = false;
-        setUser();
+        this.network = network;
+        //setUser();
         gameModel = network.getGameModel();
         network.addObserver(this);
+        do{
+            setUser();
+        } while (!verifyUser(user));
         network.update(this);
     }
 
@@ -82,12 +86,6 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
         if(state.equals(States.LOBBY)){
             System.out.println("WAIT OTHER PLAYERS JOIN THE GAME");
-            return;
-        }
-        if(state.equals(States.USERERROR)){
-            System.out.println("NOT VALID USERNAME");
-            setUser();
-            network.update(this);
             return;
         }
         if(state.equals(States.ENDROUND)){
@@ -183,6 +181,16 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             }
         }
 
+    }
+
+    public boolean verifyUser(String s) throws RemoteException{
+        for(int i=0; i<gameModel.getPlayers().size(); i++){
+            if(s.equals(gameModel.getPlayers().get(i).getUsername())){
+                System.out.println("THIS USERNAME ALREADY EXISTS");
+                return false;
+            }
+        }
+        return true;
     }
 
    @Override
