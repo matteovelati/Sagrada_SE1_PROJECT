@@ -58,12 +58,8 @@ public class GameModel implements RemoteGameModel, Serializable {
     public void setPlayers(Player player) throws RemoteException {
         this.players.add(player);
         list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
-        if(players.size() == 2) {
-            for(RemoteView x : list){
-                x.print("ARE YOU READY?! THE GAME IS STARTING...");
-            }
-            actualPlayer = this.players.get(0);
-        }
+        actualPlayer = this.players.get(0);
+
     }
 
     //SETTER (stato e actualPlayer)

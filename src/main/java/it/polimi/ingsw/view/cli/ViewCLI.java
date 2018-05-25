@@ -183,7 +183,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     }
 
-    public boolean verifyUser(String s) throws RemoteException{
+    private boolean verifyUser(String s) throws RemoteException{
         for(int i=0; i<gameModel.getPlayers().size(); i++){
             if(s.equals(gameModel.getPlayers().get(i).getUsername())){
                 System.out.println("THIS USERNAME ALREADY EXISTS");

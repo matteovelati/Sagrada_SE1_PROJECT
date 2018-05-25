@@ -5,6 +5,8 @@ import it.polimi.ingsw.view.RemoteView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static it.polimi.ingsw.model.States.*;
 
@@ -13,10 +15,12 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     private GameModel gameModel;
     private int actualPlayer, check;
     private States beforeError;
+    private Timer t;
 
 
     public GameController() throws RemoteException{
         gameModel = GameModel.getInstance(LOBBY);
+        t = new Timer();
     }
 
 
@@ -99,6 +103,22 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         }
     }
 
+    private void startTimerLobby(Timer t){
+        t.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            gameModel.setDraft();
+                            gameModel.setSchemeCards();
+                            gameModel.setState(SELECTWINDOW);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 30000
+        );
+    }
 
     @Override
     public void update(RemoteView view) throws RemoteException {
@@ -109,10 +129,15 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
                 if (gameModel.getPlayers().size() == 2) {
+                    startTimerLobby(t);
+                }
+                if(gameModel.getPlayers().size() == 4){
+                    t.cancel();
                     gameModel.setDraft();
                     gameModel.setSchemeCards();
                     gameModel.setState(SELECTWINDOW);
-                } else {
+                }
+                else {
                     gameModel.setState(LOBBY);
                 }
                 break;
