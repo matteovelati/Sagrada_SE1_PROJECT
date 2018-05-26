@@ -63,13 +63,11 @@ public class TCGrozingPliers extends Card implements ToolCard {
         boolean check;
         if (input.get(0) != -1) {
             if (flag == 1) {
-                if (input.get(0) == -1)
+                if (input.get(0) == -2)
                     check = (decreaseValue(gameModel.getField().getDraft().getDraft().get(input.get(1))));
                 else
                     check = (increaseValue(gameModel.getField().getDraft().getDraft().get(input.get(1))));
                 if (check) {
-                    if (!getIsUsed())
-                        setIsUsed(true);
                     flag = 2;
                     return true;
                 } else

@@ -65,8 +65,6 @@ public class TCLensCutter extends Card implements ToolCard {
             if (flag == 1) {
                 flag = 2;
                 swapDice(gameModel.getField().getRoundTrack(), input.get(1), gameModel.getField().getDraft(), input.get(0));
-                if (!getIsUsed())
-                    setIsUsed(true);
                 return true;
             } if (flag == 2) {
                 flag = 1;

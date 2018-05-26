@@ -77,8 +77,6 @@ public class TCLathekin extends Card implements ToolCard {
                 flag = 1;
                 check = (moveDice(gameModel.getActualPlayer().getWindow(), input.get(4), input.get(5), input.get(6), input.get(7)));
                 if (check) {
-                    if (!getIsUsed())
-                        setIsUsed(true);
                     return true;
                 } else {
                     replaceDice(gameModel.getActualPlayer().getWindow(), input.get(2), input.get(3), input.get(0), input.get(1));

@@ -77,8 +77,6 @@ public class TCTapWheel extends Card implements ToolCard {
                 if (input.get(5) == 1) {
                     check = (moveDice(gameModel.getActualPlayer().getWindow(), input.get(6), input.get(7), input.get(8), input.get(9), gameModel.getField().getRoundTrack(), input.get(0)));
                     if (check) {
-                        if (!getIsUsed())
-                            setIsUsed(true);
                         return true;
                     }
                     else {
@@ -87,8 +85,6 @@ public class TCTapWheel extends Card implements ToolCard {
                     }
                 }
                 else {
-                    if (!getIsUsed())
-                        setIsUsed(true);
                     return true;
                 }
             } else

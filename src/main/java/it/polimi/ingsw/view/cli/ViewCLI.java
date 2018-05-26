@@ -134,17 +134,19 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             }
             if(state.equals(States.PUTDICEINWINDOW)){
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("CHOOSE A ROW TO PUT YOUR DICE");
+                System.out.println("CHOOSE A ROW TO PUT YOUR DICE (-1 TO ABORT)");
                 input = new Scanner(System.in);
                 setChoose1(input.nextInt());
-                System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE");
-                input = new Scanner(System.in);
-                setChoose2(input.nextInt());
+                if(choose1!=-1) {
+                    System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE (-1 TO ABORT)");
+                    input = new Scanner(System.in);
+                    setChoose2(input.nextInt());
+                }
                 network.update(this);
                 return;
             }
             if(state.equals(States.SELECTDRAFT)){
-                System.out.println("SELECT A DICE");
+                System.out.println("SELECT A DICE (-1 TO ABORT)");
                 PrintDraft.print(gameModel.getField().getDraft());
                 input = new Scanner(System.in);
                 setChoose1(input.nextInt());

@@ -34,7 +34,7 @@ public class PrintUseToolCard implements Serializable {
                 input = new Scanner(System.in);
                 tmp = input.nextInt();
                 if(tmp == 2){
-                    choices.add(-1);
+                    choices.add(-2);
                 }
                 else{
                     choices.add(1);

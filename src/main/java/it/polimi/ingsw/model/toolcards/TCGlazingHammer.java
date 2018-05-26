@@ -61,8 +61,6 @@ public class TCGlazingHammer extends Card implements ToolCard {
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         if (gameModel.getRoundManager().getTurn() == 2 && gameModel.getRoundManager().getFirstMove() == 2 /*ha selezionato una toolcard*/){
             reRoll(gameModel.getField().getDraft());
-            if(!getIsUsed())
-                setIsUsed(true);
             return true;
         }
         else

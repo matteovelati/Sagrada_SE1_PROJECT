@@ -53,26 +53,26 @@ public class Player implements Serializable {
     }
 
     /*vengono passate le carte schema mostrate e già il numero di quella selezionata*/
-    public boolean setWindow(SchemeCard card1, SchemeCard card2, int i){
+    public void setWindow(SchemeCard card1, SchemeCard card2, int i){
         switch(i){
             case 1:
                 this.window = card1.getFront();
                 tokens = window.getDifficulty();
-                return true;
+                break;
             case 2:
                 this.window = card1.getBack();
                 tokens = window.getDifficulty();
-                return true;
+                break;
             case 3:
                 this.window = card2.getFront();
                 tokens = window.getDifficulty();
-                return true;
+                break;
             case 4:
                 this.window = card2.getBack();
                 tokens = window.getDifficulty();
-                return true;
+                break;
             default :
-                return false;
+                break;
         }
     }
 
@@ -89,7 +89,6 @@ public class Player implements Serializable {
         toolCardSelected = toolCards.get(i);
         if(toolCardSelected.getIsUsed()){
             if(this.tokens >= 2) {
-                //this.tokens = this.tokens - 2;
                 return true;
             }
             else
@@ -97,8 +96,6 @@ public class Player implements Serializable {
         }
         else{
             if(this.tokens >= 1){
-                //this.tokens --;
-                //toolCards.get(i).setIsUsed(true);
                 return true;
             }
             else
@@ -107,7 +104,7 @@ public class Player implements Serializable {
     }
 
     public void pickDice(Draft draft, int i){
-        this.setDice(draft.extract(i));
+        dice = draft.extract(i);
     }
 
     public boolean putDice(int i, int j){
@@ -132,6 +129,15 @@ public class Player implements Serializable {
     //CHIAMA IL METODO DELLA USETOOLCARD SELEZIONATA
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input){
         return toolCardSelected.useToolCard(gameModel, input);
+    }
+
+    public void decreaseToken() {
+        if (toolCardSelected.getIsUsed())
+            this.tokens = this.tokens - 2;
+        else {
+            this.tokens--;
+            toolCardSelected.setIsUsed(true);
+        }
     }
 }
 

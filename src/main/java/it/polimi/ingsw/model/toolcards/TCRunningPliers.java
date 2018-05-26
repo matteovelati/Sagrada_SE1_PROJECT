@@ -71,8 +71,6 @@ public class TCRunningPliers extends Card implements ToolCard {
         if ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y))){
             draft.extract(i);
             window.getWindow()[x][y].setDice(dicetmp);
-            if(!getIsUsed())
-                setIsUsed(true);
             return true;
         }
         else

@@ -440,7 +440,6 @@ public class Window implements Serializable {
                 break;
 
             default:
-                System.out.println("Errore colorazione facciata");
                 break;
         }
     }

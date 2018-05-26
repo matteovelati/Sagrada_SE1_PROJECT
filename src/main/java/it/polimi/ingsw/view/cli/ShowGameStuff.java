@@ -18,6 +18,7 @@ public class ShowGameStuff {
         System.out.println("5) SEE YOUR PRIVATE OBJECTIVES");
         System.out.println("6) SEE THE ROUNDTRACK");
         System.out.println("7) SEE THE WINDOWS OF OTHER PLAYERS");
+        System.out.println("8) SEE YOUR TOKENS");
         System.out.println("0) CONTINUE WITH YOUR TURN");
 
         Scanner input = new Scanner(System.in);
@@ -50,6 +51,8 @@ public class ShowGameStuff {
                     }
                 }
                 break;
+            case 8:
+                System.out.println(gameModel.getActualPlayer().getTokens());
             case 0:
                 break;
             default :

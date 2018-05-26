@@ -72,8 +72,6 @@ public class TCEglomiseBrush extends Card implements ToolCard {
         if ((window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.neighboursPositionRestriction(x, y) && window.spaceNumberRestriction(dicetmp, x, y)) ||
                 (window.getIsEmpty() && window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.spaceNumberRestriction(dicetmp, x, y))){
             window.getWindow()[x][y].setDice(dicetmp);
-            if(!getIsUsed())
-                setIsUsed(true);
             return true;
         }
         else {

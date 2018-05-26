@@ -38,6 +38,7 @@ public class GameModel implements RemoteGameModel, Serializable {
         return instance;
     }
 
+    //SETTER
     public void setSchemeCards(){
         schemeCards = new ArrayList<>();
         ArrayList<Integer> allSchemeCards = new ArrayList<>();
@@ -62,13 +63,13 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     }
 
-    //SETTER (stato e actualPlayer)
     public void setState(States state) throws RemoteException {
         this.state = state;
         notifyObservers();
     }
 
     public void setActualPlayer(int i){
+        roundManager.setFirstMove(0);
         actualPlayer = players.get(i);
     }
 
@@ -80,7 +81,7 @@ public class GameModel implements RemoteGameModel, Serializable {
         allColors.add(Colors.P);
     }
 
-    //GETTER (tutti)
+    //GETTER
     @Override
     public States getState(){
         return state;
@@ -115,34 +116,42 @@ public class GameModel implements RemoteGameModel, Serializable {
         return allColors;
     }
 
-    //CHIAMA IL METODO DEL GIOCATORE CHE SETTA LA WINDOW SCELTA (i)
-    public boolean playerSetWindow(int i){
-        return actualPlayer.setWindow(schemeCards.get(0), schemeCards.get(1), i);
+    //METODI
+    public void playerSetWindow(int i){
+        actualPlayer.setWindow(schemeCards.get(0), schemeCards.get(1), i);
     }
 
-    //CHIAMA IL METODO DEL GIOCATORE CHE SELEZIONA IL DADO SCELTO (i)
     public void playerPickDice(int i){
         actualPlayer.pickDice(field.getDraft(), i);
     }
 
-
-    //CHIAMA IL METODO DEL GIOCATORE CHE METTE IL DADO NELLA POSIZIONE SCELTA (i, j)
     public boolean playerPutDice(int i, int j){
         return actualPlayer.putDice(i, j);
     }
 
-
-    //CHIAMA IL METODO DEL GIOCATORE CHE SELEZIONA LA TOOLCARD SCELTA (i)
     public boolean playerSelectToolCard(int i){
         return actualPlayer.selectToolCard(field.getToolCards(), i);
     }
 
-
-    //CHIAMA IL METODO DEL GIOCATORE CHE USA LA TOOLCARD GIà SELEZIONATA
     public boolean playerUseToolCard(ArrayList<Integer> input){
         return actualPlayer.useToolCard(this, input);
     }
 
+    public int nextPlayer(int actualPlayer){
+        return roundManager.changeActualPlayer(actualPlayer, players.size());
+    }
+
+    public void endRound(){
+        roundManager.endRound(field.getDraft(), field.getRoundTrack());
+    }
+
+    public void putDiceInDraft(){
+        field.getDraft().addDice(actualPlayer.getDice());
+    }
+
+    public void decreaseToken(){
+        actualPlayer.decreaseToken();
+    }
 
     @Override
     public void notifyObservers() throws RemoteException {

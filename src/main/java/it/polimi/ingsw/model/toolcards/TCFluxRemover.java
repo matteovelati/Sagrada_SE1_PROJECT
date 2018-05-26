@@ -69,8 +69,6 @@ public class TCFluxRemover extends Card implements ToolCard {
             } else if (flag == 2) {
                 flag = 3;
                 setDicetmp(gameModel.getField().getDraft(), input.get(0), input.get(1));
-                if (!getIsUsed())
-                    setIsUsed(true);
                 return true;
             } else if (flag == 3) {
                 flag = 1;

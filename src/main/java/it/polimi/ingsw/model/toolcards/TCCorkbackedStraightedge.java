@@ -71,8 +71,6 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard {
         if (window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.spaceColorRestriction(dicetmp, x, y) && window.spaceNumberRestriction(dicetmp, x, y)){
             draft.extract(i);
             window.getWindow()[x][y].setDice(dicetmp);
-            if(!getIsUsed())
-                setIsUsed(true);
             return true;
         }
         else

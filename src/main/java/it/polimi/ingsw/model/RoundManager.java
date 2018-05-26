@@ -8,10 +8,10 @@ public class RoundManager implements Serializable {
 
     private int turn;
     private int counter;
-    private int firstMove;//----------------------------MEMORIZZA LA PRIMA MOSSA FATTA DA UN GIOCATORE(1:SELEZIONA DADO 2:SCEGLI TOOLCARD)
+    private int firstMove;
 
 
-    //--------------------------------------COSTRUTTORE(SINGLETON)
+    //COSTRUTTORE(SINGLETON)
     private RoundManager(){
         turn = 1;
         counter = 1;
@@ -25,7 +25,7 @@ public class RoundManager implements Serializable {
     }
 
 
-    //---------------------------------------GETTER
+    //GETTER
     public int getTurn() {
         return turn;
     }
@@ -39,13 +39,13 @@ public class RoundManager implements Serializable {
     }
 
 
-    //-----------------------------------------SETTER
+    //SETTER
     public void setFirstMove(int firstMove){
         this.firstMove = firstMove;
     }
 
 
-    //----------------------------------------METODI
+    //METODI
     public int changeActualPlayer(int actualPlayer, int nPlayers){
 
         switch(turn) {
@@ -89,17 +89,11 @@ public class RoundManager implements Serializable {
 
     public void endRound(Draft draft, RoundTrack roundTrack){
 
-        //DA GESTIRE IL CASO IN CUI I DADI RIMASTI NELLA DRAFT SIANO PIù DI UNO
-
         while(!draft.getDraft().isEmpty()) {
             roundTrack.setGrid(draft.getDraft().remove(0));
         }
 
         roundTrack.incrementRound();
 
-    }
-
-    public void setTurn(int turn) { //metodo toolcardtest (glazinghammer)
-        this.turn = turn;
     }
 }

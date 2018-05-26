@@ -64,8 +64,6 @@ public class TCGrindingStone extends Card implements ToolCard {
             if (flag == 1) {
                 flag = 2;
                 flipDice(gameModel.getField().getDraft().getDraft().get(input.get(0)));
-                if (!getIsUsed())
-                    setIsUsed(true);
                 return true;
             } else if (flag == 2) {
                 flag = 1;
