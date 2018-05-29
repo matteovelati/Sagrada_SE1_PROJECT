@@ -29,47 +29,53 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
 
     public ViewCLI(RemoteGameController network) throws RemoteException {
+        System.out.println("WELCOME TO SAGRADA! \n\n\n");
         choices = new ArrayList<>();
         endGame = false;
         this.network = network;
-        //setUser();
         gameModel = network.getGameModel();
-        network.addObserver(this);
-        do{
-            setUser();
-        } while (!verifyUser(user));
-        network.update(this);
+        if(gameModel.getState().equals(States.LOBBY)) {
+            network.addObserver(this);
+            do {
+                setUser();
+            } while (!verifyUser(user));
+            network.update(this);
+        }
+        else{
+            System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+            System.exit(0);
+        }
     }
 
-    @Override
-    public void setUser() throws RemoteException {
+
+    private void setUser() {
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
         this.user = input.next().toUpperCase();
     }
 
     @Override
-    public String getUser() throws RemoteException {
+    public String getUser() {
         return user;
     }
 
     @Override
-    public int getChoose1() throws RemoteException {
+    public int getChoose1() {
         return choose1;
     }
 
     @Override
-    public int getChoose2() throws RemoteException {
+    public int getChoose2() {
         return choose2;
     }
 
     @Override
-    public boolean getEndGame() throws RemoteException {
+    public boolean getEndGame() {
         return endGame;
     }
 
     @Override
-    public ArrayList<Integer> getChoices() throws RemoteException{
+    public ArrayList<Integer> getChoices(){
         return choices;
     }
 
@@ -85,104 +91,57 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         state = gameModel.getState();
 
         if(state.equals(States.LOBBY)){
-            System.out.println("WAIT OTHER PLAYERS JOIN THE GAME");
+            viewLobby();
             return;
         }
         if(state.equals(States.ENDROUND)){
-            System.out.println("END OF ROUND " + gameModel.getField().getRoundTrack().getRound());
-            if(user.equals(gameModel.getActualPlayer().getUsername())){
-                network.update(this);
-            }
+            viewEndRound();
             return;
         }
         if(state.equals(States.ENDMATCH)){
-            for(Player x : gameModel.getPlayers()){
-                System.out.println(x.getUsername() +"'s FINAL SCORE: "+ x.getFinalScore());
-            }
+            viewEndMatch();
             return;
         }
-        if(user.equals(gameModel.getActualPlayer().getUsername())){
-            int tmp;
-            if(state.equals(States.SELECTWINDOW)){
-                System.out.println("SELECT YOUR WINDOW!");
-                PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
-                input = new Scanner(System.in);
-                setChoose1(input.nextInt());
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.SELECTMOVE1)){
-                tmp = ShowGameStuff.print((GameModel) gameModel);
-                while (tmp != 0) {
-                    tmp = ShowGameStuff.print((GameModel) gameModel);
-                }
-                PrintSelectMove1.print();
-                input = new Scanner(System.in);
-                setChoose1(input.nextInt());
-                network.update(this);
-            }
-            if(state.equals(States.SELECTMOVE2)){
-                tmp = ShowGameStuff.print((GameModel) gameModel);
-                while (tmp != 0) {
-                    tmp = ShowGameStuff.print((GameModel) gameModel);
-                }
-                PrintSelectMove2.print();
-                input = new Scanner(System.in);
-                setChoose1(input.nextInt());
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.PUTDICEINWINDOW)){
-                PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("CHOOSE A ROW TO PUT YOUR DICE (-1 TO ABORT)");
-                input = new Scanner(System.in);
-                setChoose1(input.nextInt());
-                if(choose1!=-1) {
-                    System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE (-1 TO ABORT)");
-                    input = new Scanner(System.in);
-                    setChoose2(input.nextInt());
-                }
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.SELECTDRAFT)){
-                System.out.println("SELECT A DICE (-1 TO ABORT)");
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                setChoose1(input.nextInt());
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.SELECTCARD)){
-                System.out.println("SELECT A TOOLCARD (-1 TO ABORT)");
-                PrintToolCard.print(gameModel.getField().getToolCards());
-                input = new Scanner(System.in);
-                setChoose1(input.nextInt());
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.USETOOLCARD)){
-                PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.USETOOLCARD2)){
-                PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.USETOOLCARD3)){
-                PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-                network.update(this);
-                return;
-            }
-            if(state.equals(States.ERROR)){
-                System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY!");
-                network.update(this);
-                return;
-            }
+        if(state.equals(States.SELECTWINDOW)){
+            viewSelectWindow();
+            return;
         }
-
+        if(state.equals(States.SELECTMOVE1)){
+            viewSelectMove1();
+            return;
+        }
+        if(state.equals(States.SELECTMOVE2)){
+            viewSelectMove2();
+            return;
+        }
+        if(state.equals(States.PUTDICEINWINDOW)){
+            viewPutDiceInWindow();
+            return;
+        }
+        if(state.equals(States.SELECTDRAFT)){
+            viewSelectDraft();
+            return;
+        }
+        if(state.equals(States.SELECTCARD)){
+            viewSelectCard();
+            return;
+        }
+        if(state.equals(States.USETOOLCARD)){
+            viewUseToolCard();
+            return;
+        }
+        if(state.equals(States.USETOOLCARD2)){
+            viewUseToolCard2();
+            return;
+        }
+        if(state.equals(States.USETOOLCARD3)){
+            viewUseToolCard3();
+            return;
+        }
+        if(state.equals(States.ERROR)){
+            viewError();
+            return;
+        }
     }
 
     private boolean verifyUser(String s) throws RemoteException{
@@ -193,6 +152,125 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             }
         }
         return true;
+    }
+
+    private void viewLobby() throws RemoteException {
+        System.out.println("GAMERS IN THE LOBBY:");
+        for(Player x: gameModel.getPlayers()){
+            System.out.println("- "+ x.getUsername());
+        }
+    }
+
+    private void viewEndRound() throws RemoteException {
+        System.out.println("END OF ROUND " + gameModel.getField().getRoundTrack().getRound());
+        if(user.equals(gameModel.getActualPlayer().getUsername())){
+            network.update(this);
+        }
+    }
+
+    private void viewEndMatch() throws RemoteException {
+        for(Player x : gameModel.getPlayers()){
+            System.out.println(x.getUsername() +"'s FINAL SCORE: "+ x.getFinalScore());
+        }
+    }
+
+    private void viewSelectWindow() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            System.out.println("SELECT YOUR WINDOW!");
+            PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
+            input = new Scanner(System.in);
+            setChoose1(input.nextInt());
+            network.update(this);
+        }
+    }
+
+    private void viewSelectMove1() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            int tmp = ShowGameStuff.print((GameModel) gameModel);
+            while (tmp != 0) {
+                tmp = ShowGameStuff.print((GameModel) gameModel);
+            }
+            PrintSelectMove1.print();
+            input = new Scanner(System.in);
+            setChoose1(input.nextInt());
+            network.update(this);
+        }
+    }
+
+    private void viewSelectMove2() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            int tmp = ShowGameStuff.print((GameModel) gameModel);
+            while (tmp != 0) {
+                tmp = ShowGameStuff.print((GameModel) gameModel);
+            }
+            PrintSelectMove2.print();
+            input = new Scanner(System.in);
+            setChoose1(input.nextInt());
+            network.update(this);
+        }
+    }
+
+    private void viewPutDiceInWindow() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            PrintWindow.print(gameModel.getActualPlayer().getWindow());
+            System.out.println("CHOOSE A ROW TO PUT YOUR DICE (-1 TO ABORT)");
+            input = new Scanner(System.in);
+            setChoose1(input.nextInt());
+            if (choose1 != -1) {
+                System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE (-1 TO ABORT)");
+                input = new Scanner(System.in);
+                setChoose2(input.nextInt());
+            }
+            network.update(this);
+        }
+    }
+
+    private void viewSelectDraft() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            System.out.println("SELECT A DICE (-1 TO ABORT)");
+            PrintDraft.print(gameModel.getField().getDraft());
+            input = new Scanner(System.in);
+            setChoose1(input.nextInt());
+            network.update(this);
+        }
+    }
+
+    private void viewSelectCard() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            System.out.println("SELECT A TOOLCARD (-1 TO ABORT)");
+            PrintToolCard.print(gameModel.getField().getToolCards());
+            input = new Scanner(System.in);
+            setChoose1(input.nextInt());
+            network.update(this);
+        }
+    }
+
+    private void viewUseToolCard() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+            network.update(this);
+        }
+    }
+
+    private void viewUseToolCard2() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+            network.update(this);
+        }
+    }
+
+    private void viewUseToolCard3() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+            network.update(this);
+        }
+    }
+
+    private void viewError() throws RemoteException {
+        if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY!");
+            network.update(this);
+        }
     }
 
    @Override

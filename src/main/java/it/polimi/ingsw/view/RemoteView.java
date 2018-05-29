@@ -5,10 +5,11 @@ import it.polimi.ingsw.model.RemoteGameModel;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public interface RemoteView extends Remote {
 
-    public void setUser() throws RemoteException;
+
 
     public String getUser() throws RemoteException;
 

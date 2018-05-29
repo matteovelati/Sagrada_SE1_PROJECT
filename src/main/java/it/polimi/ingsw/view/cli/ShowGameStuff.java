@@ -53,6 +53,7 @@ public class ShowGameStuff {
                 break;
             case 8:
                 System.out.println(gameModel.getActualPlayer().getTokens());
+                break;
             case 0:
                 break;
             default :

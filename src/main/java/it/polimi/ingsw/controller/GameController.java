@@ -15,7 +15,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     private GameModel gameModel;
     private int actualPlayer, check;
     private States beforeError;
-    private Timer t;
+    private transient Timer t;
 
 
     public GameController() throws RemoteException{
@@ -159,7 +159,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case SELECTWINDOW:
-
+                //t.cancel();
                 if(view.getChoose1() > 0 && view.getChoose1() < 5) {//---------------------VERIFICA SULL'INPUT
 
                     gameModel.playerSetWindow(view.getChoose1());//----------------------SETTA LA WINDOW SELEZIONATA
@@ -188,7 +188,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case SELECTMOVE1:
-
+                t.cancel();
                 gameModel.getRoundManager().setFirstMove(view.getChoose1());
                 check = 1;
 
@@ -214,7 +214,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case SELECTDRAFT:
-
+                t.cancel();
                 if(view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()) {
                     gameModel.playerPickDice(view.getChoose1() - 1);
                     gameModel.setState(PUTDICEINWINDOW);
@@ -228,7 +228,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case PUTDICEINWINDOW:
-
+                t.cancel();
                 //CONTROLLO INPUT
                 if(view.getChoose1() > 0 && view.getChoose1() < 5) {
 
@@ -261,7 +261,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case SELECTMOVE2://--------------------------------------------------LA VIEW MOSTRERà UNA SOLA MOSSA POSSIBILE(1) E IL PASSATURNO(2)
-
+                t.cancel();
                 check = 2;
 
                 if(view.getChoose1() == 1){
@@ -287,7 +287,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case SELECTCARD:
-
+                t.cancel();
                 if (view.getChoose1() > 0 && view.getChoose1() < 4){//----------VERIFICA INPUT
 
                     if(check==2 && gameModel.getField().getToolCards().get(view.getChoose1()-1).getForceTurn()){
@@ -313,7 +313,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
 
             case USETOOLCARD:
-
+                t.cancel();
                 if(gameModel.playerUseToolCard(view.getChoices())) {
 
                     gameModel.decreaseToken();
