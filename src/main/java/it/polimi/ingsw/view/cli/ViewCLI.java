@@ -268,7 +268,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     private void viewError() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
-            System.out.println("SELECTION ERROR. PLEASE DO IT AGAIN CORRECTLY!");
+            System.out.println("PLEASE DO IT AGAIN CORRECTLY!");
             network.update(this);
         }
     }
@@ -276,6 +276,13 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
    @Override
    public void print(String s){
        System.out.println(s);
+   }
+
+   @Override
+   public void printError(String error) throws RemoteException {
+       if(user.equals(gameModel.getActualPlayer().getUsername())) {
+           System.out.println(error);
+       }
    }
 
     @Override

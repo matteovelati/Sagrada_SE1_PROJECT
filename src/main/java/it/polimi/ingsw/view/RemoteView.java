@@ -25,4 +25,5 @@ public interface RemoteView extends Remote {
 
     public void print(String string) throws RemoteException;
 
+    public void printError(String string) throws RemoteException;
 }

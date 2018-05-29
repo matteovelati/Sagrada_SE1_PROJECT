@@ -77,12 +77,12 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         return true;
     }
 
-    private void checkError(int i) throws RemoteException {
+    private void checkError(RemoteView view, int i) throws RemoteException {
 
         beforeError = gameModel.getState();
 
         if(i!=-1){
-            System.out.println("ERRORE");
+            view.printError("Input error!");
             gameModel.setState(ERROR);
         }else{
             if (check == 1) {
@@ -99,10 +99,10 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         }
     }
 
-    private void checkErrorPutDice(int i) throws RemoteException {
+    private void checkErrorPutDice(RemoteView view, int i) throws RemoteException {
         if(i == -1)
             gameModel.putDiceInDraft();
-        checkError(i);
+        checkError(view, i);
     }
 
     private boolean endTurn() throws RemoteException {
@@ -160,14 +160,13 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case SELECTWINDOW:
                 //t.cancel();
-                if(view.getChoose1() > 0 && view.getChoose1() < 5) {//---------------------VERIFICA SULL'INPUT
+                if(view.getChoose1() > 0 && view.getChoose1() < 5) {
 
-                    gameModel.playerSetWindow(view.getChoose1());//----------------------SETTA LA WINDOW SELEZIONATA
+                    gameModel.playerSetWindow(view.getChoose1());
 
-                    actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());//-----------CAMBIO IL PLAYER
+                    actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
                     gameModel.setActualPlayer(actualPlayer);
 
-                    //SE IL PLAYER HA GIà SELEZIONATO LA WINDOW PASSO ALLA SELEZIONE DELLA MOSSA ALTRIMENTI GLI FACCIO SELEZIONARE LA WINDOW
                     if (gameModel.getActualPlayer().getWindow() != null) {
                         gameModel.setState(SELECTMOVE1);
                     }
@@ -179,8 +178,8 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 }else{
                     beforeError = gameModel.getState();
-                    System.out.println("SELECTWINDOW input non corretto");
-                    gameModel.setState(ERROR);//----------INPUT NON CORRETTO
+                    view.printError("Input error!");
+                    gameModel.setState(ERROR);
                 }
 
                 break;
@@ -193,20 +192,20 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                 check = 1;
 
                 if(gameModel.getRoundManager().getFirstMove() == 1){
-                    gameModel.setState(SELECTDRAFT);//--------------------------------------PIù CHIARO CHIAMARLA SELECTDICE
+                    gameModel.setState(SELECTDRAFT);
                 }
 
                 else if(gameModel.getRoundManager().getFirstMove() == 2){
                     gameModel.setState(SELECTCARD);
                 }
 
-                else if(gameModel.getRoundManager().getFirstMove() == 0){//-----------------------------------------------------PASSA TURNO
+                else if(gameModel.getRoundManager().getFirstMove() == 0){
                     if(!endTurn())
                         break;
                 }
 
                 else{
-                    checkError(view.getChoose1());
+                    checkError(view, view.getChoose1());
                 }
 
                 break;
@@ -220,7 +219,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     gameModel.setState(PUTDICEINWINDOW);
                 }
                 else{
-                    checkError(view.getChoose1());
+                    checkError(view, view.getChoose1());
                 }
 
                 break;
@@ -229,14 +228,13 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case PUTDICEINWINDOW:
                 t.cancel();
-                //CONTROLLO INPUT
+
                 if(view.getChoose1() > 0 && view.getChoose1() < 5) {
 
                     if(view.getChoose2() > 0 && view.getChoose2() < 6) {
 
                         if (gameModel.playerPutDice(view.getChoose1() - 1, view.getChoose2() - 1)) {
 
-                            //SE LA SELEZIONE DEL DADO è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
                             if (gameModel.getRoundManager().getFirstMove() == 1)
                                 gameModel.setState(SELECTMOVE2);
 
@@ -246,27 +244,26 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                             }
                         } else {
                             beforeError = gameModel.getState();
-                            System.out.println("PUTDICEINWINDOW restrizione casella presente");
-                            gameModel.setState(ERROR);//---------------------RESTRIZIONE CASELLA PRESENTE
+                            view.printError("Restriction error");
+                            gameModel.setState(ERROR);
                         }
                     }
                     else
-                        checkErrorPutDice(view.getChoose2());
+                        checkErrorPutDice(view, view.getChoose2());
                 }
                 else
-                    checkErrorPutDice(view.getChoose1());
+                    checkErrorPutDice(view, view.getChoose1());
 
                 break;
 
 
 
-            case SELECTMOVE2://--------------------------------------------------LA VIEW MOSTRERà UNA SOLA MOSSA POSSIBILE(1) E IL PASSATURNO(2)
+            case SELECTMOVE2:
                 t.cancel();
                 check = 2;
 
                 if(view.getChoose1() == 1){
 
-                    //SE LA PRIMA MOSSA EFFETTUATA è SELEZIONE DADO LA SECONDA SARà SELEZIONA CARTA E VICEVERSA
                     if(gameModel.getRoundManager().getFirstMove() == 1) {
                         gameModel.setState(SELECTCARD);
                     }
@@ -279,7 +276,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                         break;
                 }
                 else{
-                    checkError(view.getChoose1());
+                    checkError(view, view.getChoose1());
                 }
 
                 break;
@@ -288,7 +285,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
             case SELECTCARD:
                 t.cancel();
-                if (view.getChoose1() > 0 && view.getChoose1() < 4){//----------VERIFICA INPUT
+                if (view.getChoose1() > 0 && view.getChoose1() < 4){
 
                     if(check==2 && gameModel.getField().getToolCards().get(view.getChoose1()-1).getForceTurn()){
                         gameModel.setState(SELECTCARD);
@@ -299,13 +296,13 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                             gameModel.setState(USETOOLCARD);
                         }else{
                             beforeError = gameModel.getState();
-                            System.out.println("SELECTCARD segnalini favore non sufficienti/n");
-                            gameModel.setState(ERROR);//----------------------------------SEGNALINI FAVORE NON SUFFICIENTI
+                            view.printError("You don't have enough tokens");
+                            gameModel.setState(ERROR);
                         }
                     }
                 }
                 else{
-                    checkError(view.getChoose1());
+                    checkError(view, view.getChoose1());
                 }
 
                 break;
@@ -318,7 +315,6 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                     gameModel.decreaseToken();
 
-                    //SE LA TOOLCARD CONSISTE IN UNA SOLA FASE PASSA ALLA FASE DI GIOCO SUCCESSIVA, ALTRIMENTI PASSA ALLA SECONDA FASE DELLA TOOLCARD
                     if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1) {
                         if(!setNextState())
                             break;
@@ -327,7 +323,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     }
                 }
                 else {
-                    checkError(view.getChoices().get(0));
+                    checkError(view, view.getChoices().get(0));
                 }
 
                 break;
@@ -338,7 +334,6 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if(gameModel.playerUseToolCard(view.getChoices())) {
 
-                    //SE LA TOOLCARD CONSISTE IN DUE FASI PASSA ALLA FASE DI GIOCO SUCCESSIVA, ALTRIMENTI PASSA ALLA TERZA FASE DELLA TOOLCARD
                     if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 2) {
                             if (!setNextState())
                                 break;
@@ -347,7 +342,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     }
                 }
                 else {
-                    checkError(view.getChoices().get(0));
+                    checkError(view, view.getChoices().get(0));
                 }
 
                 break;
@@ -358,14 +353,13 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if(gameModel.playerUseToolCard(view.getChoices())) {
 
-                    //SE LA TOOLCARD CONSISTE IN 3 FASI PASSA ALLA FASE DI GIOCO SUCCESSIVA
                     if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 3) {
                         if(!setNextState())
                             break;
                     }
                 }
                 else {
-                    checkError(view.getChoices().get(0));
+                    checkError(view, view.getChoices().get(0));
                 }
 
                 break;
