@@ -1,40 +1,18 @@
 package it.polimi.ingsw.model.publicobj;
 
-import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.PublicObjective;
 import it.polimi.ingsw.model.Window;
 
 import java.util.ArrayList;
 
 
-public class POColorVariety extends Card implements PublicObjective {
-
-    private int score;
+public class POColorVariety extends PublicObjective {
 
     public POColorVariety(){
-        this.score = 4;
+        super.setScore(4);
         super.setIdNumber(5);
         super.setName("Color Variety");
         super.setDescription("Sets of one of each COLOR anywhere");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getScore() {
-        return score;
-    }
-
-    @Override
-    public void setScore(int score) {//USELESS
     }
 
     @Override
@@ -75,6 +53,6 @@ public class POColorVariety extends Card implements PublicObjective {
         for(int i = 0; i < dicelist.size(); i++) {
             if(dicelist.get(i) < minsets) minsets = dicelist.get(i);
         }
-        return score*minsets;
+        return getScore()*minsets;
     }
 }

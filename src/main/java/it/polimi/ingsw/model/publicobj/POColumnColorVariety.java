@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.publicobj;
 
-import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Colors;
 import it.polimi.ingsw.model.PublicObjective;
 import it.polimi.ingsw.model.Window;
@@ -8,35 +7,15 @@ import it.polimi.ingsw.model.Window;
 import java.util.ArrayList;
 
 
-public class POColumnColorVariety extends Card implements PublicObjective {
+public class POColumnColorVariety extends PublicObjective {
 
-    private int score;
     private ArrayList<Colors> colorsBag = new ArrayList<>(5);
 
     public POColumnColorVariety(){
-        this.score = 5;
+        super.setScore(5);
         super.setIdNumber(9);
         super.setName("Column Color Variety");
         super.setDescription("Column with no repeated COLORS");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getScore() {
-        return score;
-    }
-
-    @Override
-    public void setScore(int score) {//USELESS
     }
 
     @Override
@@ -59,7 +38,7 @@ public class POColumnColorVariety extends Card implements PublicObjective {
             if(diffcolors == 4) diffcolumns ++;
         }
 
-        return score*diffcolumns;
+        return getScore()*diffcolumns;
     }
 
     private void setColorsBag() {

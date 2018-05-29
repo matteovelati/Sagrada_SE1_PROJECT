@@ -1,41 +1,20 @@
 package it.polimi.ingsw.model.publicobj;
 
-import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.PublicObjective;
 import it.polimi.ingsw.model.Window;
 
 import java.util.ArrayList;
 
 
-public class POColumnShadeVariety extends Card implements PublicObjective {
+public class POColumnShadeVariety extends PublicObjective {
 
-    private int score;
     private ArrayList<Integer> valuesBag = new ArrayList<>(6);
 
     public POColumnShadeVariety(){
-        this.score = 4;
+        super.setScore(4);
         super.setIdNumber(7);
         super.setName("Column Shade Variety");
         super.setDescription("Columns with no repeated VALUES");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getScore() {
-        return score;
-    }
-
-    @Override
-    public void setScore(int score) {//USELESS
     }
 
     @Override
@@ -58,7 +37,7 @@ public class POColumnShadeVariety extends Card implements PublicObjective {
             if(diffvalues == 4) diffcolumns ++;
         }
 
-        return score*diffcolumns;
+        return getScore()*diffcolumns;
     }
 
     private void setValuesBag() {

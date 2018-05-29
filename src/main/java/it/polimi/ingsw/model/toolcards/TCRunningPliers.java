@@ -1,59 +1,25 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.Draft;
+import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.Window;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TCRunningPliers extends Card implements ToolCard {
-
-    private boolean isUsed;
-    private Dice dicetmp;
-    private int calls = 1;
-    private boolean forceTurn = false;
+public class TCRunningPliers extends ToolCard {
 
     public TCRunningPliers(){
-        this.isUsed = false;
         super.setIdNumber(8);
         super.setColor(Colors.R);
         super.setName("Running Pliers");
         super.setDescription("After your first turn, immediately draft a die." +
             " Skip your next turn this round.\n");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
-
-    @Override
-    public boolean getIsUsed() {
-        return isUsed;
-    }
-
-    @Override
-    public void setIsUsed(boolean isUsed){
-        this.isUsed = isUsed;
-    }
-
-    @Override
-    public int getCalls(){
-        return calls;
-    }
-
-    @Override
-    public boolean getForceTurn() {
-        return forceTurn;
+        super.setIsUsed(false);
+        super.setCalls(1);
+        super.setForceTurn(false);
     }
 
     @Override
@@ -67,7 +33,7 @@ public class TCRunningPliers extends Card implements ToolCard {
     }
 
     private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft
-        dicetmp = draft.getDraft().get(i);
+        Dice dicetmp = draft.getDraft().get(i);
         if ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y))){
             draft.extract(i);
             window.getWindow()[x][y].setDice(dicetmp);

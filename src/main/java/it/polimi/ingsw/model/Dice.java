@@ -7,7 +7,6 @@ public class Dice implements Serializable {
 
     private Colors color;
     private int value;
-    private static final int faces = 6;
 
     public Dice(Colors color){
         this.color = color;
@@ -23,7 +22,7 @@ public class Dice implements Serializable {
 
     public void setValue() {
         Random r = new Random();
-        this.value = r.nextInt(faces) + 1;
+        this.value = r.nextInt(6) + 1;
     }
 
     public boolean modifyValue(int value){     //metodo toolcard

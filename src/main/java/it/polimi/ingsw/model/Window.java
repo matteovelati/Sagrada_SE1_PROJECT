@@ -452,16 +452,8 @@ public class Window implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getDifficulty() {
         return difficulty;
-    }
-
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
     }
 
     public Space[][] getWindow() {
@@ -473,7 +465,6 @@ public class Window implements Serializable {
     }
 
     public void setWindow(Dice dice, int i, int j){
-        boolean check = true;
         this.window[i][j].setDice(dice);
         for (Space[] matrix : window){
             for (Space space : matrix){

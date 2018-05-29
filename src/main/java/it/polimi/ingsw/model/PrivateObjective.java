@@ -6,20 +6,7 @@ import java.util.Collections;
 
 public class PrivateObjective extends Card implements Serializable {
 
-    private ArrayList<Colors> allColors = new ArrayList<>(0);
-
     public PrivateObjective(Colors color){
-        /*Colors colortmp;
-        if (allColors.isEmpty()) {
-            allColors.add(Colors.B);
-            allColors.add(Colors.Y);
-            allColors.add(Colors.G);
-            allColors.add(Colors.R);
-            allColors.add(Colors.P);
-        }
-        Collections.shuffle(allColors);
-        colortmp = allColors.remove(0);*/
-
 
         super.setIdNumber(0);
         switch (color){

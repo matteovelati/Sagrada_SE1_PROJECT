@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.publicobj.*;
 import it.polimi.ingsw.model.toolcards.*;
 
-import javax.tools.Tool;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -74,19 +73,19 @@ public class Field implements Serializable {
 
     private void setPublicObjectives(){
         Random r = new Random();
-        ArrayList<PublicObjective> allPublicObjecetives = new ArrayList<>(10);
-        allPublicObjecetives.add(new POColorDiagonals());
-        allPublicObjecetives.add(new POColorVariety());
-        allPublicObjecetives.add(new POColumnColorVariety());
-        allPublicObjecetives.add(new POColumnShadeVariety());
-        allPublicObjecetives.add(new PODarkShades());
-        allPublicObjecetives.add(new POLightShades());
-        allPublicObjecetives.add(new POMediumShades());
-        allPublicObjecetives.add(new PORowColorVariety());
-        allPublicObjecetives.add(new PORowShadeVariety());
-        allPublicObjecetives.add(new POShadeVariety());
+        ArrayList<PublicObjective> allPublicObjectives = new ArrayList<>(10);
+        allPublicObjectives.add(new POColorDiagonals());
+        allPublicObjectives.add(new POColorVariety());
+        allPublicObjectives.add(new POColumnColorVariety());
+        allPublicObjectives.add(new POColumnShadeVariety());
+        allPublicObjectives.add(new PODarkShades());
+        allPublicObjectives.add(new POLightShades());
+        allPublicObjectives.add(new POMediumShades());
+        allPublicObjectives.add(new PORowColorVariety());
+        allPublicObjectives.add(new PORowShadeVariety());
+        allPublicObjectives.add(new POShadeVariety());
         for (int i = 0; i < 3; i++){
-            publicObjectives.add(allPublicObjecetives.remove(r.nextInt(allPublicObjecetives.size())));
+            publicObjectives.add(allPublicObjectives.remove(r.nextInt(allPublicObjectives.size())));
         }
     }
 }

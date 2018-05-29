@@ -5,56 +5,18 @@ import it.polimi.ingsw.model.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class TCFluxRemover extends Card implements ToolCard {
+public class TCFluxRemover extends ToolCard {
 
-    private boolean isUsed;
-    private Dice dicetmp;
-    private int calls = 3;
     private int flag = 1;
-    private boolean forceTurn = true;
-
 
     public TCFluxRemover(){
-        this.isUsed = false;
         super.setIdNumber(11);
         super.setColor(Colors.P);
         super.setName("Flux Remover");
         super.setDescription("After-drafting, return the die to the Dice Bag and pull ONE die from the bag.\nChoose a value and place the new dice, obeying all placement restrictions, or return it to the Draft Pool.\n");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
-
-    @Override
-    public boolean getIsUsed() {
-        return isUsed;
-    }
-
-    @Override
-    public void setIsUsed(boolean isUsed){
-        this.isUsed = isUsed;
-    }
-
-    @Override
-    public int getCalls(){
-        return calls;
-    }
-
-    @Override
-    public boolean getForceTurn() {
-        return forceTurn;
+        super.setIsUsed(false);
+        super.setCalls(3);
+        super.setForceTurn(true);
     }
 
     @Override
@@ -87,10 +49,9 @@ public class TCFluxRemover extends Card implements ToolCard {
         }
     }
 
-
     private void mixDie(Bag bag, Draft draft, int i){   //i posizione del dado nella draft
         Random r = new Random();
-        dicetmp = draft.getDraft().remove(i);
+        Dice dicetmp = draft.getDraft().remove(i);
         bag.getBag().add(dicetmp);
         dicetmp = bag.extract(r.nextInt(bag.getBag().size()));
         dicetmp.setValue();
@@ -98,7 +59,7 @@ public class TCFluxRemover extends Card implements ToolCard {
     }
 
     private void setDicetmp(Draft draft, int i, int value){
-        dicetmp = draft.getDraft().get(i);
+        Dice dicetmp = draft.getDraft().get(i);
         dicetmp.modifyValue(value);
     }
 }

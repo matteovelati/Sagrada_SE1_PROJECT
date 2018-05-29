@@ -1,59 +1,25 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.ToolCard;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class TCGrozingPliers extends Card implements ToolCard {
+public class TCGrozingPliers extends ToolCard {
 
-    private boolean isUsed;
-    private int calls = 2;
     private int flag = 1;
-    private boolean forceTurn = true;
 
     public TCGrozingPliers(){
-        this.isUsed = false;
         super.setIdNumber(1);
         super.setColor(Colors.P);
         super.setName("Grozing Pliers");
         super.setDescription("After drafting, increase or decrease the value of the drafted die by ONE.\nONE may not change to SIX, or SIX to ONE.\n");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
-
-    @Override
-    public boolean getIsUsed() {
-        return isUsed;
-    }
-
-    @Override
-    public void setIsUsed(boolean isUsed){
-        this.isUsed = isUsed;
-    }
-
-    @Override
-    public int getCalls(){
-        return calls;
-    }
-
-    @Override
-    public boolean getForceTurn() {
-        return forceTurn;
+        super.setIsUsed(false);
+        super.setCalls(2);
+        super.setForceTurn(true);
     }
 
     @Override

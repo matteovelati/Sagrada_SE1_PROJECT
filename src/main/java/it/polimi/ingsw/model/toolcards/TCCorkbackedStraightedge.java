@@ -1,59 +1,25 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.Draft;
+import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.model.Window;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class TCCorkbackedStraightedge extends Card implements ToolCard {
-
-    private boolean isUsed;
-    private Dice dicetmp;
-    private int calls = 1;
-    private boolean forceTurn = true;
+public class TCCorkbackedStraightedge extends ToolCard {
 
     public TCCorkbackedStraightedge(){
-        this.isUsed = false;
         super.setIdNumber(9);
         super.setColor(Colors.Y);
         super.setName("Cork-backed Straightedge");
         super.setDescription("After drafting, place the die in the spot that is not adjacent to another die.\nYou must obey all placement restrictions.\n");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
-
-    @Override
-    public boolean getIsUsed() {
-        return isUsed;
-    }
-
-    @Override
-    public void setIsUsed(boolean isUsed){
-        this.isUsed = isUsed;
-    }
-
-    @Override
-    public int getCalls(){
-        return calls;
-    }
-
-    @Override
-    public boolean getForceTurn() {
-        return forceTurn;
+        super.setIsUsed(false);
+        super.setCalls(1);
+        super.setForceTurn(true);
     }
 
     @Override
@@ -67,7 +33,7 @@ public class TCCorkbackedStraightedge extends Card implements ToolCard {
     }
 
     private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft
-        dicetmp = draft.getDraft().get(i);
+        Dice dicetmp = draft.getDraft().get(i);
         if (window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.spaceColorRestriction(dicetmp, x, y) && window.spaceNumberRestriction(dicetmp, x, y)){
             draft.extract(i);
             window.getWindow()[x][y].setDice(dicetmp);

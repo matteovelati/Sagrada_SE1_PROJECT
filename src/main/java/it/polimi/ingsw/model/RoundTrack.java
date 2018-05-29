@@ -8,11 +8,10 @@ public class RoundTrack implements Serializable {
 
     private static RoundTrack instance = null;
     private ArrayList<Dice> grid;
-    private Dice dicetmp;
     private int round;
 
     private RoundTrack(){
-        grid = new ArrayList<Dice>(10);
+        grid = new ArrayList<>(10);
         round = 1;
     }
 
@@ -39,7 +38,7 @@ public class RoundTrack implements Serializable {
     }
 
     public Dice changeDice(int i, Dice dice){       //metodo toolcard
-        dicetmp = grid.get(i);
+        Dice dicetmp = grid.get(i);
         grid.set(i, dice);
         return dicetmp;
     }

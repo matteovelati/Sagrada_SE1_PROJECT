@@ -87,20 +87,10 @@ public class Player implements Serializable {
     public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
 
         toolCardSelected = toolCards.get(i);
-        if(toolCardSelected.getIsUsed()){
-            if(this.tokens >= 2) {
-                return true;
-            }
-            else
-                return false;
-        }
-        else{
-            if(this.tokens >= 1){
-                return true;
-            }
-            else
-                return false;
-        }
+        if(toolCardSelected.getIsUsed())
+            return (this.tokens >= 2);
+        else
+            return (this.tokens >= 1);
     }
 
     public void pickDice(Draft draft, int i){

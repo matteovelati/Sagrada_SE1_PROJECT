@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.model.SchemeCard;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class PrintSchemeCard implements Serializable {
 

@@ -1,60 +1,25 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Draft;
+import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.ToolCard;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 
-public class TCGlazingHammer extends Card implements ToolCard {
+public class TCGlazingHammer extends ToolCard {
 
-    private boolean isUsed;
-    private int calls = 1;
-    private boolean forceTurn = false;
-
-    public TCGlazingHammer(){
-        this.isUsed = false;
+    public TCGlazingHammer() {
         super.setIdNumber(7);
         super.setColor(Colors.B);
         super.setName("Glazing Hammer");
         super.setDescription("Re-roll all dice in the Draft Pool." +
-        " This may only be used on your second turn before drafting.\n");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
-
-    @Override
-    public boolean getIsUsed() {
-        return isUsed;
-    }
-
-    @Override
-    public void setIsUsed(boolean isUsed){
-        this.isUsed = isUsed;
-    }
-
-    @Override
-    public int getCalls(){
-        return calls;
-    }
-
-    @Override
-    public boolean getForceTurn() {
-        return forceTurn;
+                " This may only be used on your second turn before drafting.\n");
+        super.setIsUsed(false);
+        super.setCalls(1);
+        super.setForceTurn(false);
     }
 
     @Override
@@ -72,9 +37,6 @@ public class TCGlazingHammer extends Card implements ToolCard {
         Random r = new Random();
         for (int i=0; i<draft.getDraft().size(); i++) {
             draft.getDraft().get(i).modifyValue(r.nextInt(6) + 1);
-            /*dicetmp = draft.getDraft().get(i);
-            dicetmp.modifyValue(r.nextInt(6) + 1);
-            draft.getDraft().set(i, dicetmp);*/
         }
     }
 }

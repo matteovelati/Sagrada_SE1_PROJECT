@@ -8,10 +8,9 @@ public class Draft implements Serializable {
 
     private static Draft instance = null;
     private ArrayList<Dice> draft;
-    private Dice dice;
 
     private Draft(){
-        draft = new ArrayList<Dice>();
+        draft = new ArrayList<>();
     }
 
     public static Draft getInstance(){
@@ -22,7 +21,7 @@ public class Draft implements Serializable {
 
     public void setDraft(Bag bag){
         Random r = new Random();
-        dice = bag.extract((r.nextInt(bag.getBag().size())));
+        Dice dice = bag.extract((r.nextInt(bag.getBag().size())));
         dice.setValue();
         draft.add(dice);
     }
@@ -31,7 +30,7 @@ public class Draft implements Serializable {
         return draft;
     }
 
-    public Dice extract(int i) throws IndexOutOfBoundsException{
+    public Dice extract(int i){
         try{
             return draft.remove(i);
         }

@@ -1,61 +1,27 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Dice;
+import it.polimi.ingsw.model.Draft;
+import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.ToolCard;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 
-public class  TCFluxBrush extends Card implements ToolCard {
+public class  TCFluxBrush extends ToolCard {
 
-    private boolean isUsed;
-    private Dice dicetmp;
-    private int calls = 2;
     private int flag = 1;
-    private boolean forceTurn = true;
 
     public TCFluxBrush(){
-        this.isUsed = false;
         super.setIdNumber(6);
         super.setColor(Colors.P);
         super.setName("Flux Brush");
         super.setDescription("After drafting, re-roll the drafted die.\nIf it cannot be placed, return it to the Draft Pool.\n");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getNumber(){
-        return super.getIdNumber();
-    }
-
-    @Override
-    public boolean getIsUsed() {
-        return isUsed;
-    }
-
-    @Override
-    public void setIsUsed(boolean isUsed){
-        this.isUsed = isUsed;
-    }
-
-    @Override
-    public int getCalls(){
-        return calls;
-    }
-
-    @Override
-    public boolean getForceTurn() {
-        return forceTurn;
+        super.setIsUsed(false);
+        super.setCalls(2);
+        super.setForceTurn(true);
     }
 
     @Override
@@ -88,7 +54,7 @@ public class  TCFluxBrush extends Card implements ToolCard {
 
     private void reRoll(Draft draft, int i){
         Random r = new Random();
-        dicetmp = draft.getDraft().get(i);
+        Dice dicetmp = draft.getDraft().get(i);
         dicetmp.modifyValue(r.nextInt(6) + 1);
         draft.getDraft().set(i, dicetmp);
     }

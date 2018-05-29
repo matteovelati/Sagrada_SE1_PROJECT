@@ -9,7 +9,7 @@ public class Bag implements Serializable {
     private ArrayList<Dice> bag;
 
     private Bag(){
-        bag = new ArrayList<Dice>(90);
+        bag = new ArrayList<>(90);
 
         for(int i=0; i<18; i++){
             Dice dice = new Dice(Colors.B);

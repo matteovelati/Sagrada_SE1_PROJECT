@@ -1,40 +1,18 @@
 package it.polimi.ingsw.model.publicobj;
 
-import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.PublicObjective;
 import it.polimi.ingsw.model.Window;
 
 import java.util.ArrayList;
 
 
-public class POShadeVariety extends Card implements PublicObjective {
-
-    private int score;
+public class POShadeVariety extends PublicObjective {
 
     public POShadeVariety(){
-        this.score = 5;
+        super.setScore(5);
         super.setIdNumber(4);
         super.setName("Shade Variety");
         super.setDescription("Sets of one of each VALUE anywhere");
-    }
-
-    @Override
-    public String getTitle(){
-        return super.getName();
-    }
-
-    @Override
-    public String getDescr(){
-        return super.getDescription();
-    }
-
-    @Override
-    public int getScore() {
-        return score;
-    }
-
-    @Override
-    public void setScore(int score) {//USELESS
     }
 
     @Override
@@ -80,7 +58,7 @@ public class POShadeVariety extends Card implements PublicObjective {
         for(int i = 0; i < dicelist.size(); i++) {
             if(dicelist.get(i) < minsets) minsets = dicelist.get(i);
         }
-        return score*minsets;
+        return getScore()*minsets;
     }
 
 }
