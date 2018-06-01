@@ -19,7 +19,6 @@ public class  TCFluxBrush extends ToolCard {
         super.setColor(Colors.P);
         super.setName("Flux Brush");
         super.setDescription("After drafting, re-roll the drafted die.\nIf it cannot be placed, return it to the Draft Pool.\n");
-        super.setIsUsed(false);
         super.setCalls(2);
         super.setForceTurn(true);
     }

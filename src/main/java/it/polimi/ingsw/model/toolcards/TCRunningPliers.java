@@ -17,9 +17,6 @@ public class TCRunningPliers extends ToolCard {
         super.setName("Running Pliers");
         super.setDescription("After your first turn, immediately draft a die." +
             " Skip your next turn this round.\n");
-        super.setIsUsed(false);
-        super.setCalls(1);
-        super.setForceTurn(false);
     }
 
     @Override

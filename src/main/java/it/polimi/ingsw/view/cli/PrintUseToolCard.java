@@ -14,21 +14,13 @@ public class PrintUseToolCard implements Serializable {
     public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
 
         Scanner input;
-        choices.clear();
         int tmp;
+        choices.clear();
 
         switch (toolCard.getNumber()){
             case 1:                 //GROZING PLIERS
-                System.out.println("WHICH DIE DO YOU WANT TO MODIFY?");
-                System.out.println(stop);
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
+                if (!selectDraft(gameModel, choices))
                     break;
-                }
-                choices.add(tmp-1);
                 System.out.println("DO YOU WANT TO INCREASE OR DECREASE THE VALUE?");
                 System.out.println("1) INCREASE\n2) DECREASE");
                 input = new Scanner(System.in);
@@ -40,150 +32,96 @@ public class PrintUseToolCard implements Serializable {
                     choices.add(1);
                 }
                 break;
-            case 2: case 3:                 //EGLOMISE BRUSH & COPPER FOIL BURNISHER
-                PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("SELECT THE ROW OF THE DICE TO MOVE");
-                System.out.println(stop);
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
+            case 2: case 3: case 4:                //EGLOMISE BRUSH & COPPER FOIL BURNISHER
+                System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
+                if (!selectActualPosition(gameModel, choices, true))
                     break;
-                }
-                choices.add(tmp-1);
-                System.out.println("SELECT THE COLUMN OF THE DICE TO MOVE");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE NEW ROW OF THE DICE");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE NEW COLUMN OF THE DICE");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                break;
-            case 4:                 //LATHEKIN
-                System.out.println("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
-                PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("SELECT THE ACTUAL ROW");
-                System.out.println(stop);
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    break;
-                }
-                choices.add(tmp-1);
-                System.out.println("SELECT THE ACTUAL COLUMN");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE NEW ROW");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE NEW COLUMN");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
+                selectNextPosition(choices);
                 break;
             case 5:                 //LENS CUTTER
-                System.out.println("SELECT A DICE FROM THE DRAFT");
-                System.out.println(stop);
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
+                if(!selectDraft(gameModel, choices))
                     break;
-                }
-                choices.add(tmp-1);
-                System.out.println("SELECT A DICE FROM THE ROUNDTRACK");
+                System.out.println("SELECT A DIE FROM THE ROUNDTRACK");
                 PrintRoundTrack.print(gameModel.getField().getRoundTrack());
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
+                verifyInput(choices);
                 break;
             case 6:                 //FLUX BRUSH
-                System.out.println("SELECT A DICE FROM THE DRAFT TO RE-ROLL");
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    break;
-                }
-                choices.add(tmp-1);
-                break;
-            case 7:                 //GLAZING HAMMER
-                //Vengono mischiati i dadi nella draft
+                selectDraft(gameModel, choices);
                 break;
             case 11:                 //FLUX REMOVER
-                System.out.println("SELECT A DICE FROM THE DRAFT");
-                System.out.println(stop);
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    break;
-                }
-                choices.add(tmp-1);
+                selectDraft(gameModel, choices);
                 break;
             case 8: case 9:          //RUNNING PLIERS & CORK BACKED STRAIGHTEDGE
-                System.out.println("SELECT A DICE FROM THE DRAFT");
-                System.out.println(stop);
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
+                if (!selectDraft(gameModel, choices))
                     break;
-                }
-                choices.add(tmp-1);
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("SELECT A ROW TO PUT THE DICE");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT A COLUMN TO PUT THE DICE");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
+                selectNextPosition(choices);
                 break;
             case 10:                //GRINDING STONE
-                System.out.println("SELECT A DICE IN THE DRAFT TO FLIP");
-                System.out.println(stop);
-                PrintDraft.print(gameModel.getField().getDraft());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    break;
-                }
-                choices.add(tmp-1);
+                selectDraft(gameModel, choices);
                 break;
             case 12:                //TAP WHEEL
-                System.out.println("SELECT A DICE FROM THE ROUNDRACK");
+                System.out.println("SELECT A DIE FROM THE ROUNDRACK");
                 System.out.println(stop);
                 PrintRoundTrack.print(gameModel.getField().getRoundTrack());
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
+                if (!verifyInput(choices))
                     break;
-                }
-                choices.add(tmp-1);
-                System.out.println("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
+                System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("SELECT THE ACTUAL ROW");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE ACTUAL COLUMN");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE NEW ROW");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
-                System.out.println("SELECT THE NEW COLUMN");
-                input = new Scanner(System.in);
-                choices.add(input.nextInt()-1);
+                selectActualPosition(gameModel, choices, false);
+                selectNextPosition(choices);
                 break;
-            default:
+
+            default:    //GLAZING HAMMER - Vengono mischiati i dadi nella draft
                 break;
         }
+    }
+
+    private static boolean verifyInput(ArrayList<Integer> choices){
+        Scanner input = new Scanner(System.in);
+        int tmp = input.nextInt();
+        if (tmp == -1) {
+            choices.add(0, tmp);
+            return false;
+        }
+        choices.add(tmp-1);
+        return true;
+    }
+
+    private static boolean selectDraft(GameModel gameModel, ArrayList<Integer> choices){
+        System.out.println("SELECT A DIE FROM THE DRAFT");
+        System.out.println(stop);
+        PrintDraft.print(gameModel.getField().getDraft());
+        return (verifyInput(choices));
+    }
+
+    private static boolean selectActualPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify){
+        Scanner input;
+        if (verify){
+            System.out.println(stop);
+            PrintWindow.print(gameModel.getActualPlayer().getWindow());
+        }
+        System.out.println("SELECT THE ROW OF THE DIE TO BE MOVED [0,4]");
+        if (verify){
+            if (!verifyInput(choices))
+                return false;
+        }
+        else {
+            input = new Scanner(System.in);
+            choices.add(input.nextInt() - 1);
+        }
+        System.out.println("SELECT THE COLUMN OF THE DIE TO BE MOVED [0,5]");
+        input = new Scanner(System.in);
+        choices.add(input.nextInt()-1);
+        return true;
+    }
+
+    private static void selectNextPosition(ArrayList<Integer> choices){
+        System.out.println("SELECT THE ROW TO INSERT THE DIE IN [0,4]");
+        Scanner input = new Scanner(System.in);
+        choices.add(input.nextInt()-1);
+        System.out.println("SELECT THE COLUMN TO INSERT THE DIE IN [0,5]");
+        input = new Scanner(System.in);
+        choices.add(input.nextInt()-1);
     }
 }

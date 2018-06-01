@@ -18,9 +18,7 @@ public class TCLathekin extends ToolCard {
         super.setColor(Colors.Y);
         super.setName("Lathekin");
         super.setDescription("Move exactly TWO dice, obeying all placement restrictions.\n");
-        super.setIsUsed(false);
         super.setCalls(2);
-        super.setForceTurn(false);
     }
 
     @Override

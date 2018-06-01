@@ -19,9 +19,7 @@ public class TCTapWheel extends ToolCard {
         super.setColor(Colors.B);
         super.setName("Tap Wheel");
         super.setDescription("Move up to TWO dice of the same color that match the color of a die on the Round Track.\nYou must obey all placement restrictions.\n");
-        super.setIsUsed(false);
         super.setCalls(2);
-        super.setForceTurn(false);
     }
 
     @Override

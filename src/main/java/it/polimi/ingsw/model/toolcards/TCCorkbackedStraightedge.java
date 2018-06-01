@@ -17,8 +17,6 @@ public class TCCorkbackedStraightedge extends ToolCard {
         super.setColor(Colors.Y);
         super.setName("Cork-backed Straightedge");
         super.setDescription("After drafting, place the die in the spot that is not adjacent to another die.\nYou must obey all placement restrictions.\n");
-        super.setIsUsed(false);
-        super.setCalls(1);
         super.setForceTurn(true);
     }
 

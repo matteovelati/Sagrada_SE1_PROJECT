@@ -177,7 +177,7 @@ public class Window implements Serializable {
                 window[3][4].setColor(Colors.R);
                 break;
 
-            case 10:
+            case 11:
                 this.name = "Symphony of Light";
                 this.difficulty = 6;
                 window[0][0].setValue(2);
@@ -195,7 +195,7 @@ public class Window implements Serializable {
                 window[3][3].setValue(5);
                 break;
 
-            case 11:
+            case 13:
                 this.name = "Water of Life";
                 this.difficulty = 6;
                 window[0][0].setValue(6);
@@ -214,7 +214,7 @@ public class Window implements Serializable {
                 window[3][4].setColor(Colors.P);
                 break;
 
-            case 12:
+            case 15:
                 this.name = "Sun's Glory";
                 this.difficulty = 6;
                 window[0][0].setValue(1);
@@ -233,7 +233,7 @@ public class Window implements Serializable {
                 window[3][4].setValue(1);
                 break;
 
-            case 13:
+            case 10:
                 this.name = "Via Lux";
                 this.difficulty = 4;
                 window[0][0].setColor(Colors.Y);
@@ -250,7 +250,7 @@ public class Window implements Serializable {
                 window[3][4].setColor(Colors.R);
                 break;
 
-            case 14:
+            case 12:
                 this.name = "Virtus";
                 this.difficulty = 5;
                 window[0][0].setValue(4);
@@ -268,7 +268,7 @@ public class Window implements Serializable {
                 window[3][2].setValue(1);
                 break;
 
-            case 15:
+            case 14:
                 this.name = "Gravitas";
                 this.difficulty = 5;
                 window[0][0].setValue(1);
@@ -321,7 +321,7 @@ public class Window implements Serializable {
                 window[3][4].setValue(3);
                 break;
 
-            case 18:
+            case 19:
                 this.name = "Ripples of Light";
                 this.difficulty = 5;
                 window[0][3].setColor(Colors.R);
@@ -340,7 +340,7 @@ public class Window implements Serializable {
                 window[3][4].setColor(Colors.R);
                 break;
 
-            case 19:
+            case 21:
                 this.name = "Firmitas";
                 this.difficulty = 5;
                 window[0][0].setColor(Colors.P);
@@ -358,7 +358,7 @@ public class Window implements Serializable {
                 window[3][4].setValue(4);
                 break;
 
-            case 20:
+            case 23:
                 this.name = "Aurorae Magnificus";
                 this.difficulty = 5;
                 window[0][0].setValue(5);
@@ -376,7 +376,7 @@ public class Window implements Serializable {
                 window[3][4].setValue(4);
                 break;
 
-            case 21:
+            case 18:
                 this.name = "Sun Catcher";
                 this.difficulty = 3;
                 window[0][1].setColor(Colors.B);
@@ -391,7 +391,7 @@ public class Window implements Serializable {
                 window[3][4].setColor(Colors.P);
                 break;
 
-            case 22:
+            case 20:
                 this.name = "Fractal Drops";
                 this.difficulty = 3;
                 window[0][1].setValue(4);
@@ -406,7 +406,7 @@ public class Window implements Serializable {
                 window[3][1].setColor(Colors.Y);
                 break;
 
-            case 23:
+            case 22:
                 this.name = "Kaleidoscopic Dream";
                 this.difficulty = 4;
                 window[0][0].setColor(Colors.Y);
@@ -516,7 +516,7 @@ public class Window implements Serializable {
     public boolean neighboursNumberRestriction(Dice dice, int i, int j){
         //return false se a N S E W c'è un dado dello stesso numero
         if (i == 0) {
-            if (j == 0)                                                //.getDice().getValue()
+            if (j == 0)
                 return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
             else {
                 if (j == 4)
@@ -595,7 +595,7 @@ public class Window implements Serializable {
     }
 
     public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
-        return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j) );
+        return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j) && this.neighboursColorRestriction(dice, i, j) && this.neighboursNumberRestriction(dice, i, j));
     }
 
     public boolean verifyAllRestrictions(Dice dice, int i, int j){

@@ -14,7 +14,6 @@ public class TCLensCutter extends ToolCard {
         super.setColor(Colors.G);
         super.setName("Lens Cutter");
         super.setDescription("After drafting, swap the drafted die with a die from the Round Track.\n");
-        super.setIsUsed(false);
         super.setCalls(2);
         super.setForceTurn(true);
     }
@@ -30,12 +29,7 @@ public class TCLensCutter extends ToolCard {
                 return true;
             } if (flag == 2) {
                 flag = 1;
-                if ((gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) ||
-                        (gameModel.getActualPlayer().getWindow().getIsEmpty() && gameModel.getActualPlayer().getWindow().verifyFirstDiceRestriction(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3)))){
-                    gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
-                    return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
-                } else
-                    return false;
+                return diePlacement(gameModel, input);
             } else
                 return false;
         }

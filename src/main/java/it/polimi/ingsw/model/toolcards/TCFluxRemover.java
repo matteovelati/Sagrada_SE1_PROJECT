@@ -14,7 +14,6 @@ public class TCFluxRemover extends ToolCard {
         super.setColor(Colors.P);
         super.setName("Flux Remover");
         super.setDescription("After-drafting, return the die to the Dice Bag and pull ONE die from the bag.\nChoose a value and place the new dice, obeying all placement restrictions, or return it to the Draft Pool.\n");
-        super.setIsUsed(false);
         super.setCalls(3);
         super.setForceTurn(true);
     }

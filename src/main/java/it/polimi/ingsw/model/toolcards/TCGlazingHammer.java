@@ -17,9 +17,6 @@ public class TCGlazingHammer extends ToolCard {
         super.setName("Glazing Hammer");
         super.setDescription("Re-roll all dice in the Draft Pool." +
                 " This may only be used on your second turn before drafting.\n");
-        super.setIsUsed(false);
-        super.setCalls(1);
-        super.setForceTurn(false);
     }
 
     @Override

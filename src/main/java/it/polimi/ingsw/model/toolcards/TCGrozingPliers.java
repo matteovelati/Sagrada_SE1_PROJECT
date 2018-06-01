@@ -17,7 +17,6 @@ public class TCGrozingPliers extends ToolCard {
         super.setColor(Colors.P);
         super.setName("Grozing Pliers");
         super.setDescription("After drafting, increase or decrease the value of the drafted die by ONE.\nONE may not change to SIX, or SIX to ONE.\n");
-        super.setIsUsed(false);
         super.setCalls(2);
         super.setForceTurn(true);
     }
@@ -29,10 +28,10 @@ public class TCGrozingPliers extends ToolCard {
         boolean check;
         if (input.get(0) != -1) {
             if (flag == 1) {
-                if (input.get(0) == -2)
-                    check = (decreaseValue(gameModel.getField().getDraft().getDraft().get(input.get(1))));
+                if (input.get(1) == -2)
+                    check = (decreaseValue(gameModel.getField().getDraft().getDraft().get(input.get(0))));
                 else
-                    check = (increaseValue(gameModel.getField().getDraft().getDraft().get(input.get(1))));
+                    check = (increaseValue(gameModel.getField().getDraft().getDraft().get(input.get(0))));
                 if (check) {
                     flag = 2;
                     return true;
@@ -40,12 +39,7 @@ public class TCGrozingPliers extends ToolCard {
                     return false;
             } else if (flag == 2) {
                 flag = 1;
-                if ((gameModel.getActualPlayer().getWindow().verifyAllRestrictions(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3))) ||
-                        (gameModel.getActualPlayer().getWindow().getIsEmpty() && gameModel.getActualPlayer().getWindow().verifyFirstDiceRestriction(gameModel.getField().getDraft().getDraft().get(input.get(0)), input.get(2), input.get(3)))) {
-                    gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
-                    return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
-                } else
-                    return false;
+                return diePlacement(gameModel, input);
             } else
                 return false;
         }

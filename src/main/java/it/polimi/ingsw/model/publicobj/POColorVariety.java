@@ -50,8 +50,8 @@ public class POColorVariety extends PublicObjective {
             }
         }
         int minsets = dicelist.get(0);
-        for(int i = 0; i < dicelist.size(); i++) {
-            if(dicelist.get(i) < minsets) minsets = dicelist.get(i);
+        for(int i : dicelist) {
+            if(i < minsets) minsets = i;
         }
         return getScore()*minsets;
     }
