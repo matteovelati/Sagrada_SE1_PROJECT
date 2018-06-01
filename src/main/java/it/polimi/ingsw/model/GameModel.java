@@ -155,9 +155,17 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     @Override
     public void notifyObservers() throws RemoteException {
+        int tmp = 0;
         for(RemoteView observer: getObservers()) {
-            observer.update(this);
+            if(!actualPlayer.getUsername().equals(observer.getUser())) {
+                observer.update(this);
+            }
+            else{
+                tmp = getObservers().indexOf(observer);
+            }
         }
+        getObservers().get(tmp).update(this);
+
     }
 
     @Override

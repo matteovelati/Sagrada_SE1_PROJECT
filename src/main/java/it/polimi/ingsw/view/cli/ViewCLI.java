@@ -88,59 +88,51 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     }
 
     private void run() throws RemoteException {
+
         state = gameModel.getState();
 
-        if(state.equals(States.LOBBY)){
-            viewLobby();
-            return;
-        }
-        if(state.equals(States.ENDROUND)){
-            viewEndRound();
-            return;
-        }
-        if(state.equals(States.ENDMATCH)){
-            viewEndMatch();
-            return;
-        }
-        if(state.equals(States.SELECTWINDOW)){
-            viewSelectWindow();
-            return;
-        }
-        if(state.equals(States.SELECTMOVE1)){
-            viewSelectMove1();
-            return;
-        }
-        if(state.equals(States.SELECTMOVE2)){
-            viewSelectMove2();
-            return;
-        }
-        if(state.equals(States.PUTDICEINWINDOW)){
-            viewPutDiceInWindow();
-            return;
-        }
-        if(state.equals(States.SELECTDRAFT)){
-            viewSelectDraft();
-            return;
-        }
-        if(state.equals(States.SELECTCARD)){
-            viewSelectCard();
-            return;
-        }
-        if(state.equals(States.USETOOLCARD)){
-            viewUseToolCard();
-            return;
-        }
-        if(state.equals(States.USETOOLCARD2)){
-            viewUseToolCard2();
-            return;
-        }
-        if(state.equals(States.USETOOLCARD3)){
-            viewUseToolCard3();
-            return;
-        }
-        if(state.equals(States.ERROR)){
-            viewError();
-            return;
+        switch (state){
+            case LOBBY:
+                viewLobby();
+                break;
+            case ENDROUND:
+                viewEndRound();
+                break;
+            case ENDMATCH:
+                viewEndMatch();
+                break;
+            case SELECTWINDOW:
+                viewSelectWindow();
+                break;
+            case SELECTMOVE1:
+                viewSelectMove1();
+                break;
+            case SELECTMOVE2:
+                viewSelectMove2();
+                break;
+            case PUTDICEINWINDOW:
+                viewPutDiceInWindow();
+                break;
+            case SELECTDRAFT:
+                viewSelectDraft();
+                break;
+            case SELECTCARD:
+                viewSelectCard();
+                break;
+            case USETOOLCARD:
+                viewUseToolCard();
+                break;
+            case USETOOLCARD2:
+                viewUseToolCard2();
+                break;
+            case USETOOLCARD3:
+                viewUseToolCard3();
+                break;
+            case ERROR:
+                viewError();
+                break;
+            default:
+                System.out.println("Errore interno view...");
         }
     }
 
@@ -159,10 +151,11 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         for(Player x: gameModel.getPlayers()){
             System.out.println("- "+ x.getUsername());
         }
+
     }
 
     private void viewEndRound() throws RemoteException {
-        System.out.println("END OF ROUND " + gameModel.getField().getRoundTrack().getRound());
+        System.out.println("\n\nEND OF ROUND " + gameModel.getField().getRoundTrack().getRound() +"\n\n");
         if(user.equals(gameModel.getActualPlayer().getUsername())){
             network.update(this);
         }
@@ -182,6 +175,9 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             setChoose1(input.nextInt());
             network.update(this);
         }
+        else{
+            System.out.println("\n\nWAIT YOUR TURN...\n\n");
+        }
     }
 
     private void viewSelectMove1() throws RemoteException {
@@ -194,6 +190,9 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             input = new Scanner(System.in);
             setChoose1(input.nextInt());
             network.update(this);
+        }
+        else{
+            System.out.println("\n\nWAIT YOUR TURN...\n\n");
         }
     }
 
