@@ -206,7 +206,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
                 if (gameModel.playerPutDice(view.getChoose1() - 1, view.getChoose2() - 1)) {
 
-                    if (gameModel.getRoundManager().getFirstMove() == 1)
+                   if (gameModel.getRoundManager().getFirstMove() == 1)
                         gameModel.setState(SELECTMOVE2);
 
                     else if (gameModel.getRoundManager().getFirstMove() == 2)
@@ -363,7 +363,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     private void nextPlayer(){
         do {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

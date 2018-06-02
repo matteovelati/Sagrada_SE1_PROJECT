@@ -22,6 +22,8 @@ public class ShowGameStuff {
         System.out.println("0) CONTINUE WITH YOUR TURN");
 
         Scanner input = new Scanner(System.in);
+        while(!input.hasNextInt())
+            input = new Scanner(System.in);
         int choose = input.nextInt();
 
         switch (choose){

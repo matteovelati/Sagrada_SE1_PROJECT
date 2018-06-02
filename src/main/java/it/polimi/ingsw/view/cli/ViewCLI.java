@@ -61,7 +61,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     public synchronized void setOnline(boolean online){
         this.online = online;
         if(!online){
-            this.print("\n\nYOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PLEASE PRESS ANY NUMBER");
+            this.print("\n\nYOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PLEASE PRESS 0");
         }
     }
 
@@ -183,11 +183,15 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+
+    //The selectwindow is without timer
     private void viewSelectWindow() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             System.out.println("SELECT YOUR WINDOW!");
             PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
             input = new Scanner(System.in);
+            while(!input.hasNextInt())
+                input = new Scanner(System.in);
             setChoose1(input.nextInt());
             network.update(this);
         }
@@ -203,11 +207,18 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             while (tmp != 0) {
                 tmp = ShowGameStuff.print((GameModel) gameModel);
             }
-            PrintSelectMove1.print();
-            input = new Scanner(System.in);
-            setChoose1(input.nextInt());
             if(getOnline()) {
-                network.update(this);
+                PrintSelectMove1.print();
+                input = new Scanner(System.in);
+                while(!input.hasNextInt())
+                    input = new Scanner(System.in);
+                setChoose1(input.nextInt());
+                if (getOnline()) {
+                    network.update(this);
+                } else {
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
             }
             else{
                 network.setPlayerOnline(user, true);
@@ -221,49 +232,99 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     private void viewSelectMove2() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            network.startTimer(this);
             int tmp = ShowGameStuff.print((GameModel) gameModel);
             while (tmp != 0) {
                 tmp = ShowGameStuff.print((GameModel) gameModel);
             }
-            PrintSelectMove2.print();
-            input = new Scanner(System.in);
-            setChoose1(input.nextInt());
-            network.update(this);
+            if(getOnline()) {
+                PrintSelectMove2.print();
+                input = new Scanner(System.in);
+                while(!input.hasNextInt())
+                    input = new Scanner(System.in);
+                setChoose1(input.nextInt());
+                if(getOnline()) {
+                    network.update(this);
+                }
+                else{
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
+            }
+            else{
+                network.setPlayerOnline(user, true);
+                this.setOnline(true);
+            }
         }
     }
 
     private void viewPutDiceInWindow() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            network.startTimer(this);
             PrintWindow.print(gameModel.getActualPlayer().getWindow());
             System.out.println("CHOOSE A ROW TO PUT YOUR DICE (-1 TO ABORT)");
             input = new Scanner(System.in);
-            setChoose1(input.nextInt());
-            if (choose1 != -1) {
-                System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE (-1 TO ABORT)");
+            while(!input.hasNextInt())
                 input = new Scanner(System.in);
-                setChoose2(input.nextInt());
+            setChoose1(input.nextInt());
+            if(getOnline()) {
+                if (choose1 != -1) {
+                    System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE (-1 TO ABORT)");
+                    input = new Scanner(System.in);
+                    while (!input.hasNextInt())
+                        input = new Scanner(System.in);
+                    setChoose2(input.nextInt());
+                }
+                if(getOnline()) {
+                    network.update(this);
+                }
+                else{
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
             }
-            network.update(this);
+            else{
+                network.setPlayerOnline(user, true);
+                this.setOnline(true);
+            }
         }
     }
 
     private void viewSelectDraft() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            network.startTimer(this);
             System.out.println("SELECT A DICE (-1 TO ABORT)");
             PrintDraft.print(gameModel.getField().getDraft());
             input = new Scanner(System.in);
+            while(!input.hasNextInt())
+                input = new Scanner(System.in);
             setChoose1(input.nextInt());
-            network.update(this);
+            if(getOnline()) {
+                network.update(this);
+            }
+            else{
+                network.setPlayerOnline(user, true);
+                this.setOnline(true);
+            }
         }
     }
 
     private void viewSelectCard() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            network.startTimer(this);
             System.out.println("SELECT A TOOLCARD (-1 TO ABORT)");
             PrintToolCard.print(gameModel.getField().getToolCards());
             input = new Scanner(System.in);
+            while(!input.hasNextInt())
+                input = new Scanner(System.in);
             setChoose1(input.nextInt());
-            network.update(this);
+            if(getOnline()) {
+                network.update(this);
+            }
+            else {
+                network.setPlayerOnline(user, true);
+                this.setOnline(true);
+            }
         }
     }
 
