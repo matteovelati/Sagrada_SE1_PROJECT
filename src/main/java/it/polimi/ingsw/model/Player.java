@@ -13,9 +13,20 @@ public class Player implements Serializable {
     private ToolCard toolCardSelected;
     private int finalScore;
 
+    private boolean online;
+
     public Player(String username, Colors color){
         this.username = username;
+        setOnline(true);
         setPrivateObjective(color);
+    }
+
+    public synchronized boolean getOnline() {
+        return online;
+    }
+
+    public synchronized void setOnline(boolean online) {
+        this.online = online;
     }
 
     public Dice getDice() {

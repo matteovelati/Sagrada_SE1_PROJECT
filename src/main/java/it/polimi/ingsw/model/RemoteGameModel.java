@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface RemoteGameModel extends Remote {
 
+
     public void notifyObservers() throws RemoteException;
 
     //private List<RemoteView> list = new ArrayList<RemoteView>();

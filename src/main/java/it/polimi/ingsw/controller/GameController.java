@@ -23,6 +23,15 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         t = new Timer();
     }
 
+    //setta il player online/offline
+    @Override
+    public void setPlayerOnline(String user, boolean online){
+        for(Player x : gameModel.getPlayers()){
+            if(x.getUsername().equals(user)){
+                x.setOnline(online);
+            }
+        }
+    }
 
     @Override
     public void addObserver(RemoteView view) throws RemoteException{
@@ -58,9 +67,15 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     }
 
     private void nextPlayer(){
-
-        actualPlayer = gameModel.nextPlayer(actualPlayer);
-        gameModel.setActualPlayer(actualPlayer);
+        do {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            actualPlayer = gameModel.nextPlayer(actualPlayer);
+            gameModel.setActualPlayer(actualPlayer);
+        }while(!gameModel.getActualPlayer().getOnline());
 
     }
 
@@ -116,6 +131,25 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
         gameModel.setState(SELECTMOVE1);
         return true;
+    }
+
+    @Override
+    public void startTimer(final RemoteView view){
+        t = new Timer();
+        t.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            view.setOnline(false);
+                            setPlayerOnline(view.getUser(), false);
+                            endTurn();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 30000
+        );
     }
 
     private void startTimerLobby(Timer t){

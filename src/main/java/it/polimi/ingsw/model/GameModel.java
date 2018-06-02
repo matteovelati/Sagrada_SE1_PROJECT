@@ -157,14 +157,14 @@ public class GameModel implements RemoteGameModel, Serializable {
     public void notifyObservers() throws RemoteException {
         int tmp = 0;
         for(RemoteView observer: getObservers()) {
-            if(!actualPlayer.getUsername().equals(observer.getUser())) {
+            if(!actualPlayer.getUsername().equals(observer.getUser()) && observer.getOnline()) {
                 observer.update(this);
             }
             else{
                 tmp = getObservers().indexOf(observer);
             }
         }
-        getObservers().get(tmp).update(this);
+        getObservers().get(tmp).update(this); //l'actual player è sempre online!
 
     }
 

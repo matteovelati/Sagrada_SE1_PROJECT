@@ -11,6 +11,10 @@ public interface RemoteView extends Remote {
 
 
 
+    public void setOnline(boolean online) throws RemoteException;
+
+    public boolean getOnline() throws RemoteException;
+
     public String getUser() throws RemoteException;
 
     public int getChoose1() throws RemoteException;

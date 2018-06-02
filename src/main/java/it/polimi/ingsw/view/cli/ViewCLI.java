@@ -23,6 +23,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     private int choose2;
     private ArrayList<Integer> choices;
 
+    private boolean online;
+
     private RemoteGameModel gameModel;
 
     private RemoteGameController network;
@@ -31,6 +33,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     public ViewCLI(RemoteGameController network) throws RemoteException {
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
         choices = new ArrayList<>();
+        setOnline(true);
         endGame = false;
         this.network = network;
         gameModel = network.getGameModel();
@@ -52,6 +55,19 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
         this.user = input.next().toUpperCase();
+    }
+
+    @Override
+    public synchronized void setOnline(boolean online){
+        this.online = online;
+        if(!online){
+            this.print("\n\nYOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PLEASE PRESS ANY NUMBER");
+        }
+    }
+
+    @Override
+    public synchronized boolean getOnline(){
+        return online;
     }
 
     @Override
@@ -182,6 +198,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     private void viewSelectMove1() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            network.startTimer(this);
             int tmp = ShowGameStuff.print((GameModel) gameModel);
             while (tmp != 0) {
                 tmp = ShowGameStuff.print((GameModel) gameModel);
@@ -189,7 +206,13 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             PrintSelectMove1.print();
             input = new Scanner(System.in);
             setChoose1(input.nextInt());
-            network.update(this);
+            if(getOnline()) {
+                network.update(this);
+            }
+            else{
+                network.setPlayerOnline(user, true);
+                this.setOnline(true);
+            }
         }
         else{
             System.out.println("\n\nWAIT YOUR TURN...\n\n");
