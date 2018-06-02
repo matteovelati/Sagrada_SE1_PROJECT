@@ -1,10 +1,6 @@
 package it.polimi.ingsw.model.toolcards;
 
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Dice;
-import it.polimi.ingsw.model.GameModel;
-import it.polimi.ingsw.model.ToolCard;
-import it.polimi.ingsw.model.Window;
+import it.polimi.ingsw.model.*;
 
 import java.util.ArrayList;
 
@@ -49,11 +45,28 @@ public class TCLathekin extends ToolCard {
                 return false;
         }
         else
-            if (flag == 2){
-                replaceDice(gameModel.getActualPlayer().getWindow(), input.get(3), input.get(4), input.get(1), input.get(2));
+        if (flag == 2){
+            replaceDice(gameModel.getActualPlayer().getWindow(), input.get(3), input.get(4), input.get(1), input.get(2));
+        }
+        flag = 1;
+        return false; //questo false NON deve richiamare il metodo
+    }
+
+    @Override
+    public boolean select(GameModel gameModel){
+        int i=0;
+
+        for (Space[] matrix : gameModel.getActualPlayer().getWindow().getWindow()){
+            for (Space space : matrix){
+                if (!space.getIsEmpty()){
+                    i++;
+                    if(i == 2)
+                        return true;
+                }
             }
-            flag = 1;
-            return false; //questo false NON deve richiamare il metodo
+        }
+
+        return false;
     }
 
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
@@ -76,3 +89,4 @@ public class TCLathekin extends ToolCard {
     }
 
 }
+

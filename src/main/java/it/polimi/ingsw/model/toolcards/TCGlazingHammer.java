@@ -21,10 +21,14 @@ public class TCGlazingHammer extends ToolCard {
 
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        if (gameModel.getRoundManager().getTurn() == 2 && gameModel.getRoundManager().getFirstMove() == 2 /*ha selezionato una toolcard*/){
-            reRoll(gameModel.getField().getDraft());
+        reRoll(gameModel.getField().getDraft());
+        return true;
+    }
+
+    @Override
+    public boolean select(GameModel gameModel){
+        if(gameModel.getRoundManager().getTurn()==2 && gameModel.getRoundManager().getFirstMove() == 2)
             return true;
-        }
         else
             return false;
     }
@@ -37,3 +41,4 @@ public class TCGlazingHammer extends ToolCard {
         }
     }
 }
+

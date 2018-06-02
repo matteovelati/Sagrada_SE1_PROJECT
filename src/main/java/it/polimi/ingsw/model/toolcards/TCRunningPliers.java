@@ -16,7 +16,7 @@ public class TCRunningPliers extends ToolCard {
         super.setColor(Colors.R);
         super.setName("Running Pliers");
         super.setDescription("After your first turn, immediately draft a die." +
-            " Skip your next turn this round.\n");
+                " Skip your next turn this round.\n");
     }
 
     @Override
@@ -27,6 +27,11 @@ public class TCRunningPliers extends ToolCard {
             return placeDice(gameModel.getActualPlayer().getWindow(), input.get(1), input.get(2), gameModel.getField().getDraft(), input.get(0));
         else
             return false; //con questo false NON deve richiamare il metodo
+    }
+
+    @Override
+    public boolean select(GameModel gameModel){
+        return (gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getFirstMove() == 1);
     }
 
     private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft

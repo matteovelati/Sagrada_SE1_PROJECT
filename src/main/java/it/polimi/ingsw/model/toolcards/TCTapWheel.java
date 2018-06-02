@@ -55,6 +55,11 @@ public class TCTapWheel extends ToolCard {
 
     }
 
+    @Override
+    public boolean select(GameModel gameModel){
+        return (checkNotEmptyWindow(gameModel.getActualPlayer().getWindow()) && checkNotEmptyRoundTrack(gameModel.getField().getRoundTrack()));
+    }
+
     private boolean moveDice(Window window, int i, int j, int x, int y, RoundTrack grid, int k){ //i,j dado da muovere - x,y nuova casella - k dado roundtrack
         Dice dicetmp = window.getWindow()[i][j].getDice();
         window.getWindow()[i][j].setDice(null);

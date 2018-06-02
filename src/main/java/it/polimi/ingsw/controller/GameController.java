@@ -17,13 +17,11 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     private States beforeError;
     private transient Timer t;
 
-
     public GameController() throws RemoteException{
         gameModel = GameModel.getInstance(LOBBY);
         t = new Timer();
     }
 
-    //setta il player online/offline
     @Override
     public void setPlayerOnline(String user, boolean online){
         for(Player x : gameModel.getPlayers()){
@@ -38,10 +36,306 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         gameModel.addObserver(view);
     }
 
-
     @Override
     public GameModel getGameModel() throws RemoteException {
         return gameModel;
+    }
+
+    @Override
+    public void startTimer(final RemoteView view){
+        t = new Timer();
+        t.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            view.setOnline(false);
+                            setPlayerOnline(view.getUser(), false);
+                            endTurn();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 30000
+        );
+    }
+
+    @Override
+    public void update(RemoteView view) throws RemoteException {
+
+        switch(gameModel.getState()){
+
+            case LOBBY:
+                lobby(view);
+                break;
+
+            case SELECTWINDOW:
+                selectWindow(view);
+                break;
+
+            case SELECTMOVE1:
+                selectMove1(view);
+                break;
+
+            case SELECTDRAFT:
+                selectDraft(view);
+                break;
+
+            case PUTDICEINWINDOW:
+                putDiceInWindow(view);
+                break;
+
+            case SELECTMOVE2:
+                selectMove2(view);
+                break;
+
+            case SELECTCARD:
+                selectCard(view);
+                break;
+
+            case USETOOLCARD:
+                useToolCard(view);
+                break;
+
+            case USETOOLCARD2:
+                useToolCard2(view);
+                break;
+
+            case USETOOLCARD3:
+                useToolCard3(view);
+                break;
+
+            case ENDROUND:
+                endRound();
+                break;
+
+            case ENDMATCH:
+                break;
+
+            case ERROR:
+                gameModel.setState(beforeError);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
+    private void lobby(RemoteView view) throws RemoteException {
+
+        gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
+        if (gameModel.getPlayers().size() == 2) {
+            startTimerLobby(t);
+        }
+        if(gameModel.getPlayers().size() == 4){
+            t.cancel();
+            gameModel.setDraft();
+            gameModel.setSchemeCards();
+            gameModel.setState(SELECTWINDOW);
+        }
+        else {
+            gameModel.setState(LOBBY);
+        }
+    }
+
+    private void selectWindow(RemoteView view) throws RemoteException {
+
+        //t.cancel();
+        if(view.getChoose1() > 0 && view.getChoose1() < 5) {
+
+            gameModel.playerSetWindow(view.getChoose1());
+
+            actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
+            gameModel.setActualPlayer(actualPlayer);
+
+            if (gameModel.getActualPlayer().getWindow() != null) {
+                gameModel.setState(SELECTMOVE1);
+            }
+            else {
+                gameModel.getSchemeCards().remove(0);
+                gameModel.getSchemeCards().remove(0);
+                gameModel.setState(SELECTWINDOW);
+            }
+
+        }else{
+            beforeError = gameModel.getState();
+            view.printError("Input error!");
+            gameModel.setState(ERROR);
+        }
+    }
+
+    private void selectMove1(RemoteView view) throws RemoteException{
+
+        t.cancel();
+        gameModel.getRoundManager().setFirstMove(view.getChoose1());
+        check = 1;
+
+        if(gameModel.getRoundManager().getFirstMove() == 1)
+            gameModel.setState(SELECTDRAFT);
+
+        else if(gameModel.getRoundManager().getFirstMove() == 2)
+            gameModel.setState(SELECTCARD);
+
+        else if(gameModel.getRoundManager().getFirstMove() == 0)
+            endTurn();
+
+        else
+            checkError(view, view.getChoose1());
+
+    }
+
+    private void selectDraft(RemoteView view) throws RemoteException{
+
+        t.cancel();
+        if(view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()) {
+            gameModel.playerPickDice(view.getChoose1() - 1);
+            gameModel.setState(PUTDICEINWINDOW);
+        }
+        else
+            checkError(view, view.getChoose1());
+
+    }
+
+    private void putDiceInWindow(RemoteView view) throws RemoteException{
+
+        t.cancel();
+        if(view.getChoose1() > 0 && view.getChoose1() < 5) {
+
+            if(view.getChoose2() > 0 && view.getChoose2() < 6) {
+
+                if (gameModel.playerPutDice(view.getChoose1() - 1, view.getChoose2() - 1)) {
+
+                    if (gameModel.getRoundManager().getFirstMove() == 1)
+                        gameModel.setState(SELECTMOVE2);
+
+                    else if (gameModel.getRoundManager().getFirstMove() == 2)
+                        endTurn();
+
+                } else {
+                    beforeError = gameModel.getState();
+                    view.printError("Restriction error");
+                    gameModel.setState(ERROR);
+                }
+            }
+            else
+                checkErrorPutDice(view, view.getChoose2());
+        }
+        else
+            checkErrorPutDice(view, view.getChoose1());
+
+    }
+
+    private void selectMove2(RemoteView view) throws RemoteException{
+
+        t.cancel();
+        check = 2;
+
+        if(view.getChoose1() == 1){
+
+            if(gameModel.getRoundManager().getFirstMove() == 1)
+                gameModel.setState(SELECTCARD);
+
+            else if(gameModel.getRoundManager().getFirstMove() == 2)
+                gameModel.setState(SELECTDRAFT);
+
+        }
+        else if(view.getChoose1() == 0)
+            endTurn();
+
+        else
+            checkError(view, view.getChoose1());
+
+    }
+
+    private void selectCard(RemoteView view) throws RemoteException{
+
+        t.cancel();
+
+        if (view.getChoose1() > 0 && view.getChoose1() < 4){
+
+            if(gameModel.getField().getToolCards().get(view.getChoose1()-1).select(gameModel)) {
+
+                if (check == 2 && gameModel.getField().getToolCards().get(view.getChoose1() - 1).getForceTurn()) {
+                    view.printError("You can't use this card now, you have already put a dice.");
+                    gameModel.setState(SELECTCARD);
+                } else {
+                    if (gameModel.playerSelectToolCard(view.getChoose1() - 1)) {
+                        gameModel.setState(USETOOLCARD);
+                    } else {
+                        beforeError = gameModel.getState();
+                        view.printError("You don't have enough tokens");
+                        gameModel.setState(ERROR);
+                    }
+                }
+            }
+            else{
+                beforeError = gameModel.getState();
+                view.printError("You can't use this card.");
+                gameModel.setState(ERROR);
+            }
+        }
+        else
+            checkError(view, view.getChoose1());
+
+    }
+
+    private void useToolCard(RemoteView view) throws RemoteException{
+
+        t.cancel();
+
+        if(gameModel.playerUseToolCard(view.getChoices())) {
+
+            gameModel.decreaseToken();
+
+            if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1)
+                setNextState();
+            else
+                gameModel.setState(USETOOLCARD2);
+
+        }
+        else
+            checkError(view, view.getChoices().get(0));
+
+    }
+
+    private void useToolCard2(RemoteView view) throws RemoteException{
+
+        if(gameModel.playerUseToolCard(view.getChoices())) {
+
+            if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 2)
+                setNextState();
+            else
+                gameModel.setState(USETOOLCARD3);
+
+        }
+        else
+            checkError(view, view.getChoices().get(0));
+
+    }
+
+    private void useToolCard3(RemoteView view) throws RemoteException{
+
+        if(gameModel.playerUseToolCard(view.getChoices()))
+            setNextState();
+        else
+            checkError(view, view.getChoices().get(0));
+
+    }
+
+    private void endRound() throws RemoteException {
+
+        gameModel.endRound();
+
+        if(gameModel.getField().getRoundTrack().getRound() == 11) {
+            scoreCalculation();
+            gameModel.setState(ENDMATCH);
+        }
+        else {
+            gameModel.setDraft();
+            gameModel.setState(SELECTMOVE1);
+        }
+
     }
 
 
@@ -76,20 +370,15 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
             actualPlayer = gameModel.nextPlayer(actualPlayer);
             gameModel.setActualPlayer(actualPlayer);
         }while(!gameModel.getActualPlayer().getOnline());
-
     }
 
-    private boolean setNextState() throws RemoteException {
-        // SE L'USO DELLA TOOLCARD è LA PRIMA MOSSA PASSA ALLA SCELTA DELLA SECONDA MOSSA, ALTRIMENTI PASSA IL TURNO(STATO SELECTMOVE1 DEL PROSSIMO PLAYER)
-        if (gameModel.getRoundManager().getFirstMove() == 1 || gameModel.getActualPlayer().getToolCardSelected().getForceTurn()) {
+    private void setNextState() throws RemoteException {
 
-            if(!endTurn())
-                return false;
-
-        } else if (gameModel.getRoundManager().getFirstMove() == 2)
+        if (gameModel.getRoundManager().getFirstMove() == 1 || gameModel.getActualPlayer().getToolCardSelected().getForceTurn())
+            endTurn();
+        else if (gameModel.getRoundManager().getFirstMove() == 2)
             gameModel.setState(SELECTMOVE2);
 
-        return true;
     }
 
     private void checkError(RemoteView view, int i) throws RemoteException {
@@ -109,7 +398,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                 if(beforeError.equals(USETOOLCARD2) || beforeError.equals(USETOOLCARD3))
                     endTurn();
                 else
-                gameModel.setState(SELECTMOVE2);
+                    gameModel.setState(SELECTMOVE2);
             }
         }
     }
@@ -120,36 +409,15 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         checkError(view, i);
     }
 
-    private boolean endTurn() throws RemoteException {
+    private void endTurn() throws RemoteException {
 
         nextPlayer();
 
-        if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1) {//---------SE è FINITO IL ROUND METTE I DADI RIMASTI NELLA ROUNDTRACK
+        if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
             gameModel.setState(ENDROUND);
-            return false;
-        }
+        else
+            gameModel.setState(SELECTMOVE1);
 
-        gameModel.setState(SELECTMOVE1);
-        return true;
-    }
-
-    @Override
-    public void startTimer(final RemoteView view){
-        t = new Timer();
-        t.schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            view.setOnline(false);
-                            setPlayerOnline(view.getUser(), false);
-                            endTurn();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 30000
-        );
     }
 
     private void startTimerLobby(Timer t){
@@ -169,273 +437,5 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         );
     }
 
-    @Override
-    public void update(RemoteView view) throws RemoteException {
 
-        switch(gameModel.getState()){
-
-            case LOBBY:
-
-                gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
-                if (gameModel.getPlayers().size() == 2) {
-                    startTimerLobby(t);
-                }
-                if(gameModel.getPlayers().size() == 4){
-                    t.cancel();
-                    gameModel.setDraft();
-                    gameModel.setSchemeCards();
-                    gameModel.setState(SELECTWINDOW);
-                }
-                else {
-                    gameModel.setState(LOBBY);
-                }
-                break;
-
-
-            case SELECTWINDOW:
-                //t.cancel();
-                if(view.getChoose1() > 0 && view.getChoose1() < 5) {
-
-                    gameModel.playerSetWindow(view.getChoose1());
-
-                    actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
-                    gameModel.setActualPlayer(actualPlayer);
-
-                    if (gameModel.getActualPlayer().getWindow() != null) {
-                        gameModel.setState(SELECTMOVE1);
-                    }
-                    else {
-                        gameModel.getSchemeCards().remove(0);
-                        gameModel.getSchemeCards().remove(0);
-                        gameModel.setState(SELECTWINDOW);
-                    }
-
-                }else{
-                    beforeError = gameModel.getState();
-                    view.printError("Input error!");
-                    gameModel.setState(ERROR);
-                }
-
-                break;
-
-
-
-            case SELECTMOVE1:
-                t.cancel();
-                gameModel.getRoundManager().setFirstMove(view.getChoose1());
-                check = 1;
-
-                if(gameModel.getRoundManager().getFirstMove() == 1){
-                    gameModel.setState(SELECTDRAFT);
-                }
-
-                else if(gameModel.getRoundManager().getFirstMove() == 2){
-                    gameModel.setState(SELECTCARD);
-                }
-
-                else if(gameModel.getRoundManager().getFirstMove() == 0){
-                    if(!endTurn())
-                        break;
-                }
-
-                else{
-                    checkError(view, view.getChoose1());
-                }
-
-                break;
-
-
-
-            case SELECTDRAFT:
-                t.cancel();
-                if(view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()) {
-                    gameModel.playerPickDice(view.getChoose1() - 1);
-                    gameModel.setState(PUTDICEINWINDOW);
-                }
-                else{
-                    checkError(view, view.getChoose1());
-                }
-
-                break;
-
-
-
-            case PUTDICEINWINDOW:
-                t.cancel();
-
-                if(view.getChoose1() > 0 && view.getChoose1() < 5) {
-
-                    if(view.getChoose2() > 0 && view.getChoose2() < 6) {
-
-                        if (gameModel.playerPutDice(view.getChoose1() - 1, view.getChoose2() - 1)) {
-
-                            if (gameModel.getRoundManager().getFirstMove() == 1)
-                                gameModel.setState(SELECTMOVE2);
-
-                            else if (gameModel.getRoundManager().getFirstMove() == 2) {
-                                if (!endTurn())
-                                    break;
-                            }
-                        } else {
-                            beforeError = gameModel.getState();
-                            view.printError("Restriction error");
-                            gameModel.setState(ERROR);
-                        }
-                    }
-                    else
-                        checkErrorPutDice(view, view.getChoose2());
-                }
-                else
-                    checkErrorPutDice(view, view.getChoose1());
-
-                break;
-
-
-
-            case SELECTMOVE2:
-                t.cancel();
-                check = 2;
-
-                if(view.getChoose1() == 1){
-
-                    if(gameModel.getRoundManager().getFirstMove() == 1) {
-                        gameModel.setState(SELECTCARD);
-                    }
-                    else if(gameModel.getRoundManager().getFirstMove() == 2)
-                        gameModel.setState(SELECTDRAFT);
-
-                }
-                else if(view.getChoose1() == 0){
-                    if(!endTurn())
-                        break;
-                }
-                else{
-                    checkError(view, view.getChoose1());
-                }
-
-                break;
-
-
-
-            case SELECTCARD:
-                t.cancel();
-                if (view.getChoose1() > 0 && view.getChoose1() < 4){
-
-                    if(check==2 && gameModel.getField().getToolCards().get(view.getChoose1()-1).getForceTurn()){
-                        gameModel.setState(SELECTCARD);
-                        break;
-                    }
-                    else{
-                        if(gameModel.playerSelectToolCard(view.getChoose1()-1)){
-                            gameModel.setState(USETOOLCARD);
-                        }else{
-                            beforeError = gameModel.getState();
-                            view.printError("You don't have enough tokens");
-                            gameModel.setState(ERROR);
-                        }
-                    }
-                }
-                else{
-                    checkError(view, view.getChoose1());
-                }
-
-                break;
-
-
-
-            case USETOOLCARD:
-                t.cancel();
-                if(gameModel.playerUseToolCard(view.getChoices())) {
-
-                    gameModel.decreaseToken();
-
-                    if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1) {
-                        if(!setNextState())
-                            break;
-                    } else{
-                        gameModel.setState(USETOOLCARD2);
-                    }
-                }
-                else {
-                    checkError(view, view.getChoices().get(0));
-                }
-
-                break;
-
-
-
-            case USETOOLCARD2:
-
-                if(gameModel.playerUseToolCard(view.getChoices())) {
-
-                    if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 2) {
-                            if (!setNextState())
-                                break;
-                    }else{
-                        gameModel.setState(USETOOLCARD3);
-                    }
-                }
-                else {
-                    checkError(view, view.getChoices().get(0));
-                }
-
-                break;
-
-
-
-            case USETOOLCARD3:
-
-                if(gameModel.playerUseToolCard(view.getChoices())) {
-
-                    if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 3) {
-                        if(!setNextState())
-                            break;
-                    }
-                }
-                else {
-                    checkError(view, view.getChoices().get(0));
-                }
-
-                break;
-
-
-
-            case ENDROUND:
-
-                gameModel.endRound();
-
-                if(gameModel.getField().getRoundTrack().getRound() == 11) {
-                    scoreCalculation();
-                    gameModel.setState(ENDMATCH);
-                }
-                else {
-
-                    gameModel.setDraft();
-                    gameModel.setState(SELECTMOVE1);
-                    
-                }
-
-                break;
-
-
-
-            case ENDMATCH:
-
-                //display risultati
-                break;
-
-
-
-            case ERROR:
-
-                gameModel.setState(beforeError);
-
-                break;
-
-            default:
-                break;
-
-
-        }
-    }
 }

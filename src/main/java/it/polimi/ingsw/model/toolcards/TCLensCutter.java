@@ -39,9 +39,14 @@ public class TCLensCutter extends ToolCard {
         }
     }
 
+    @Override
+    public boolean select(GameModel gameModel){
+        return checkNotEmptyRoundTrack(gameModel.getField().getRoundTrack());
+    }
 
     private void swapDice(RoundTrack grid, int i, Draft draft, int j){  //i indice roundtrack, j indice draft
         Dice dicetmp = grid.changeDice(i, draft.getDraft().get(j));
         draft.getDraft().set(j, dicetmp);
     }
 }
+
