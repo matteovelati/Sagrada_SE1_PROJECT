@@ -25,10 +25,6 @@ public class Player implements Serializable {
         return online;
     }
 
-    public synchronized void setOnline(boolean online) {
-        this.online = online;
-    }
-
     public Dice getDice() {
         return dice;
     }
@@ -59,6 +55,10 @@ public class Player implements Serializable {
 
 
 
+    public synchronized void setOnline(boolean online) {
+        this.online = online;
+    }
+
     public void setDice(Dice dice){
         this.dice = dice;
     }
@@ -82,8 +82,8 @@ public class Player implements Serializable {
                 this.window = card2.getBack();
                 tokens = window.getDifficulty();
                 break;
-            default :
-                break;
+            default:
+                assert false: "wrong input: " + i;
         }
     }
 

@@ -34,15 +34,15 @@ public class PrintUseToolCard2 implements Serializable {
                 break;
             case 4:                 //LATHEKIN
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
-                if (!selectActualPosition(gameModel, choices, true))
+                if (!selectPosition(gameModel, choices, true, true))
                     break;
-                selectNextPosition(gameModel, choices, false);
+                selectPosition(gameModel, choices, false, false);
                 break;
             case 6:                 //FLUX BRUSH
                 System.out.println("YOU HAVE ROLLED THE DIE IN POSITION "+ choices.get(0)+1);
                 PrintDraft.print(gameModel.getField().getDraft());
                 System.out.println("INSERT THIS DICE IN YOUR WINDOW");
-                selectNextPosition(gameModel, choices, true);
+                selectPosition(gameModel, choices, true, false);
                 break;
             case 11:                //FLUX REMOVER
                 System.out.println("COLOR IS: "+ gameModel.getField().getDraft().getDraft().get(choices.get(0)).getColor());
@@ -64,8 +64,8 @@ public class PrintUseToolCard2 implements Serializable {
                 if(tmp == 1){
                     System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                     PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                    selectActualPosition(gameModel, choices, false);
-                    selectNextPosition(gameModel, choices, false);
+                    selectPosition(gameModel, choices, false, true);
+                    selectPosition(gameModel, choices, false, false);
                 }
                 break;
             default :
@@ -84,13 +84,16 @@ public class PrintUseToolCard2 implements Serializable {
         return true;
     }
 
-    private static boolean selectActualPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify){
+    private static boolean selectPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify, boolean first){
         Scanner input;
         if (verify){
             System.out.println(STOP);
             PrintWindow.print(gameModel.getActualPlayer().getWindow());
         }
-        System.out.println("SELECT THE ROW OF THE DIE TO BE MOVED [0,4]");
+        if (first)
+            System.out.println("SELECT THE ROW OF THE DIE TO BE MOVED [0,4]");
+        else
+            System.out.println("SELECT THE ROW TO INSERT THE DIE IN [0,4]");
         if (verify){
             if (!verifyInput(choices))
                 return false;
@@ -99,28 +102,10 @@ public class PrintUseToolCard2 implements Serializable {
             input = new Scanner(System.in);
             choices.add(input.nextInt() - 1);
         }
-        System.out.println("SELECT THE COLUMN OF THE DIE TO BE MOVED [0,5]");
-        input = new Scanner(System.in);
-        choices.add(input.nextInt()-1);
-        return true;
-    }
-
-    private static boolean selectNextPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify){
-        Scanner input;
-        if (verify){
-            System.out.println(STOP);
-            PrintWindow.print(gameModel.getActualPlayer().getWindow());
-        }
-        System.out.println("SELECT THE ROW TO INSERT THE DIE IN [0,4]");
-        if (verify){
-            if (!verifyInput(choices))
-                return false;
-        }
-        else {
-            input = new Scanner(System.in);
-            choices.add(input.nextInt() - 1);
-        }
-        System.out.println("SELECT THE COLUMN TO INSERT THE DIE IN [0,5]");
+        if (first)
+            System.out.println("SELECT THE COLUMN OF THE DIE TO BE MOVED [0,5]");
+        else
+            System.out.println("SELECT THE COLUMN TO INSERT THE DIE IN [0,5]");
         input = new Scanner(System.in);
         choices.add(input.nextInt()-1);
         return true;

@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class PrivateObjective extends Card implements Serializable {
 
@@ -36,8 +34,7 @@ public class PrivateObjective extends Card implements Serializable {
                 super.setColor(Colors.Y);
                 break;
             default:
-                System.out.println("errore creazioni privateObjectives");
-                break;
+                assert false: "unknown color: " + color;
         }
     }
 

@@ -55,7 +55,6 @@ public class TCLathekin extends ToolCard {
     @Override
     public boolean select(GameModel gameModel){
         int i=0;
-
         for (Space[] matrix : gameModel.getActualPlayer().getWindow().getWindow()){
             for (Space space : matrix){
                 if (!space.getIsEmpty()){
@@ -65,7 +64,6 @@ public class TCLathekin extends ToolCard {
                 }
             }
         }
-
         return false;
     }
 

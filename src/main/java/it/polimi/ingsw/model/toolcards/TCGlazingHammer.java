@@ -27,10 +27,7 @@ public class TCGlazingHammer extends ToolCard {
 
     @Override
     public boolean select(GameModel gameModel){
-        if(gameModel.getRoundManager().getTurn()==2 && gameModel.getRoundManager().getFirstMove() == 2)
-            return true;
-        else
-            return false;
+        return (gameModel.getRoundManager().getTurn()==2 && gameModel.getRoundManager().getFirstMove() == 2);
     }
 
 

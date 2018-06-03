@@ -10,7 +10,7 @@ public class BagTest {
     private Bag bag;
 
     @Before
-    public void before(){
+    public void setUp(){
         bag = Bag.getInstance();
     }
 

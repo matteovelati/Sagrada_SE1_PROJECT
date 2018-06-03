@@ -13,6 +13,10 @@ public class Draft implements Serializable {
         draft = new ArrayList<>();
     }
 
+    public ArrayList<Dice> getDraft(){
+        return draft;
+    }
+
     public static Draft getInstance(){
         if (instance == null)
             instance = new Draft();
@@ -24,10 +28,6 @@ public class Draft implements Serializable {
         Dice dice = bag.extract((r.nextInt(bag.getBag().size())));
         dice.setValue();
         draft.add(dice);
-    }
-
-    public ArrayList<Dice> getDraft(){
-        return draft;
     }
 
     public Dice extract(int i){
