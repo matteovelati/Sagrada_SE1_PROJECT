@@ -14,6 +14,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
     private GameModel gameModel;
     private int actualPlayer, check;
+    private boolean roundEnded;
     private States beforeError;
     private transient Timer t;
 
@@ -360,7 +361,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         }
     }
 
-    private void nextPlayer(){
+    private void nextPlayer() throws RemoteException {
         do {
             try {
                 Thread.sleep(3000);
@@ -369,7 +370,14 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
             }
             actualPlayer = gameModel.nextPlayer(actualPlayer);
             gameModel.setActualPlayer(actualPlayer);
+            if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
+                roundEnded = true;
         }while(!gameModel.getActualPlayer().getOnline());
+
+        if(roundEnded){
+            roundEnded = false;
+            gameModel.setState(ENDROUND);
+        }
     }
 
     private void setNextState() throws RemoteException {
