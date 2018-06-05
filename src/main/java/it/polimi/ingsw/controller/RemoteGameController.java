@@ -15,5 +15,6 @@ public interface RemoteGameController extends Remote {
     public void addObserver(RemoteView view) throws RemoteException;
     public void setPlayerOnline(String user, boolean online) throws RemoteException;
     public void startTimer(RemoteView view) throws RemoteException;
+    public void reAddObserver(RemoteView view) throws RemoteException;
 
 }

@@ -45,8 +45,18 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             network.update(this);
         }
         else{
-            System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
-            System.exit(0);
+            if(!gameModel.getObservers().contains(null)) {
+                System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+                System.exit(0);
+            }
+            else{
+                do{
+                    setUser();
+                }while(!verifyUserCrashed(user));
+                network.addObserver(this);
+                network.setPlayerOnline(user, true);
+                System.out.println("\n\nJOINING AGAIN THE MATCH...");
+            }
         }
     }
 
@@ -160,6 +170,23 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             }
         }
         return true;
+    }
+
+    private boolean verifyUserCrashed(String s) throws RemoteException {
+        for(Player x : gameModel.getPlayers()){
+            if(x.getUsername().equals(s)){
+                if(x.getOnline())
+                    return false;
+                else{
+                    for(RemoteView y : gameModel.getObservers()){
+                        if(y!=null && y.getUser().equals(s))
+                            return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void viewLobby() throws RemoteException {

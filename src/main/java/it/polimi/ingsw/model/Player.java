@@ -57,6 +57,11 @@ public class Player implements Serializable {
 
     public synchronized void setOnline(boolean online) {
         this.online = online;
+        if(online)
+            System.out.println(username+" IS ONLINE");
+        else{
+            System.out.println(username+" IS OFFLINE");
+        }
     }
 
     public void setDice(Dice dice){

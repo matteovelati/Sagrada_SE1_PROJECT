@@ -33,6 +33,11 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     }
 
     @Override
+    public void reAddObserver(RemoteView view) throws RemoteException{
+        gameModel.reAddObserver(view);
+    }
+
+    @Override
     public void addObserver(RemoteView view) throws RemoteException{
         gameModel.addObserver(view);
     }
@@ -54,7 +59,13 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                             setPlayerOnline(view.getUser(), false);
                             endTurn();
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            setPlayerOnline(gameModel.getActualPlayer().getUsername(), false);
+                            try {
+                                gameModel.removeObserver(view);
+                                endTurn();
+                            } catch (RemoteException e1) {
+                                System.out.println("Non deve succedere");
+                            }
                         }
                     }
                 }, 30000

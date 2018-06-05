@@ -15,6 +15,8 @@ public interface RemoteGameModel extends Remote {
 
     //private List<RemoteView> list = new ArrayList<RemoteView>();
 
+    public void reAddObserver(RemoteView observer) throws RemoteException;
+
     public List<RemoteView> getObservers() throws RemoteException;
 
     public void addObserver(RemoteView observer) throws RemoteException;
