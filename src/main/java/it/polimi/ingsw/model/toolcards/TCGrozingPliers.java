@@ -23,7 +23,7 @@ public class TCGrozingPliers extends ToolCard {
 
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        // arraylist: in 0 posizione dado draft; in 1 mettere '-1' per decreamentare; in 2,3 le i,j della new pos
+        // arraylist: in 0 posizione dado draft; in 1 mettere '-2' per decreamentare; in 2,3 le i,j della new pos
         //IN 0 (-1) PER ANNULLARE
         boolean check;
         if (input.get(0) != -1) {

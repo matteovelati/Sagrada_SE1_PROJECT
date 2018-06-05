@@ -8,16 +8,11 @@ import static org.junit.Assert.*;
 
 public class RoundManagerTest {
 
-    RoundManager roundManager;
-    int actualPlayer0;
-    int actualPlayer1;
-    int actualPlayer2;
-    int actualPlayer3;
-    int nPlayers;
-
-    Draft draft;
-    Bag bag;
-    RoundTrack roundTrack;
+    private RoundManager roundManager;
+    private int actualPlayer0, actualPlayer1, actualPlayer2, actualPlayer3, nPlayers;
+    private Draft draft;
+    private Bag bag;
+    private RoundTrack roundTrack;
 
     @Before
     public void before() {
@@ -60,16 +55,13 @@ public class RoundManagerTest {
 
         assertEquals(1, roundManager.changeActualPlayer(actualPlayer0, nPlayers));
         assertEquals(1, roundManager.getTurn());
-
     }
 
     @Test
     public void endRound() {
         Dice dice = draft.getDraft().get(0);
-
         roundManager.endRound(draft, roundTrack);
-
         assertEquals(dice, roundTrack.getGrid().get(0));
-        assertNotEquals(dice, draft.getDraft().get(0));
+        assertFalse(draft.getDraft().contains(dice));
     }
 }

@@ -33,7 +33,6 @@ public abstract class ToolCard extends Card {
     public boolean select(GameModel gameModel){
         return true;
     }
-
     protected void setCalls(int calls){
         this.calls = calls;
     }
@@ -72,18 +71,10 @@ public abstract class ToolCard extends Card {
             return false;
         }
     }
-
     protected boolean checkNotEmptyWindow(Window window){
-        if (window.getIsEmpty())
-            return false;
-        else
-            return true;
+        return !window.getIsEmpty();
     }
     protected boolean checkNotEmptyRoundTrack(RoundTrack roundTrack){
-        if(roundTrack.getGrid().size()==0)
-            return false;
-        else
-            return true;
+        return !roundTrack.getGrid().isEmpty();
     }
 }
-

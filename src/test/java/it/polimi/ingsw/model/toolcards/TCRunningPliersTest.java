@@ -1,4 +1,4 @@
-/*package it.polimi.ingsw.model.toolcards;
+package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -14,20 +14,20 @@ public class TCRunningPliersTest {
     private GameModel gameModel;
     private Dice dice1, dice2, dice3, dice4, dice5, dice6, dice7, dice8;
     private Player player1;
-    private ArrayList<Player> players;
-    private States state;
-    private Window window1;
     private SchemeCard schemeCard1;
     private SchemeCard schemeCard2;
 
     @Before
     public void before() {
 
-        players = new ArrayList<>(1);
-        player1 = new Player("matteo");
-        players.add(player1);
-        state = States.SELECTMOVE1;
-        gameModel = new GameModel(players, state);
+        gameModel = GameModel.getInstance(States.LOBBY);
+        player1 = new Player("matteo", Colors.G);
+        try {
+            gameModel.setPlayers(player1);
+        }
+        catch (Exception e){
+            assert false;
+        }
 
         dice1 = new Dice(Colors.R);    //00
         dice1.modifyValue(5);
@@ -53,7 +53,6 @@ public class TCRunningPliersTest {
         gameModel.getField().getDraft().addDice(dice4);
         gameModel.getField().getDraft().addDice(dice5);
 
-        window1 = new Window(5);
         schemeCard1 = new SchemeCard(3);
         schemeCard2 = new SchemeCard(1);
         gameModel.getActualPlayer().setWindow(schemeCard1, schemeCard2, 1);
@@ -68,19 +67,30 @@ public class TCRunningPliersTest {
 
     }
 
+    public void setDraft(){
+        gameModel.getField().getDraft().getDraft().clear();
+        gameModel.getField().getDraft().addDice(dice1);
+        gameModel.getField().getDraft().addDice(dice2);
+        gameModel.getField().getDraft().addDice(dice3);
+        gameModel.getField().getDraft().addDice(dice4);
+        gameModel.getField().getDraft().addDice(dice5);
+    }
+
 
     @Test
     public void useToolCard1() {
 
         ArrayList<Integer> input = new ArrayList<>();
 
-        input.add(0);
+        input.add(1);
+        input.add(1);
+        input.add(4);
 
-        gameModel.getRoundManager().setTurn(1);
         gameModel.getRoundManager().setFirstMove(1);
 
         assertTrue(tc.useToolCard(gameModel, input));
-        assertFalse(gameModel.getField().getDraft().getDraft().contains(dice1));
+        assertEquals(dice2, gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice());
+        setDraft();
     }
 
     @Test
@@ -88,13 +98,15 @@ public class TCRunningPliersTest {
 
         ArrayList<Integer> input = new ArrayList<>();
 
+        input.add(2);
         input.add(1);
+        input.add(0);
 
-        gameModel.getRoundManager().setTurn(2);
-        gameModel.getRoundManager().setFirstMove(1);
+        gameModel.getRoundManager().setFirstMove(2);
 
         assertFalse(tc.useToolCard(gameModel, input));
-        assertTrue(gameModel.getField().getDraft().getDraft().contains(dice2));
+        assertTrue(gameModel.getField().getDraft().getDraft().contains(dice3));
+        setDraft();
     }
 
     @Test
@@ -102,12 +114,14 @@ public class TCRunningPliersTest {
 
         ArrayList<Integer> input = new ArrayList<>();
 
+        input.add(1);
         input.add(2);
+        input.add(3);
 
-        gameModel.getRoundManager().setTurn(1);
         gameModel.getRoundManager().setFirstMove(2);
 
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getField().getDraft().getDraft().contains(dice3));
+        setDraft();
     }
-}*/
+}

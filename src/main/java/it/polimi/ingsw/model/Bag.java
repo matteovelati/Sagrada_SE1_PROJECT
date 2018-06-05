@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Bag implements Serializable {
 
@@ -23,6 +24,7 @@ public class Bag implements Serializable {
             Dice dice5 = new Dice(Colors.Y);
             bag.add(dice5);
         }
+        Collections.shuffle(bag);
     }
 
     public static Bag getInstance(){

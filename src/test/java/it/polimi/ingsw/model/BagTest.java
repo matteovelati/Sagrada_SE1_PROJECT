@@ -14,8 +14,6 @@ public class BagTest {
         bag = Bag.getInstance();
     }
 
-
-
     @Test
     public void getInstance() {
         assertEquals(bag, Bag.getInstance());

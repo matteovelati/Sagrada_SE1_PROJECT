@@ -1,4 +1,4 @@
-/*package it.polimi.ingsw.model.toolcards;
+package it.polimi.ingsw.model.toolcards;
 
 import it.polimi.ingsw.model.*;
 import org.junit.Before;
@@ -14,20 +14,20 @@ public class TCLensCutterTest {
     private GameModel gameModel;
     private Dice dice1, dice2, dice3, dice4, dice5, dice6, dice7, dice8;
     private Player player1;
-    private ArrayList<Player> players;
-    private States state;
-    private Window window1;
     private SchemeCard schemeCard1;
     private SchemeCard schemeCard2;
 
     @Before
     public void before() {
 
-        players = new ArrayList<>(1);
-        player1 = new Player("matteo");
-        players.add(player1);
-        state = States.SELECTMOVE1;
-        gameModel = new GameModel(players, state);
+        gameModel = GameModel.getInstance(States.LOBBY);
+        player1 = new Player("matteo", Colors.G);
+        try {
+            gameModel.setPlayers(player1);
+        }
+        catch (Exception e){
+            assert false;
+        }
 
         dice1 = new Dice(Colors.R);    //00
         dice1.modifyValue(5);
@@ -57,7 +57,6 @@ public class TCLensCutterTest {
         gameModel.getField().getRoundTrack().setGrid(dice6);
         gameModel.getField().getRoundTrack().setGrid(dice7);
 
-        window1 = new Window(5);
         schemeCard1 = new SchemeCard(3);
         schemeCard2 = new SchemeCard(1);
         gameModel.getActualPlayer().setWindow(schemeCard1, schemeCard2, 1);
@@ -70,6 +69,14 @@ public class TCLensCutterTest {
         gameModel.getActualPlayer().getWindow().setWindow(dice7, 2, 1);
         gameModel.getActualPlayer().getWindow().setWindow(dice8, 2, 2);
 
+    }
+    public void setDraft(){
+        gameModel.getField().getDraft().getDraft().clear();
+        gameModel.getField().getDraft().addDice(dice1);
+        gameModel.getField().getDraft().addDice(dice2);
+        gameModel.getField().getDraft().addDice(dice3);
+        gameModel.getField().getDraft().addDice(dice4);
+        gameModel.getField().getDraft().addDice(dice5);
     }
 
 
@@ -84,5 +91,6 @@ public class TCLensCutterTest {
         assertTrue(tc.useToolCard(gameModel, input));
         assertFalse(gameModel.getField().getDraft().getDraft().contains( gameModel.getField().getRoundTrack().getGrid().get(input.get(1)) ));
         assertFalse(gameModel.getField().getRoundTrack().getGrid().contains( gameModel.getField().getDraft().getDraft().get(input.get(0)) ));
+        setDraft();
     }
-}*/
+}

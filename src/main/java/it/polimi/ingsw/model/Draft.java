@@ -44,5 +44,4 @@ public class Draft implements Serializable {
         draft.add(dice);
     }
 
-
 }

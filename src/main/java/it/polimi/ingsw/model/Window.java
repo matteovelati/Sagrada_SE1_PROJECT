@@ -478,127 +478,92 @@ public class Window implements Serializable {
     }
 
     public boolean neighboursColorRestriction(Dice dice, int i, int j){
+        //return true se puoi inserire
         //return false se a N S E W c'è un dado dello stesso colore
-        if (i == 0) {
-            if (j == 0)
-                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
-            else {
-                if (j == 4)
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
-                else
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
+        for (int x = -1; x < 2; x += 2) {
+            try {
+                if (dice.getColor().equals(window[i + x][j].getDice().getColor()))
+                    return false;
+            } catch (Exception e) {
+                //DO NOTHING
             }
         }
-        else {
-            if (i == 3) {
-                if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())));
-                else {
-                    if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())));
-                    else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())));
-                }
-            }
-            else {
-                if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
-                else {
-                    if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
-                    else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getColor().equals(dice.getColor())) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getColor().equals(dice.getColor())) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getColor().equals(dice.getColor())) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getColor().equals(dice.getColor())));
-                }
+        for (int y = -1; y < 2; y += 2) {
+            try {
+                if (dice.getColor().equals(window[i][j + y].getDice().getColor()))
+                    return false;
+            } catch (Exception e) {
+                //DO NOTHING
             }
         }
+        return true;
     }
 
     public boolean neighboursNumberRestriction(Dice dice, int i, int j){
+        //return true se puoi inserire
         //return false se a N S E W c'è un dado dello stesso numero
-        if (i == 0) {
-            if (j == 0)
-                return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
-            else {
-                if (j == 4)
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
-                else
-                    return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
+        for (int x = -1; x < 2; x += 2) {
+            try {
+                if (dice.getValue() == (window[i + x][j].getDice().getValue()))
+                    return false;
+            } catch (Exception e) {
+                //DO NOTHING
             }
         }
-        else {
-            if (i == 3) {
-                if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()));
-                else {
-                    if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()));
-                    else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()));
-                }
-            }
-            else {
-                if (j == 0)
-                    return!((!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
-                else {
-                    if (j == 4)
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
-                    else
-                        return!((!window[i][j-1].getIsEmpty() && window[i][j - 1].getDice().getValue() == dice.getValue()) || (!window[i][j+1].getIsEmpty() && window[i][j + 1].getDice().getValue() == dice.getValue()) || (!window[i-1][j].getIsEmpty() && window[i - 1][j].getDice().getValue() == dice.getValue()) || (!window[i+1][j].getIsEmpty() && window[i + 1][j].getDice().getValue() == dice.getValue()));
-                }
+        for (int y = -1; y < 2; y += 2) {
+            try {
+                if (dice.getValue() == (window[i][j + y].getDice().getValue()))
+                    return false;
+            } catch (Exception e) {
+                //DO NOTHING
             }
         }
+        return true;
     }
 
     public boolean neighboursPositionRestriction(int i, int j){
-        //return false se non vi sono dadi adiacienti
-        if (i == 0) {
-            if (j == 0)
-                return!(window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty());
-            else {
-                if (j == 4)
-                    return!(window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty());
-                else
-                    return!(window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty());
+        //return true se puoi inserire
+        //return false se non c'è nemmeno un dado adiacente
+        for (int y = -1; y < 2; y += 2) {
+            try {
+                if (!window[i][j + y].getIsEmpty())
+                    return true;
+            } catch (Exception e) {
+                //DO NOTHING
             }
         }
-        else {
-            if (i == 3) {
-                if (j == 0)
-                    return!(window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty());
-                else {
-                    if (j == 4)
-                        return!(window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty());
-                    else
-                        return!(window[i][j-1].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty());
-                }
-            } else {
-                if (j == 0)
-                    return!(window[i-1][j].getIsEmpty() && window[i-1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i+1][j].getIsEmpty());
-                else {
-                    if (j == 4)
-                        return!(window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty());
-                    else
-                        return!(window[i-1][j].getIsEmpty() && window[i-1][j-1].getIsEmpty() && window[i][j-1].getIsEmpty() && window[i+1][j-1].getIsEmpty() && window[i+1][j].getIsEmpty() && window[i+1][j+1].getIsEmpty() && window[i][j+1].getIsEmpty() && window[i-1][j+1].getIsEmpty());
+        for (int x = -1; x < 2; x += 2){
+            for (int y = -1; y < 2; y ++){
+                try {
+                    if (!window[i + x][j + y].getIsEmpty())
+                        return true;
+                } catch (Exception e) {
+                    //DO NOTHING
                 }
             }
         }
+        return false;
     }
 
     public boolean spaceColorRestriction(Dice dice, int i, int j){
+        //return true se puoi inserire
         return !(!window[i][j].getIsEmpty() || (!window[i][j].getColor().equals(dice.getColor()) && !window[i][j].getColor().equals(Colors.W)));
 
     }
 
     public boolean spaceNumberRestriction(Dice dice, int i, int j){
+        //return true se puoi inserire
         return !(!window[i][j].getIsEmpty() || (window[i][j].getValue() != dice.getValue() && window[i][j].getValue() != 0));
 
     }
 
     public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
-        return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j) && this.neighboursColorRestriction(dice, i, j) && this.neighboursNumberRestriction(dice, i, j));
+        //return true se puoi inserire
+        return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j));
     }
 
     public boolean verifyAllRestrictions(Dice dice, int i, int j){
+        //return true se puoi inserire
         return (this.neighboursColorRestriction(dice, i, j) && this.neighboursNumberRestriction(dice, i, j) && this.neighboursPositionRestriction(i, j) && this.spaceColorRestriction(dice, i, j) && this.spaceNumberRestriction(dice, i, j));
     }
 

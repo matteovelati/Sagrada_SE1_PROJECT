@@ -2,5 +2,5 @@ projectKey=it.polimi.ingsw:Sagrada
 serverUrl=http://localhost:9000
 serverVersion=7.0.0.36138
 dashboardUrl=http://localhost:9000/dashboard/index/it.polimi.ingsw:Sagrada
-ceTaskId=AWPFwFXW3rQV2GMtliyC
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AWPFwFXW3rQV2GMtliyC
+ceTaskId=AWPPnjdabVqtP-nyyAN-
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWPPnjdabVqtP-nyyAN-
