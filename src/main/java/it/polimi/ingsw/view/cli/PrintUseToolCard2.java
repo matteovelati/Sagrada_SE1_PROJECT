@@ -10,62 +10,87 @@ import java.util.Scanner;
 public class PrintUseToolCard2 implements Serializable {
 
     private static final String STOP = "ENTER [-1] TO STOP. YOU WILL LOSE YOUR TOKENS!!!";
+    private static int tmp;
 
     public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
 
         Scanner input;
-        int tmp;
 
         switch (toolCard.getNumber()){
             case 1: case 5: case 10:         //GROZING PLIERS & LENS CUTTER & GRINDING STONE
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("SELECT THE ROW TO INSERT THE DIE IN [0,4]");
+                System.out.println("SELECT THE ROW TO INSERT THE DIE");
                 System.out.println(STOP);
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
+                do {
+                    input = new Scanner(System.in);
+                    tmp = input.nextInt();
+                    if (tmp == -1) {
+                        choices.add(0, tmp);
+                        break;
+                    }
+                }while(!correctInput(tmp, 2, gameModel));
+                if(choices.get(0) == -1)
                     break;
-                }
                 choices.add(2, tmp-1);
-                System.out.println("SELECT THE COLUMN TO INSERT THE DIE IN [0,5]");
-                input = new Scanner(System.in);
-                choices.add(3, input.nextInt()-1);
+                System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
+                do {
+                    input = new Scanner(System.in);
+                    tmp = input.nextInt();
+                    if (tmp == -1) {
+                        choices.add(0, tmp);
+                        break;
+                    }
+                }while(!correctInput(tmp, 3, gameModel));
+                if(choices.get(0) == -1)
+                    break;
+                choices.add(3, tmp-1);
                 break;
             case 4:                 //LATHEKIN
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                 if (!selectPosition(gameModel, choices, true, true))
                     break;
-                selectPosition(gameModel, choices, false, false);
+                if(!selectPosition(gameModel, choices, false, false))
+                    break;
                 break;
             case 6:                 //FLUX BRUSH
                 System.out.println("YOU HAVE ROLLED THE DIE IN POSITION "+ choices.get(0)+1);
                 PrintDraft.print(gameModel.getField().getDraft());
                 System.out.println("INSERT THIS DICE IN YOUR WINDOW");
-                selectPosition(gameModel, choices, true, false);
+                if(!selectPosition(gameModel, choices, true, false))
+                    break;
                 break;
             case 11:                //FLUX REMOVER
                 System.out.println("COLOR IS: "+ gameModel.getField().getDraft().getDraft().get(choices.get(0)).getColor());
                 System.out.println("CHOOSE A NEW VALUE FOR THE DIE");
                 System.out.println(STOP);
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    break;
-                }
+                do {
+                    input = new Scanner(System.in);
+                    tmp = input.nextInt();
+                    if (tmp == -1) {
+                        choices.add(0, tmp);
+                        break;
+                    }
+                    if(tmp<1 || tmp>6)
+                        System.out.println("Input error! Do it again correctly");
+                }while(tmp<1 || tmp>6);
                 choices.add(tmp);
                 break;
             case 12:                //TAP WHEEL
                 System.out.println("DO YOU WANT TO MOVE ANOTHER DIE?\n1) YES\n2) NO");
-                input = new Scanner(System.in);
-                tmp = input.nextInt();
+                do {
+                    input = new Scanner(System.in);
+                    tmp = input.nextInt();
+                    if(tmp<1 || tmp>2)
+                        System.out.println("Input error! Do it again correctly");
+                }while(tmp<1 || tmp>2);
                 choices.add(tmp);
                 if(tmp == 1){
                     System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                     PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                    selectPosition(gameModel, choices, false, true);
-                    selectPosition(gameModel, choices, false, false);
+                    if(!selectPosition(gameModel, choices, false, true))
+                        break;
+                    if(!selectPosition(gameModel, choices, false, false))
+                        break;
                 }
                 break;
             default :
@@ -73,41 +98,64 @@ public class PrintUseToolCard2 implements Serializable {
         }
     }
 
-    private static boolean verifyInput(ArrayList<Integer> choices){
-        Scanner input = new Scanner(System.in);
-        int tmp = input.nextInt();
-        if (tmp == -1) {
-            choices.add(0, tmp);
-            return false;
-        }
-        choices.add(tmp-1);
+    private static boolean verifyInput(ArrayList<Integer> choices, int check, GameModel gameModel){
+        do {
+            Scanner input = new Scanner(System.in);
+            tmp = input.nextInt();
+            if (tmp == -1) {
+                choices.add(0, tmp);
+                return false;
+            }
+        }while(!correctInput(tmp, check, gameModel));
+        choices.add(tmp - 1);
         return true;
     }
 
     private static boolean selectPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify, boolean first){
-        Scanner input;
+
         if (verify){
             System.out.println(STOP);
             PrintWindow.print(gameModel.getActualPlayer().getWindow());
         }
         if (first)
-            System.out.println("SELECT THE ROW OF THE DIE TO BE MOVED [0,4]");
+            System.out.println("SELECT THE ROW OF THE DIE TO BE MOVED");
         else
-            System.out.println("SELECT THE ROW TO INSERT THE DIE IN [0,4]");
-        if (verify){
-            if (!verifyInput(choices))
-                return false;
-        }
-        else {
-            input = new Scanner(System.in);
-            choices.add(input.nextInt() - 1);
-        }
+            System.out.println("SELECT THE ROW TO INSERT THE DIE");
+        if (!verifyInput(choices, 2, gameModel))
+            return false;
+
         if (first)
-            System.out.println("SELECT THE COLUMN OF THE DIE TO BE MOVED [0,5]");
+            System.out.println("SELECT THE COLUMN OF THE DIE TO BE MOVED");
         else
-            System.out.println("SELECT THE COLUMN TO INSERT THE DIE IN [0,5]");
-        input = new Scanner(System.in);
-        choices.add(input.nextInt()-1);
-        return true;
+            System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
+        return verifyInput(choices, 3, gameModel);
+    }
+
+    private static boolean correctInput(int i, int check, GameModel gameModel){
+        if(check == 0){             //check draft
+            return checkInput(i, gameModel.getField().getDraft().getDraft().size()+1);
+        }
+        else if (check == 1){       //check roundtrack
+            return checkInput(i, gameModel.getField().getRoundTrack().getGrid().size()+1);
+        }
+        else if (check == 2){       //check row
+            return checkInput(i, 5);
+        }
+        else if (check == 3){       //check column
+            return checkInput(i, 6);
+        }
+        return false;               //method error
+    }
+
+    private static boolean checkInput(int i, int j){
+        if(!(i > 0 && i < j))
+            return error();
+        else
+            return true;
+    }
+
+    private static boolean error(){
+        System.out.println("Input error! Do it again correctly");
+        return false;
     }
 }
