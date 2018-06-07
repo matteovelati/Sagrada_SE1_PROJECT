@@ -374,17 +374,12 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
     private void nextPlayer() throws RemoteException {
         do {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             actualPlayer = gameModel.nextPlayer(actualPlayer);
             gameModel.setActualPlayer(actualPlayer);
             if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
                 roundEnded = true;
         }while(!gameModel.getActualPlayer().getOnline());
-
+        System.out.println("actualplayer: "+ gameModel.getActualPlayer().getUsername());
         if(roundEnded){
             roundEnded = false;
             gameModel.setState(ENDROUND);

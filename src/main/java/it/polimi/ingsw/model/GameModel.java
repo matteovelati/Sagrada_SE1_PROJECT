@@ -158,49 +158,29 @@ public class GameModel implements RemoteGameModel, Serializable {
         int tmp = 0;
         for(RemoteView observer: getObservers()) {
             try {
-                if (observer!=null && !actualPlayer.getUsername().equals(observer.getUser())) {
-                    if (observer.getOnline()) {
-                        observer.update(this);
+                if(observer!=null) {
+                    if (!actualPlayer.getUsername().equals(observer.getUser())) {
+                        if (observer.getOnline()) {
+                            observer.update(this);
+                        }
+                    } else {
+                        tmp = getObservers().indexOf(observer);
                     }
-                } else {
-                    tmp = getObservers().indexOf(observer);
                 }
             }catch (RemoteException e){
-                System.out.println("perchè perchè.");
+                System.out.println("Rimosso player inattivo");
+                removeObserver(observer);
             }
-            //System.out.println(observer.getUser()+ "ciclo for");
         }
         try {
             getObservers().get(tmp).update(this); //l'actual player è sempre online!
         }catch (RemoteException e){
-            System.out.println("finisce qui.  "+ tmp);
             if(!actualPlayer.getUsername().equals(players.get(tmp).getUsername()) && getPlayers().get(tmp).getOnline()) {
-                System.out.println("fungeeeee");
                 System.out.println(actualPlayer.getUsername());
                 getPlayers().get(tmp).setOnline(false);
-                System.out.println("\n\nSETTATO\n\n");
                 removeObserver(getObservers().get(tmp));
+                System.out.println("Rimosso "+getPlayers().get(tmp).getUsername());
             }
-
-            /*int i;
-            for(i=0; i<getObservers().size(); i++){
-                try{
-                    getObservers().get(i).getUser();
-                }catch (RemoteException e1){
-                    RemoteView view = getObservers().get(i);
-                    removeObserver(view);
-                    players.get(i).setOnline(false);
-                    break;
-                }
-            }*/
-            //removeObserver(getObservers().get(i));
-            /*for(RemoteView x : getObservers()){
-                try{
-                    x.getUser();
-                }catch (RemoteException e1){
-                    removeObserver(x);
-                }
-            }*/
         }
 
     }
@@ -218,7 +198,6 @@ public class GameModel implements RemoteGameModel, Serializable {
     @Override
     public void removeObserver(RemoteView observer) throws RemoteException {
         list.set(getObservers().indexOf(observer), null);
-        //list.remove(observer);
     }
 
     @Override

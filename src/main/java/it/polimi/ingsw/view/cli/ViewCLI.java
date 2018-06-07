@@ -58,7 +58,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 do{
                     setUser();
                 }while(!verifyUserCrashed(user));
-                network.addObserver(this);
+                network.reAddObserver(this);
                 network.setPlayerOnline(user, true);
                 System.out.println("\n\nJOINING AGAIN THE MATCH...");
             }
@@ -80,7 +80,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @param online the boolean to be set
      */
     @Override
-    public synchronized void setOnline(boolean online){
+    public void setOnline(boolean online){
         this.online = online;
         if(!online){
             this.print("\n\nYOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PLEASE PRESS 0");
@@ -92,7 +92,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @return true if the player is online, false otherwise
      */
     @Override
-    public synchronized boolean getOnline(){
+    public boolean getOnline(){
         return online;
     }
 
