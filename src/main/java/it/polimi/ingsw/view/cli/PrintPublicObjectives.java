@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
 public class PrintPublicObjectives implements Serializable {
 
+    /**
+     * prints the public objectives
+     * @param publicObjectives the list of 3 public objectives of the game
+     */
     public static void print(ArrayList<PublicObjective> publicObjectives){
         for(int i=0; i<publicObjectives.size(); i++){
             System.out.println("TITLE: "+ publicObjectives.get(i).getTitle());

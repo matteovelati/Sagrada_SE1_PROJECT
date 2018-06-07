@@ -10,6 +10,9 @@ public class PORowShadeVariety extends PublicObjective {
 
     private ArrayList<Integer> valuesBag = new ArrayList<>(6);
 
+    /**
+     * creates a public objective card setting score, idnumber, name and description
+     */
     public PORowShadeVariety(){
         super.setScore(5);
         super.setIdNumber(6);
@@ -17,6 +20,11 @@ public class PORowShadeVariety extends PublicObjective {
         super.setDescription("Rows with no repeated VALUES");
     }
 
+    /**
+     * scrolls through the matrix to find how many different rows there are with no repeated values
+     * @param window is the player's window
+     * @return the score calculated based on this card
+     */
     @Override
     public int calculateScore(Window window){
         int diffrows = 0;
@@ -41,6 +49,9 @@ public class PORowShadeVariety extends PublicObjective {
         return getScore()*diffrows;
     }
 
+    /**
+     * creates a temporary bag of die's values
+     */
     private void setValuesBag() {
         valuesBag.clear();
         valuesBag.add(1);

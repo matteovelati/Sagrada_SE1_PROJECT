@@ -16,6 +16,10 @@ public class Field implements Serializable {
     private ArrayList<ToolCard> toolCards; //sono 3 carte
     private ArrayList<PublicObjective> publicObjectives; //sono 3 carte
 
+    /**
+     * creates a Field object which contains instance of Roundtrack and Draft
+     * initializes and sets an arraylist of 3 ToolCard objects and of 3 PublicObjective objects
+     */
     private Field(){
         this.roundTrack = RoundTrack.getInstance();
         this.draft = Draft.getInstance();
@@ -25,32 +29,62 @@ public class Field implements Serializable {
         setPublicObjectives();
     }
 
+    /**
+     * if the field already exists, the method returns the Field object,
+     * otherwise it creates a new Field.
+     * @return the instance of the Field class
+     */
     public static Field getInstance(){
         if (instance == null)
             instance = new Field();
         return instance;
     }
 
+    /**
+     * gets the roundtrack
+     * @return a roundtrack object
+     */
     public RoundTrack getRoundTrack() {
         return roundTrack;
     }
 
+    /**
+     * gets the draft
+     * @return a draft object
+     */
     public Draft getDraft() {
         return draft;
     }
 
+    /**
+     * gets the list of toolcards of the game, that are shared among all the players
+     * @return a list which contains 3 ToolCard objects
+     */
     public ArrayList<ToolCard> getToolCards() {
         return toolCards;
     }
 
+    /**
+     * gets the list of publicobjectives of the game, that are shared among all the players
+     * @return a list which contains 3 PublicObjective objects
+     */
     public ArrayList<PublicObjective> getPublicObjectives() {
         return publicObjectives;
     }
 
+    /**
+     * randomly extracts a die from the bag
+     * randomly sets a value for the die
+     * finally adds the die to the draft as the last element of the list
+     */
     public void setDraft(){
         draft.setDraft(Bag.getInstance());
     }
 
+    /**
+     * creates an arraylist which contains 12 ToolCards (one each)
+     * randomly extract 3 and put them in the list
+     */
     private void setToolCards(){
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>(12);
@@ -71,6 +105,10 @@ public class Field implements Serializable {
         }
     }
 
+    /**
+     * creates an arraylist which contains 10 PublicObjectives (one each)
+     * randomly extract 3 and put them in the list
+     */
     private void setPublicObjectives(){
         Random r = new Random();
         ArrayList<PublicObjective> allPublicObjectives = new ArrayList<>(10);

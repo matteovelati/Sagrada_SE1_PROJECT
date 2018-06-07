@@ -16,6 +16,11 @@ public class PrintToolCard implements Serializable {
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_YELLOW = "\u001B[33m";
 
+    /**
+     * prints the toolcards
+     * @param toolCards the list of 3 toolcards of the game
+     */
+
     public static void print(ArrayList<ToolCard> toolCards){
         Colors colortmp = Colors.W;
         for(int i=0; i<toolCards.size(); i++){

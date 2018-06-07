@@ -9,6 +9,9 @@ public class TCLensCutter extends ToolCard {
 
     private int flag = 1;
 
+    /**
+     * creates a toolcard setting idnumber, color, name, description, number of calls and force turn
+     */
     public TCLensCutter(){
         super.setIdNumber(5);
         super.setColor(Colors.G);
@@ -18,6 +21,12 @@ public class TCLensCutter extends ToolCard {
         super.setForceTurn(true);
     }
 
+    /**
+     * switches a draft's die with one from the roundtrack
+     * @param gameModel the gamemodel of the match
+     * @param input a list of integer that represents the client's inputs
+     * @return true if the toolcard has been used correctly, false otherwise
+     */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice dado draft, in 1 indice dado roundtrack, in 2,3 le i,j della new pos
@@ -39,11 +48,23 @@ public class TCLensCutter extends ToolCard {
         }
     }
 
+    /**
+     * check if the roundtrack is empty or not
+     * @param gameModel the gamemodel of the match
+     * @return true if the roundtrack isn't empty, false otherwise
+     */
     @Override
     public boolean select(GameModel gameModel){
         return checkNotEmptyRoundTrack(gameModel.getField().getRoundTrack());
     }
 
+    /**
+     * switches the die at index i of the roundtrack with the one at index j of the draft
+     * @param grid the roundtrack of the match
+     * @param i the index of the die in the roundtrack
+     * @param draft the draft of the match
+     * @param j the index of the die in the draft
+     */
     private void swapDice(RoundTrack grid, int i, Draft draft, int j){  //i indice roundtrack, j indice draft
         Dice dicetmp = grid.changeDice(i, draft.getDraft().get(j));
         draft.getDraft().set(j, dicetmp);

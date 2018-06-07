@@ -9,6 +9,9 @@ public class TCLathekin extends ToolCard {
 
     private int flag = 1;
 
+    /**
+     * creates a toolcard setting idnumber, color, name, description, number of calls
+     */
     public TCLathekin(){
         super.setIdNumber(4);
         super.setColor(Colors.Y);
@@ -17,6 +20,12 @@ public class TCLathekin extends ToolCard {
         super.setCalls(2);
     }
 
+    /**
+     * moves exactly two dice of player's window
+     * @param gameModel the gamemodel of the match
+     * @param input a list of integer that represents the client's inputs
+     * @return true if the toolcard has been used correctly, false otherwise
+     */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist: in 0,1 le i,j del dado1; in 2,3 le i,j della new pos dado1; in 4,5 le i,j del dado2; in 6,7 le i,j della new pos dado2
@@ -52,6 +61,11 @@ public class TCLathekin extends ToolCard {
         return false; //questo false NON deve richiamare il metodo
     }
 
+    /**
+     * check if the actualplayer's window has at least 2 empty spaces or not
+     * @param gameModel the gamemodel of the match
+     * @return true if the actualplayer's window has at least 2 empty spaces, false otherwise
+     */
     @Override
     public boolean select(GameModel gameModel){
         int i=0;
@@ -67,6 +81,16 @@ public class TCLathekin extends ToolCard {
         return false;
     }
 
+    /**
+     * verify if a die of player's window in position i,j can be moved in position x,y
+     * if true, the die is moved
+     * @param window the player's window
+     * @param i the actual row of the die
+     * @param j the actual column of the die
+     * @param x the next row
+     * @param y the next column
+     * @return true if the die has been moved, false otherwise
+     */
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
         Dice dicetmp = window.getWindow()[i][j].getDice();
         window.getWindow()[i][j].setDice(null);
@@ -80,6 +104,14 @@ public class TCLathekin extends ToolCard {
         }
     }
 
+    /**
+     * moves the die in i,j position to x,y position
+     * @param window the window of the player
+     * @param i the actual row of the die
+     * @param j the actual column of the die
+     * @param x the next row
+     * @param y the next column
+     */
     private void replaceDice(Window window, int i, int j, int x, int y){
         Dice dicetmp = window.getWindow()[i][j].getDice();
         window.getWindow()[i][j].setDice(null);

@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class PrivateObjective extends Card implements Serializable {
 
+    /**
+     * creates a new PrivateObjective setting idnumber, name, description and color
+     * each private objective is owned by one and only one player
+     * @param color is the color of the private objective card
+     */
     public PrivateObjective(Colors color){
 
         super.setIdNumber(0);
@@ -38,6 +43,13 @@ public class PrivateObjective extends Card implements Serializable {
         }
     }
 
+    /**
+     * calculates the score of each player based on the color of his private objective
+     * the player gets one more point for each die in his window of the same color of the private objective, one less for every empty box
+     * and as many points as the remaining tokens
+     * @param player is the player whose score is to be calculated
+     * @return the player's final score
+     */
     public int calculateScore(Player player){                   //+1 per ogni dado dello stesso colore,
         int score = 0;                                          //+n segnalini favore residui,
         for (int i = 0; i < 4; i++){                            //-1 per ogni casella vuota

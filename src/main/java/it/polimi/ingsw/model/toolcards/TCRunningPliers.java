@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 public class TCRunningPliers extends ToolCard {
 
+    /**
+     * createsa toolcard setting idnumber, color, name and description
+     */
     public TCRunningPliers(){
         super.setIdNumber(8);
         super.setColor(Colors.R);
@@ -19,6 +22,12 @@ public class TCRunningPliers extends ToolCard {
                 " Skip your next turn this round.\n");
     }
 
+    /**
+     * allows the player to draft a second die in it's first turn, skipping the second one
+     * @param gameModel the gamemodel of the match
+     * @param input a list of integer that represents the client's inputs
+     * @return true if the toolcard has been used correctly, false otherwise
+     */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylisy: in 0 indice dado draft; in 1,2 le i,j della nuova posizione
@@ -29,11 +38,26 @@ public class TCRunningPliers extends ToolCard {
             return false; //con questo false NON deve richiamare il metodo
     }
 
+    /**
+     * check if the actual player's turn is 1 and his first move was 1
+     * @param gameModel the gamemodel of the match
+     * @return true if the conditions are both true, false otherwise
+     */
     @Override
     public boolean select(GameModel gameModel){
         return (gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getFirstMove() == 1);
     }
 
+    /**
+     * verifies if the die of draft at index i can be placed in player's window in i,j positions
+     * if true, places the die
+     * @param window the player's window
+     * @param x the row to put the die in
+     * @param y the column to put the die in
+     * @param draft the draft of the game
+     * @param i the index of the die in the draft
+     * @return true if the die has been placed, false otherwise
+     */
     private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft
         Dice dicetmp = draft.getDraft().get(i);
         if ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y))){

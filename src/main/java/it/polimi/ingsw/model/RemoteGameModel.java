@@ -10,32 +10,93 @@ import java.util.List;
 
 public interface RemoteGameModel extends Remote {
 
+    /**
+     * notifies the observers in game
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void notifyObservers() throws RemoteException;
 
-    public void notifyObservers() throws RemoteException;
+    /**
+     * adds again an observer after he has lost connection
+     * @param observer the observer to be added
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void reAddObserver(RemoteView observer) throws RemoteException;
 
-    //private List<RemoteView> list = new ArrayList<RemoteView>();
+    /**
+     * gets the list of observers in game
+     * @return the list of observers in game
+     * @throws RemoteException if the reference could not be accessed
+     */
+    List<RemoteView> getObservers() throws RemoteException;
 
-    public void reAddObserver(RemoteView observer) throws RemoteException;
+    /**
+     * adds an observer at the beginning
+     * @param observer the observer to be addded
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void addObserver(RemoteView observer) throws RemoteException;
 
-    public List<RemoteView> getObservers() throws RemoteException;
+    /**
+     * removes an observer from the observers's list (setting him as 'null')
+     * @param observer the observer to be removed
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void removeObserver(RemoteView observer) throws RemoteException;
 
-    public void addObserver(RemoteView observer) throws RemoteException;
+    /**
+     * gets the actual state
+     * @return the actual state
+     * @throws RemoteException if the reference could not be accessed
+     */
+    States getState() throws RemoteException;
 
-    public void removeObserver(RemoteView observer) throws RemoteException;
+    /**
+     * gets the players in game
+     * @return an arraylist of players in game
+     * @throws RemoteException if the reference could not be accessed
+     */
+    ArrayList<Player> getPlayers() throws RemoteException;
 
-    public States getState() throws RemoteException;
+    /**
+     * gets the field of the match
+     * @return the field of the match
+     * @throws RemoteException if the reference could not be accessed
+     */
+    Field getField() throws RemoteException;
 
-    public ArrayList<Player> getPlayers() throws RemoteException;
+    /**
+     * gets the bag of the match
+     * @return the bag od the match
+     * @throws RemoteException if the reference could not be accessed
+     */
+    Bag getBag() throws RemoteException;
 
-    public Field getField() throws RemoteException;
+    /**
+     * gets the schemecards of the match
+     * @return a list of 3 schemecars
+     * @throws RemoteException if the reference could not be accessed
+     */
+    ArrayList<SchemeCard> getSchemeCards() throws RemoteException;
 
-    public Bag getBag() throws RemoteException;
+    /**
+     * gets the actual player of the match
+     * @return the actual player
+     * @throws RemoteException if the reference could not be accessed
+     */
+    Player getActualPlayer() throws RemoteException;
 
-    public ArrayList<SchemeCard> getSchemeCards() throws RemoteException;
+    /**
+     * gets the roundmanager of the match
+     * @return the roundmanager of the match
+     * @throws RemoteException if the reference could not be accessed
+     */
+    RoundManager getRoundManager() throws RemoteException;
 
-    public Player getActualPlayer() throws RemoteException;
-
-    public RoundManager getRoundManager() throws RemoteException;
-
-    public ArrayList<Colors> getAllColors() throws RemoteException;
+    /**
+     * gets all the colors of the Colors's enumeration
+     * @return a list which contains 5 colors
+     * @throws RemoteException if the reference could not be accessed
+     */
+    ArrayList<Colors> getAllColors() throws RemoteException;
 }

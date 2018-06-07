@@ -9,6 +9,12 @@ public class Window implements Serializable {
     private int difficulty;
     private Space[][] window;
 
+    /**
+     * creates a Window object that is a spaces's matrix composed by 4 rows and 5 columns
+     * initializes each space with '0' value, 'W' color and 'empty' boolean
+     * according to x, sets the name, the difficulty and some restriction to the window's spaces
+     * @param x the idnumber of window to be created
+     */
     public Window(int x){
         isEmpty = true;
         window = new Space[4][5];
@@ -444,26 +450,53 @@ public class Window implements Serializable {
         }
     }
 
+    /**
+     * gets if the window is empty or not
+     * @return true if the window is empty, false otherwise
+     */
     public boolean getIsEmpty(){
         return isEmpty;
     }
 
+    /**
+     * gets the window's name
+     * @return the window's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * gets the window's difficulty
+     * @return the window's difficulty
+     */
     public int getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * gets the spaces's matrix of the window
+     * @return the spaces's matrix of the window
+     */
     public Space[][] getWindow() {
         return window;
     }
 
+    /**
+     * sets if the window is empty or not
+     * @param isEmpty the boolean to be set
+     */
     public void setIsEmpty(boolean isEmpty){
         this.isEmpty = isEmpty;
     }
 
+    /**
+     * adds the die to the i,j window's position
+     * checks and sets if the window is empty or not
+     * @param dice the die to be added
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     */
     public void setWindow(Dice dice, int i, int j){
         this.window[i][j].setDice(dice);
         for (Space[] matrix : window){
@@ -477,9 +510,14 @@ public class Window implements Serializable {
         this.setIsEmpty(true);
     }
 
+    /**
+     * check if there is a die of the same color of the die to be placed in the adjacent positions of i,j (N-W-S-E)
+     * @param dice the die to be set
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false if there is at least one die of the same color adjacent
+     */
     public boolean neighboursColorRestriction(Dice dice, int i, int j){
-        //return true se puoi inserire
-        //return false se a N S E W c'è un dado dello stesso colore
         for (int x = -1; x < 2; x += 2) {
             try {
                 if (dice.getColor().equals(window[i + x][j].getDice().getColor()))
@@ -499,9 +537,14 @@ public class Window implements Serializable {
         return true;
     }
 
+    /**
+     * check if there is a die of the same value of the die to be placed in the adjacent positions of i,j (N-W-S-E)
+     * @param dice the die to be set
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false if there is at least one die of the same value adjacent
+     */
     public boolean neighboursNumberRestriction(Dice dice, int i, int j){
-        //return true se puoi inserire
-        //return false se a N S E W c'è un dado dello stesso numero
         for (int x = -1; x < 2; x += 2) {
             try {
                 if (dice.getValue() == (window[i + x][j].getDice().getValue()))
@@ -521,9 +564,13 @@ public class Window implements Serializable {
         return true;
     }
 
+    /**
+     * check if there is at least one die near by the i,j position (N-NW-W-SW-S-SE-E-NE)
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false if there isn't a die nearby
+     */
     public boolean neighboursPositionRestriction(int i, int j){
-        //return true se puoi inserire
-        //return false se non c'è nemmeno un dado adiacente
         for (int y = -1; y < 2; y += 2) {
             try {
                 if (!window[i][j + y].getIsEmpty())
@@ -545,23 +592,51 @@ public class Window implements Serializable {
         return false;
     }
 
+    /**
+     * checks if the die to be placed verifies the window's space i,j color restriction
+     * @param dice the die to be placed
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false if the color is not the same or the space isn't empty
+     */
     public boolean spaceColorRestriction(Dice dice, int i, int j){
         //return true se puoi inserire
         return !(!window[i][j].getIsEmpty() || (!window[i][j].getColor().equals(dice.getColor()) && !window[i][j].getColor().equals(Colors.W)));
 
     }
 
+    /**
+     * checks if the die to be placed verifies the window's space i,j value restriction
+     * @param dice the die to be placed
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false if the value is not the same or the space isn't empty
+     */
     public boolean spaceNumberRestriction(Dice dice, int i, int j){
         //return true se puoi inserire
         return !(!window[i][j].getIsEmpty() || (window[i][j].getValue() != dice.getValue() && window[i][j].getValue() != 0));
 
     }
 
+    /**
+     * verifies if the first die can be placed according to all game restrictions
+     * @param dice the die to be placed
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false otherwise
+     */
     public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
         //return true se puoi inserire
         return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j));
     }
 
+    /**
+     * verifies if the die can be placed according to all game restrictions
+     * @param dice the die to be placed
+     * @param i the selected row of the matrix
+     * @param j the selected column of the matrix
+     * @return true if the die can be placed, false otherwise
+     */
     public boolean verifyAllRestrictions(Dice dice, int i, int j){
         //return true se puoi inserire
         return (this.neighboursColorRestriction(dice, i, j) && this.neighboursNumberRestriction(dice, i, j) && this.neighboursPositionRestriction(i, j) && this.spaceColorRestriction(dice, i, j) && this.spaceNumberRestriction(dice, i, j));

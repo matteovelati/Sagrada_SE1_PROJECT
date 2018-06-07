@@ -29,7 +29,12 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     private RemoteGameController network;
 
-
+    /**
+     * creates a ViewCLI object checking if the username is correct and if the game is already started
+     * initializes an arraylist of integer which will contains client's inputs
+     * @param network the RemoteGameController
+     * @throws RemoteException if the reference could not be accessed
+     */
     public ViewCLI(RemoteGameController network) throws RemoteException {
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
         choices = new ArrayList<>();
@@ -60,13 +65,20 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
-
+    /**
+     * asks the client to enter an username
+     * finally transform it in upper case
+     */
     private void setUser() {
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
         this.user = input.next().toUpperCase();
     }
 
+    /**
+     * sets if the client is online or not
+     * @param online the boolean to be set
+     */
     @Override
     public synchronized void setOnline(boolean online){
         this.online = online;
@@ -75,44 +87,80 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * gets if player is online or not
+     * @return true if the player is online, false otherwise
+     */
     @Override
     public synchronized boolean getOnline(){
         return online;
     }
 
+    /**
+     * gets the client's username
+     * @return the client's username
+     */
     @Override
     public String getUser() {
         return user;
     }
 
+    /**
+     * gets choose1
+     * @return first choice of the client
+     */
     @Override
     public int getChoose1() {
         return choose1;
     }
 
+    /**
+     * gets choose2
+     * @return second choice of the client
+     */
     @Override
     public int getChoose2() {
         return choose2;
     }
 
+    /**
+     * gets if the game is ended or not
+     * @return true if game is ended, false otherwise
+     */
     @Override
     public boolean getEndGame() {
         return endGame;
     }
 
+    /**
+     * gets the list of inputs of the client
+     * @return an arraylist of client's inputs
+     */
     @Override
     public ArrayList<Integer> getChoices(){
         return choices;
     }
 
+    /**
+     * sets choose1
+     * @param choose1 the int to be set
+     */
     private void setChoose1(int choose1){
         this.choose1 = choose1;
     }
 
+    /**
+     * sets choose2
+     * @param choose2 the int to be set
+     */
     private void setChoose2(int choose2){
         this.choose2 = choose2;
     }
 
+    /**
+     * chooses the next state according to the actual one
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void run() throws RemoteException {
 
         state = gameModel.getState();
@@ -158,10 +206,16 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 viewError();
                 break;
             default:
-                System.out.println("Errore interno view...");
+                assert false;
         }
     }
 
+    /**
+     * verifies if the client has entered a not valid username
+     * @param s the name of the client to be verified
+     * @return true if the username is valid, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     private boolean verifyUser(String s) throws RemoteException{
         for(int i=0; i<gameModel.getPlayers().size(); i++){
             if(s.equals(gameModel.getPlayers().get(i).getUsername())){
@@ -172,6 +226,12 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         return true;
     }
 
+    /**
+     * verifies if some client has lost connection to the main server
+     * @param s the name of the client to be verified
+     * @return true if the client has lost connection, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     private boolean verifyUserCrashed(String s) throws RemoteException {
         for(Player x : gameModel.getPlayers()){
             if(x.getUsername().equals(s)){
@@ -189,6 +249,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         return false;
     }
 
+    /**
+     * prints the players in the lobby
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewLobby() throws RemoteException {
         System.out.println("GAMERS IN THE LOBBY:");
         for(Player x: gameModel.getPlayers()){
@@ -197,6 +261,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     }
 
+    /**
+     * prints a message for each player to notify them the end of a round
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewEndRound() throws RemoteException {
         System.out.println("\n\nEND OF ROUND " + gameModel.getField().getRoundTrack().getRound() +"\n\n");
         if(user.equals(gameModel.getActualPlayer().getUsername())){
@@ -204,13 +272,20 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints the final score for each player
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewEndMatch() throws RemoteException {
         for(Player x : gameModel.getPlayers()){
             System.out.println(x.getUsername() +"'s FINAL SCORE: "+ x.getFinalScore());
         }
     }
 
-
+    /**
+     * prints the 2 schemecards (4 window)
+     * @throws RemoteException if the reference could not be accessed
+     */
     //The selectwindow is without timer
     private void viewSelectWindow() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -227,6 +302,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints client's input possible choices
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewSelectMove1() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
@@ -257,6 +336,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints client's input possible choices
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewSelectMove2() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
@@ -285,6 +368,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints the player's window and asks him the i,j position to insert it
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewPutDiceInWindow() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
@@ -317,6 +404,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints the list of dice in the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewSelectDraft() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
@@ -336,6 +427,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints toolcards available
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewSelectCard() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
@@ -355,6 +450,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints selection menu for toolcards
+     * @throws RemoteException  if the reference could not be accessed
+     */
     private void viewUseToolCard() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
@@ -362,6 +461,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints selection menu for toolcards
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewUseToolCard2() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
@@ -369,6 +472,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * prints selection menu for toolcards
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewUseToolCard3() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
@@ -376,6 +483,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * print error message
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void viewError() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             System.out.println("PLEASE DO IT AGAIN CORRECTLY!");
@@ -383,11 +494,20 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         }
     }
 
+    /**
+     * print a message
+     * @param s the message to be printed
+     */
    @Override
    public void print(String s){
        System.out.println(s);
    }
 
+    /**
+     * prints an error message
+     * @param error the error message to be printed
+     * @throws RemoteException if the reference could not be accessed
+     */
    @Override
    public void printError(String error) throws RemoteException {
        if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -395,11 +515,15 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
        }
    }
 
-    @Override
-    public void update(RemoteGameModel gameModel) throws RemoteException {
-        this.gameModel = gameModel;
-        this.run();
-    }
-
+    /**
+     *
+     * @param gameModel the gamemodel of the match
+     * @throws RemoteException if the reference could not be accessed
+     */
+   @Override
+   public void update(RemoteGameModel gameModel) throws RemoteException {
+       this.gameModel = gameModel;
+       this.run();
+   }
 
 }

@@ -14,6 +14,9 @@ public class  TCFluxBrush extends ToolCard {
 
     private int flag = 1;
 
+    /**
+     * creates a toolcard setting idnumber, color, name, description
+     */
     public TCFluxBrush(){
         super.setIdNumber(6);
         super.setColor(Colors.P);
@@ -23,6 +26,12 @@ public class  TCFluxBrush extends ToolCard {
         super.setForceTurn(true);
     }
 
+    /**
+     * roll again a die of the draft, setting a new random value, and puts the die in the window
+     * @param gameModel the gamemodel of the match
+     * @param input a list of integer that represents the client's inputs
+     * @return true if the toolcard has been used correctly, false otherwise
+     */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice dado draft; 1,2 le i,j della new pos
@@ -50,7 +59,11 @@ public class  TCFluxBrush extends ToolCard {
         }
     }
 
-
+    /**
+     * randomly set a new value to a die in the draft
+     * @param draft the draft of the game
+     * @param i the index of the die in the draft
+     */
     private void reRoll(Draft draft, int i){
         Random r = new Random();
         Dice dicetmp = draft.getDraft().get(i);

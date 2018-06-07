@@ -9,6 +9,9 @@ public class TCFluxRemover extends ToolCard {
 
     private int flag = 1;
 
+    /**
+     * creates a toolcard setting idnumber, color, name, effect, number of calls and force turn
+     */
     public TCFluxRemover(){
         super.setIdNumber(11);
         super.setColor(Colors.P);
@@ -18,6 +21,12 @@ public class TCFluxRemover extends ToolCard {
         super.setForceTurn(true);
     }
 
+    /**
+     * extracts a new die from the bag choosing the value and puts the die in the window
+     * @param gameModel the gamemodel of the match
+     * @param input a list of integer that represents the client's inputs
+     * @return true if the toolcard has been used correctly, false otherwise
+     */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist in 0 indice i del dado nella draft, in 1 il nuovo valore, in 2,3 le i,j della new pos
@@ -48,6 +57,13 @@ public class TCFluxRemover extends ToolCard {
         }
     }
 
+    /**
+     * adds a die extracted from the draft at index i to the bag
+     * extracts a new die from the bag and put it in the draft
+     * @param bag the bag od the match
+     * @param draft the draft of the match
+     * @param i the index of the die to be extracted from the draft
+     */
     private void mixDie(Bag bag, Draft draft, int i){   //i posizione del dado nella draft
         Random r = new Random();
         Dice dicetmp = draft.getDraft().remove(i);
@@ -57,6 +73,12 @@ public class TCFluxRemover extends ToolCard {
         draft.getDraft().add(i, dicetmp);
     }
 
+    /**
+     * modifies the value of a die in the draft
+     * @param draft the draft of the match
+     * @param i the index of the die in the draft
+     * @param value the new value to be set to the die
+     */
     private void setDicetmp(Draft draft, int i, int value){
         Dice dicetmp = draft.getDraft().get(i);
         dicetmp.modifyValue(value);

@@ -10,6 +10,9 @@ public class POColumnShadeVariety extends PublicObjective {
 
     private ArrayList<Integer> valuesBag = new ArrayList<>(6);
 
+    /**
+     * creates a public objective card setting score, idnumber, name and description
+     */
     public POColumnShadeVariety(){
         super.setScore(4);
         super.setIdNumber(7);
@@ -17,10 +20,15 @@ public class POColumnShadeVariety extends PublicObjective {
         super.setDescription("Columns with no repeated VALUES");
     }
 
+    /**
+     * scrolls through the matrix to find how many different columns there are with no repeated values
+     * @param window is the player's window
+     * @return the score calculated based on this card
+     */
     @Override
     public int calculateScore(Window window){
         int diffcolumns = 0;
-        int diffvalues = 0;
+        int diffvalues;
 
         for(int j = 0; j < 5; j++) {
             setValuesBag();
@@ -40,6 +48,9 @@ public class POColumnShadeVariety extends PublicObjective {
         return getScore()*diffcolumns;
     }
 
+    /**
+     * creates a temporary bag of die's values
+     */
     private void setValuesBag() {
         valuesBag.clear();
         valuesBag.add(1);

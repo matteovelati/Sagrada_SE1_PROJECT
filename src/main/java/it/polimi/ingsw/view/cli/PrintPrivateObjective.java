@@ -15,6 +15,10 @@ public class PrintPrivateObjective implements Serializable {
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_YELLOW = "\u001B[33m";
 
+    /**
+     * prints the private objective
+     * @param privateObjective the player's private objective
+     */
     public static void print(PrivateObjective privateObjective){
         Colors colortmp = Colors.W;
         if (privateObjective.getColor() == Colors.R)    colortmp = Colors.R;

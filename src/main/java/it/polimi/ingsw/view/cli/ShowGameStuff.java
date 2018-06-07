@@ -1,13 +1,15 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.GameModel;
-import it.polimi.ingsw.model.RemoteGameModel;
-
-import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class ShowGameStuff {
 
+    /**
+     * prints the client's possible choices
+     * @param gameModel the gamemodel of the match
+     * @return the client's input
+     */
     public static int print(GameModel gameModel) {
 
         System.out.println("WHAT DO YOU WANT TO DO?");

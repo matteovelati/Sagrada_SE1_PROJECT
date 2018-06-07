@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class POColorVariety extends PublicObjective {
 
+    /**
+     * creates a public objective card setting score, idnumber, name and description
+     */
     public POColorVariety(){
         super.setScore(4);
         super.setIdNumber(5);
@@ -15,6 +18,12 @@ public class POColorVariety extends PublicObjective {
         super.setDescription("Sets of one of each COLOR anywhere");
     }
 
+    /**
+     * scrolls through the window's player to count the number of dice of the same color
+     * and calculates the score with the minimum sets of same-colored dice
+     * @param window is the player's window
+     * @return the score calculated based on this card
+     */
     @Override
     public int calculateScore(Window window){
         ArrayList<Integer> dicelist  = new ArrayList<>(5);

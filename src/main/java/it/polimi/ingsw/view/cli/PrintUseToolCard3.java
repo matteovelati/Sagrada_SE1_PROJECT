@@ -11,6 +11,12 @@ public class PrintUseToolCard3 implements Serializable {
 
     private static final String STOP = "ENTER [-1] TO STOP. YOU WILL LOSE YOUR TOKENS!!!";
 
+    /**
+     * prints some messages to ask the client to select the positions where he would like to place the die
+     * @param gameModel the gamemodel of the match
+     * @param toolCard the list of 3 toolcards of the match
+     * @param choices the list of integer that contains the client's inputs
+     */
     public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
         Scanner input;
         int tmp;
@@ -26,7 +32,7 @@ public class PrintUseToolCard3 implements Serializable {
                         choices.add(0, tmp);
                         return;
                     }
-                }while(!correctInput(tmp, 2, gameModel));
+                }while(!correctInput(tmp, 2));
                 choices.add(tmp-1);
                 System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
                 do {
@@ -36,18 +42,18 @@ public class PrintUseToolCard3 implements Serializable {
                         choices.add(0, tmp);
                         return;
                     }
-                }while(!correctInput(tmp, 3, gameModel));
+                }while(!correctInput(tmp, 3));
         }
     }
 
-    private static boolean correctInput(int i, int check, GameModel gameModel){
-        if(check == 0){             //check draft
-            return checkInput(i, gameModel.getField().getDraft().getDraft().size()+1);
-        }
-        else if (check == 1){       //check roundtrack
-            return checkInput(i, gameModel.getField().getRoundTrack().getGrid().size()+1);
-        }
-        else if (check == 2){       //check row
+    /**
+     * verify if the client's input is correct
+     * @param i the client's input
+     * @param check a value to know what's the bounds of input
+     * @return true if the input is correct, false otherwise
+     */
+    private static boolean correctInput(int i, int check){
+        if (check == 2){       //check row
             return checkInput(i, 5);
         }
         else if (check == 3){       //check column
@@ -56,6 +62,12 @@ public class PrintUseToolCard3 implements Serializable {
         return false;               //method error
     }
 
+    /**
+     * verifies if the input is correct or not
+     * @param i the client's input
+     * @param j the maximum input accepted
+     * @return true if the input is correct, false otherwise
+     */
     private static boolean checkInput(int i, int j){
         if(!(i > 0 && i < j))
             return error();
@@ -63,6 +75,10 @@ public class PrintUseToolCard3 implements Serializable {
             return true;
     }
 
+    /**
+     * prints a error message
+     * @return false
+     */
     private static boolean error(){
         System.out.println("Input error! Do it again correctly");
         return false;

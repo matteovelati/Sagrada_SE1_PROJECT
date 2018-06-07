@@ -12,6 +12,12 @@ public class PrintUseToolCard implements Serializable {
     private static final String stop = "ENTER [-1] TO STOP. YOU WILL NOT LOSE YOUR TOKENS";
     private static int tmp;
 
+    /**
+     * prints the possible input choices to use a toolcard
+     * @param gameModel the gamemodel of the match
+     * @param toolCard the list of 3 toolcards of the match
+     * @param choices the list of integer that contains the client's inputs
+     */
     public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
 
         Scanner input;
@@ -86,6 +92,13 @@ public class PrintUseToolCard implements Serializable {
         }
     }
 
+    /**
+     * asks to insert a number and verifies if the client's input is '-1' or isn't correct
+     * @param choices the list of integer that contains the client's inputs
+     * @param check a value to know what's the bounds of input
+     * @param gameModel the gamemodel of the match
+     * @return false if the input was -1, true otherwise
+     */
     private static boolean verifyInput(ArrayList<Integer> choices, int check, GameModel gameModel){
         do {
             Scanner input = new Scanner(System.in);
@@ -99,6 +112,12 @@ public class PrintUseToolCard implements Serializable {
         return true;
     }
 
+    /**
+     * asks the client to select a die from the draft
+     * @param gameModel the gamemodel of the match
+     * @param choices the list of integer that contains the client's inputs
+     * @return false if the input was -1, true otherwise
+     */
     private static boolean selectDraft(GameModel gameModel, ArrayList<Integer> choices){
         System.out.println("SELECT A DIE FROM THE DRAFT");
         System.out.println(stop);
@@ -106,6 +125,14 @@ public class PrintUseToolCard implements Serializable {
         return (verifyInput(choices, 0, gameModel));
     }
 
+    /**
+     * prints some messages to ask the client to select the positions of the die to be moved and his next positions
+     * @param gameModel the gamemodel of the match
+     * @param choices the list of integer that contains the client's inputs
+     * @param verify a boolean to know if it's necessary to verify the input -1
+     * @param first a boolean to know what kind of message print to the client
+     * @return false if (verify == true) and client's input was -1
+     */
     private static boolean selectPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify, boolean first){
 
         if (verify){
@@ -126,6 +153,13 @@ public class PrintUseToolCard implements Serializable {
         return verifyInput(choices, 3, gameModel);
     }
 
+    /**
+     * verify if the client's input is correct
+     * @param i the client's input
+     * @param check a value to know what's the bounds of input
+     * @param gameModel the gamemodel of the match
+     * @return true if the input is correct, false otherwise
+     */
     private static boolean correctInput(int i, int check, GameModel gameModel){
         if(check == 0){             //check draft
             return checkInput(i, gameModel.getField().getDraft().getDraft().size()+1);
@@ -142,6 +176,12 @@ public class PrintUseToolCard implements Serializable {
         return false;               //method error
     }
 
+    /**
+     * verifies if the input is correct or not
+     * @param i the client's input
+     * @param j the maximum input accepted
+     * @return true if the input is correct, false otherwise
+     */
     private static boolean checkInput(int i, int j){
         if(!(i > 0 && i < j))
             return error();
@@ -149,6 +189,10 @@ public class PrintUseToolCard implements Serializable {
             return true;
     }
 
+    /**
+     * prints a error message
+     * @return false
+     */
     private static boolean error(){
         System.out.println("Input error! Do it again correctly");
         return false;

@@ -12,6 +12,9 @@ public class TCGrozingPliers extends ToolCard {
 
     private int flag = 1;
 
+    /**
+     * create a toolcard setting idnumber, color, name, description, calls and force turn
+     */
     public TCGrozingPliers(){
         super.setIdNumber(1);
         super.setColor(Colors.P);
@@ -21,6 +24,12 @@ public class TCGrozingPliers extends ToolCard {
         super.setForceTurn(true);
     }
 
+    /**
+     * increases or decreases a die of the draft by one and puts the die in player's window
+     * @param gameModel the gamemodel of the match
+     * @param input a list of integer that represents the client's inputs
+     * @return true if the toolcard has been used correctly, false otherwise
+     */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         // arraylist: in 0 posizione dado draft; in 1 mettere '-2' per decreamentare; in 2,3 le i,j della new pos
@@ -49,17 +58,29 @@ public class TCGrozingPliers extends ToolCard {
         }
     }
 
+    /**
+     * increases the value of a die if it's not equals to 6
+     * @param dice the die to be increased
+     * @return true if the die's value has been changed, false otherwise
+     */
     private boolean increaseValue(Dice dice){
         if (dice.getValue() != 6) {
-            return(dice.modifyValue(dice.getValue() + 1));
+            dice.modifyValue(dice.getValue() + 1);
+            return true;
         }
         else
             return false;
     }
 
+    /**
+     * decreases the value of a die if it's not equals to 1
+     * @param dice the die to be decreased
+     * @return true if the die's has been changed, false otherwise
+     */
     private boolean decreaseValue(Dice dice){
         if (dice.getValue() != 1) {
-            return(dice.modifyValue(dice.getValue() - 1));
+            dice.modifyValue(dice.getValue() - 1);
+            return true;
         }
         else
             return false;

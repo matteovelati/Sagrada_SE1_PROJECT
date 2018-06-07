@@ -11,6 +11,9 @@ public class PORowColorVariety extends PublicObjective {
 
     private ArrayList<Colors> colorsBag = new ArrayList<>(5);
 
+    /**
+     * creates a public objective card setting score, idnumber, name and description
+     */
     public PORowColorVariety(){
         super.setScore(6);
         super.setIdNumber(8);
@@ -18,6 +21,11 @@ public class PORowColorVariety extends PublicObjective {
         super.setDescription("Rows with no repeated COLORS");
     }
 
+    /**
+     * scrolls through the matrix to find how many different rows there are with no repeated colors
+     * @param window is the player's window
+     * @return the score calculated based on this card
+     */
     @Override
     public int calculateScore(Window window){
         int diffrows = 0;
@@ -41,6 +49,9 @@ public class PORowColorVariety extends PublicObjective {
         return getScore()*diffrows;
     }
 
+    /**
+     * creates a temporary bag of die's colors
+     */
     private void setColorsBag() {
         colorsBag.clear();
         colorsBag.add(Colors.B);

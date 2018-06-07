@@ -6,6 +6,11 @@ import java.io.Serializable;
 
 public class PrintSchemeCard implements Serializable {
 
+    /**
+     * prints the schemecard to be chosen
+     * @param schemeCard1 the first schemecard that contains 2 windows
+     * @param schemeCard2 the second schemecard that contains 2 windows
+     */
     public static void print(SchemeCard schemeCard1, SchemeCard schemeCard2) {
             System.out.println("\n1)");
             PrintWindow.print(schemeCard1.getFront());

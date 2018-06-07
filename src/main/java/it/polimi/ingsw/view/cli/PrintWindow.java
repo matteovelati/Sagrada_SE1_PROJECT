@@ -21,7 +21,10 @@ public class PrintWindow implements Serializable {
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_YELLOW = "\u001B[33m";
 
-
+    /**
+     * prints the matrix of spaces and his dice
+     * @param window the player's window
+     */
     public static void print(Window window){
         System.out.println(ANSI_BOLD + window.getName() +"  "+window.getDifficulty());
         Colors colortmp = Colors.W;
