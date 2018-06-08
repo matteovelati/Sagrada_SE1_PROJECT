@@ -59,12 +59,11 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                             setPlayerOnline(view.getUser(), false);
                             endTurn();
                         } catch (RemoteException e) {
-                            setPlayerOnline(gameModel.getActualPlayer().getUsername(), false);
                             try {
-                                gameModel.removeObserver(view);
+                                verifyObserver();
                                 endTurn();
                             } catch (RemoteException e1) {
-                                System.out.println("Non deve succedere");
+                                //
                             }
                         }
                     }
@@ -72,8 +71,22 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         );
     }
 
+    private void verifyObserver() throws RemoteException {
+        for(int i=0; i<gameModel.getObservers().size(); i++){
+            try{
+                if(gameModel.getObservers().get(i) != null)
+                    gameModel.getObservers().get(i).getUser();
+            } catch(RemoteException e){
+                gameModel.getPlayers().get(i).setOnline(false);
+                gameModel.removeObserver(gameModel.getObservers().get(i));
+            }
+        }
+    }
+
     @Override
     public void update(RemoteView view) throws RemoteException {
+
+        verifyObserver();
 
         switch(gameModel.getState()){
 
@@ -335,6 +348,52 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
     }
 
+
+    private void scoreCalculation(){
+
+        int score;
+
+        for(Player x : gameModel.getPlayers()){
+            score = x.getPrivateObjective().calculateScore(x);
+            for(PublicObjective po : gameModel.getField().getPublicObjectives())
+                score += po.calculateScore(x.getWindow());
+            x.setFinalScore(score);
+        }
+    }
+
+    private boolean nextPlayer(){
+        do {
+            actualPlayer = gameModel.nextPlayer(actualPlayer);
+            gameModel.setActualPlayer(actualPlayer);
+            if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
+                roundEnded = true;
+        }while(!gameModel.getActualPlayer().getOnline());
+        return roundEnded;
+    }
+
+    private void endTurn() throws RemoteException {
+        int onPlayers = 0;
+        for(Player p : gameModel.getPlayers()){
+            if(p.getOnline())
+                onPlayers ++;
+            if(onPlayers > 1)
+                break;
+        }
+        if(onPlayers < 2){
+            scoreCalculation();
+            gameModel.setState(ENDMATCH);
+            return;
+        }
+
+        if(nextPlayer()){
+            roundEnded = false;
+            gameModel.setState(ENDROUND);
+        }
+        else
+            gameModel.setState(SELECTMOVE1);
+
+    }
+
     private void endRound() throws RemoteException {
 
         gameModel.endRound();
@@ -348,42 +407,6 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
             gameModel.setState(SELECTMOVE1);
         }
 
-    }
-
-
-    private void scoreCalculation(){
-
-        int score;
-
-        for(Player players : gameModel.getPlayers()) {
-
-            //calcolo punteggio degli obiettivi privati
-            score = gameModel.getActualPlayer().getPrivateObjective().calculateScore(gameModel.getActualPlayer());
-
-            //calcolo punteggio degli obietivi pubblici
-            for (int j = 0; j < 2; j++) {
-                score = score + gameModel.getField().getPublicObjectives().get(j).calculateScore(gameModel.getActualPlayer().getWindow());
-            }
-
-            gameModel.getActualPlayer().setFinalScore(score);
-
-            actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());//-----------CAMBIO IL PLAYER
-            gameModel.setActualPlayer(actualPlayer);
-        }
-    }
-
-    private void nextPlayer() throws RemoteException {
-        do {
-            actualPlayer = gameModel.nextPlayer(actualPlayer);
-            gameModel.setActualPlayer(actualPlayer);
-            if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
-                roundEnded = true;
-        }while(!gameModel.getActualPlayer().getOnline());
-        System.out.println("actualplayer: "+ gameModel.getActualPlayer().getUsername());
-        if(roundEnded){
-            roundEnded = false;
-            gameModel.setState(ENDROUND);
-        }
     }
 
     private void setNextState() throws RemoteException {
@@ -421,17 +444,6 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         if(i == -1)
             gameModel.putDiceInDraft();
         checkError(view, i);
-    }
-
-    private void endTurn() throws RemoteException {
-
-        nextPlayer();
-
-        if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
-            gameModel.setState(ENDROUND);
-        else
-            gameModel.setState(SELECTMOVE1);
-
     }
 
     private void startTimerLobby(Timer t){

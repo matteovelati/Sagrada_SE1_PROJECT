@@ -21,7 +21,7 @@ public class Player implements Serializable {
         setPrivateObjective(color);
     }
 
-    public boolean getOnline() {
+    public synchronized boolean getOnline() {
         return online;
     }
 
@@ -55,7 +55,7 @@ public class Player implements Serializable {
 
 
 
-    public void setOnline(boolean online) {
+    public synchronized void setOnline(boolean online) {
         this.online = online;
         if(online)
             System.out.println(username+" IS ONLINE");

@@ -168,19 +168,19 @@ public class GameModel implements RemoteGameModel, Serializable {
                     }
                 }
             }catch (RemoteException e){
-                System.out.println("Rimosso player inattivo");
-                removeObserver(observer);
+                /*System.out.println("Rimosso player inattivo");
+                removeObserver(observer);*/
             }
         }
         try {
             getObservers().get(tmp).update(this); //l'actual player è sempre online!
         }catch (RemoteException e){
-            if(!actualPlayer.getUsername().equals(players.get(tmp).getUsername()) && getPlayers().get(tmp).getOnline()) {
+            /*if (!actualPlayer.getUsername().equals(players.get(tmp).getUsername()) && getPlayers().get(tmp).getOnline()) {
                 System.out.println(actualPlayer.getUsername());
                 getPlayers().get(tmp).setOnline(false);
                 removeObserver(getObservers().get(tmp));
-                System.out.println("Rimosso "+getPlayers().get(tmp).getUsername());
-            }
+                System.out.println("Rimosso " + getPlayers().get(tmp).getUsername());
+            }*/
         }
 
     }

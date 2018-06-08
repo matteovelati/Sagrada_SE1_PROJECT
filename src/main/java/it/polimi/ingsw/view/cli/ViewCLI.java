@@ -80,7 +80,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @param online the boolean to be set
      */
     @Override
-    public void setOnline(boolean online){
+    public synchronized void setOnline(boolean online){
         this.online = online;
         if(!online){
             this.print("\n\nYOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PLEASE PRESS 0");
@@ -92,7 +92,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @return true if the player is online, false otherwise
      */
     @Override
-    public boolean getOnline(){
+    public synchronized boolean getOnline(){
         return online;
     }
 
@@ -277,9 +277,25 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewEndMatch() throws RemoteException {
+        boolean win = true;
+        int myScore = 0;
         for(Player x : gameModel.getPlayers()){
-            System.out.println(x.getUsername() +"'s FINAL SCORE: "+ x.getFinalScore());
+            if(user.equals(x.getUsername())){
+                myScore = x.getFinalScore();
+                System.out.println("YOUR FINAL SCORE IS: "+ myScore +"\n");
+                break;
+            }
         }
+        for (Player x : gameModel.getPlayers()){
+            if(!user.equals(x.getUsername()))
+                System.out.println(x.getUsername() +"'S FINAL SCORE: "+ x.getFinalScore());
+            if(myScore < x.getFinalScore())
+                win = false;
+        }
+        if (win)
+            System.out.println("\nYOU WON!!!");
+        else
+            System.out.println("\nYOU LOST...    :'(");
     }
 
     /**
