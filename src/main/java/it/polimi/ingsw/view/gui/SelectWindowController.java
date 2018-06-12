@@ -21,7 +21,7 @@ public class SelectWindowController {
     private ViewGUI viewGUI;
 
     public void waitTurn(){
-        container.getChildren().remove(allWindows);
+        allWindows.setDisable(true);
         text.setText("WAIT YOUR TURN");
     }
 
@@ -37,14 +37,8 @@ public class SelectWindowController {
     }
 
     public void setActualPlayer(){
-        System.out.println("dentro");
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                text.setText("CHOOSE A WINDOW PATTERN");
-                container.getChildren().add(allWindows);
-            }
-        });
+        text.setText("CHOOSE A WINDOW PATTERN");
+        allWindows.setDisable(false);
     }
 
 }

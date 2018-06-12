@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="container" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" styleClass="gamebg" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.SelectWindowController">
+    <children>
+        <Label fx:id="text" text="CHOOSE A WINDOW PATTERN" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="30.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="20.0" />
+            </VBox.margin>
+        </Label>
+        <GridPane fx:id="allWindows" hgap="150.0" maxHeight="-Infinity" maxWidth="-Infinity" vgap="70.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="350.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="350.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="280.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+            <ImageView fx:id="card1front" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <image>
+                  <Image url="@../images/windows/aurorae_magnificus.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="card1back" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
+               <image>
+                  <Image url="@../images/windows/bellesguard.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="card2front" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <image>
+                  <Image url="@../images/windows/sun_catcher.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="card2back" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <image>
+                  <Image url="@../images/windows/via_lux.png" />
+               </image>
+            </ImageView>
+            </children>
+            <VBox.margin>
+                <Insets bottom="20.0" />
+            </VBox.margin>
+        </GridPane>
+    </children>
+</VBox>

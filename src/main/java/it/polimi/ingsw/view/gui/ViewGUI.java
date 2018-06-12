@@ -85,14 +85,15 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             case SELECTWINDOW:
                 viewSelectWindow();
                 break;
+            case SELECTMOVE1:
+                System.out.println("ok");
+                //viewSelectMove1();
+                break;
             /*case ENDROUND:
                 viewEndRound();
                 break;
             case ENDMATCH:
                 viewEndMatch();
-                break;
-            case SELECTMOVE1:
-                viewSelectMove1();
                 break;
             case SELECTMOVE2:
                 viewSelectMove2();
@@ -133,7 +134,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         startController.addPrint("- "+ x.getUsername());
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //do nothing
                 }
             }
         });
@@ -153,10 +154,18 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 }
             });
         }else{
-            System.out.println(actualPlayer());
-            if(actualPlayer()) {
-                selectWindowController.setActualPlayer();
-            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if(actualPlayer()) {
+                            selectWindowController.setActualPlayer();
+                        }
+                    } catch (RemoteException e) {
+                        //do nothing
+                    }
+                }
+            });
         }
     }
 
