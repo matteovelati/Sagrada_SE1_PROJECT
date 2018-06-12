@@ -1,19 +1,18 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.controller.RemoteGameController;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.RemoteGameModel;
 import it.polimi.ingsw.model.States;
 import it.polimi.ingsw.view.RemoteView;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -22,8 +21,11 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class ViewGUI extends Application implements RemoteView, Serializable {
+    private Stage mainStage;
+    private boolean firstCall = true;
 
     private boolean online;
+    private States state;
     private String user;
     private int choose1;
     private int choose2;
@@ -53,11 +55,109 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
 
         startController = loader.getController();
         startController.setViewGUI(this);
+        startController.init();
 
         primaryStage.setTitle("Sagrada");
         primaryStage.setScene(new Scene(root, 544, 635));
         primaryStage.setResizable(false);
+        mainStage = primaryStage;
         primaryStage.show();
+    }
+
+    /**
+     *
+     * @param gameModel the gamemodel of the match
+     * @throws RemoteException if the reference could not be accessed
+     */
+    @Override
+    public void update(RemoteGameModel gameModel) throws RemoteException {
+        this.gameModel = gameModel;
+        this.run();
+    }
+
+    public void run() throws RemoteException{
+        state = gameModel.getState();
+
+        switch (state){
+            case LOBBY:
+                viewLobby();
+                break;
+            case SELECTWINDOW:
+                viewSelectWindow();
+                break;
+            /*case ENDROUND:
+                viewEndRound();
+                break;
+            case ENDMATCH:
+                viewEndMatch();
+                break;
+            case SELECTMOVE1:
+                viewSelectMove1();
+                break;
+            case SELECTMOVE2:
+                viewSelectMove2();
+                break;
+            case PUTDICEINWINDOW:
+                viewPutDiceInWindow();
+                break;
+            case SELECTDRAFT:
+                viewSelectDraft();
+                break;
+            case SELECTCARD:
+                viewSelectCard();
+                break;
+            case USETOOLCARD:
+                viewUseToolCard();
+                break;
+            case USETOOLCARD2:
+                viewUseToolCard2();
+                break;
+            case USETOOLCARD3:
+                viewUseToolCard3();
+                break;
+            case ERROR:
+                viewError();
+                break;*/
+            default:
+                assert false;
+        }
+    }
+
+    private void viewLobby() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startController.print("GAMERS IN THE LOBBY:\n");
+                    for(Player x: gameModel.getPlayers()){
+                        startController.addPrint("- "+ x.getUsername());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void viewSelectWindow() throws RemoteException {
+        if(firstCall) {
+            firstCall = false;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        startController.changeScene(mainStage);
+                    } catch (IOException e) {
+                        //do nothing
+                    }
+                }
+            });
+        }else{
+            System.out.println(actualPlayer());
+            if(actualPlayer()) {
+                selectWindowController.setActualPlayer();
+            }
+        }
     }
 
     /**
@@ -140,16 +240,6 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
 
     }
 
-    /**
-     *
-     * @param gameModel the gamemodel of the match
-     * @throws RemoteException if the reference could not be accessed
-     */
-    @Override
-    public void update(RemoteGameModel gameModel) throws RemoteException {
-        this.gameModel = gameModel;
-    }
-
 
     public void setUser(String s) throws RemoteException {
         this.user = s;
@@ -170,5 +260,22 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             return true;
         }else
             return false;
+    }
+
+    public boolean reconnecting() throws RemoteException {
+        return gameModel.getObservers().contains(null);
+    }
+
+    public void setSelectWindowController(SelectWindowController selectWindowController){
+        this.selectWindowController = selectWindowController;
+    }
+
+    public boolean actualPlayer() throws RemoteException {
+        return user.equals(gameModel.getActualPlayer().getUsername());
+    }
+
+    public void setChoose1(int i) throws RemoteException {
+        this.choose1 = i;
+        network.update(this);
     }
 }

@@ -1,28 +1,50 @@
 package it.polimi.ingsw.view.gui;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
-import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class SelectWindowController {
+    @FXML
+    private Label text;
+    @FXML
+    private VBox container;
+    @FXML
+    private GridPane allWindows;
 
-    public void clickGrid(MouseEvent event) throws IOException {
+    private ViewGUI viewGUI;
 
-        Parent game = FXMLLoader.load(getClass().getResource("fxml/match.fxml"));
-
-        Scene selectWindowScene;
-        selectWindowScene = new Scene(game, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
-        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        primaryStage.setScene(selectWindowScene);
-        primaryStage.setMaximized(true);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-
+    public void waitTurn(){
+        container.getChildren().remove(allWindows);
+        text.setText("WAIT YOUR TURN");
     }
+
+    public void setViewGUI(ViewGUI viewGUI){
+        this.viewGUI = viewGUI;
+    }
+
+    public void selectWindow(MouseEvent e) throws RemoteException {
+        ImageView selected = (ImageView) e.getSource();
+        int selection = GridPane.getRowIndex(selected)*2 + GridPane.getColumnIndex(selected) + 1;
+        waitTurn();
+        viewGUI.setChoose1(selection);
+    }
+
+    public void setActualPlayer(){
+        System.out.println("dentro");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                text.setText("CHOOSE A WINDOW PATTERN");
+                container.getChildren().add(allWindows);
+            }
+        });
+    }
+
 }

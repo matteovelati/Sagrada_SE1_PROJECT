@@ -1,6 +1,5 @@
 import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.view.cli.ViewCLI;
-import it.polimi.ingsw.view.gui.App;
 import it.polimi.ingsw.view.gui.ViewGUI;
 import javafx.application.Application;
 
@@ -16,6 +15,9 @@ public class Client {
         Scanner input;
         int val;
         boolean check = false;
+
+        System.setProperty("java.security.policy", "stupid.policy");
+        System.setSecurityManager(new SecurityManager());
 
         Registry registry = LocateRegistry.getRegistry();
 

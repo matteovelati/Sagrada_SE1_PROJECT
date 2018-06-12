@@ -13,7 +13,7 @@ public class Server {
 
         GameController network = new GameController();
 
-        Registry registry = LocateRegistry.getRegistry("169.254.148.232");
+        Registry registry = LocateRegistry.getRegistry();
         registry.bind("network", network);
 
         System.out.println("Hi! I'm the Sagrada server!\n\nI'm waiting for players...");
