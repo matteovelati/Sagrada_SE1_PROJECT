@@ -10,17 +10,30 @@ import java.util.TimerTask;
 
 import static it.polimi.ingsw.model.States.*;
 
-public class GameController extends UnicastRemoteObject implements ControllerObserver, RemoteGameController {
+public class GameController extends UnicastRemoteObject implements RemoteGameController {
 
     private GameModel gameModel;
     private int actualPlayer, check;
     private boolean roundEnded;
     private States beforeError;
     private transient Timer t;
+    private boolean singlePlayerStarted;
+    private boolean multiPlayerStarted;
 
     public GameController() throws RemoteException{
-        gameModel = GameModel.getInstance(LOBBY, 0);
+        singlePlayerStarted = false;
+        multiPlayerStarted = false;
         t = new Timer();
+    }
+
+    @Override
+    public boolean getSinglePlayerStarted(){
+        return singlePlayerStarted;
+    }
+
+    @Override
+    public boolean getMultiPlayerStarted(){
+        return multiPlayerStarted;
     }
 
     @Override
@@ -71,16 +84,13 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         );
     }
 
-    private void verifyObserver() throws RemoteException {
-        for(int i=0; i<gameModel.getObservers().size(); i++){
-            try{
-                if(gameModel.getObservers().get(i) != null)
-                    gameModel.getObservers().get(i).getUser();
-            } catch(RemoteException e){
-                gameModel.getPlayers().get(i).setOnline(false);
-                gameModel.removeObserver(gameModel.getObservers().get(i));
-            }
-        }
+    @Override
+    public void createGameModel(RemoteView view, int level) throws RemoteException{
+        gameModel = GameModel.getInstance(LOBBY, level);
+        if (level == 0)
+            multiPlayerStarted = true;
+        else
+            singlePlayerStarted = true;
     }
 
     @Override
@@ -146,21 +156,97 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         }
     }
 
+    @Override
+    public void updateSP(RemoteView view) throws RemoteException{
+
+        do{
+            verifyObserver();
+        }while (gameModel.getObservers().contains(null));
+
+        switch(gameModel.getState()){
+
+            case LOBBY:
+                lobby(view);
+                break;
+
+            case SELECTWINDOW:
+                selectWindow(view);
+                break;
+
+            case SELECTMOVE1:
+                selectMove1(view);
+                break;
+
+            case SELECTDRAFT:
+                selectDraft(view);
+                break;
+
+            case PUTDICEINWINDOW:
+                putDiceInWindow(view);
+                break;
+
+            case SELECTMOVE2:
+                selectMove2(view);
+                break;
+
+            case SELECTCARD:
+                selectCard(view);
+                break;
+
+            case SELECTDIE:
+                selectDie(view);
+                break;
+
+            case USETOOLCARD:
+                useToolCard(view);
+                break;
+
+            case USETOOLCARD2:
+                useToolCard2(view);
+                break;
+
+            case USETOOLCARD3:
+                useToolCard3(view);
+                break;
+
+            case ENDROUND:
+                endRound();
+                break;
+
+            case ENDMATCH:
+                break;
+
+            case ERROR:
+                gameModel.setState(beforeError);
+                break;
+
+            default:
+                break;
+        }
+    }
 
     private void lobby(RemoteView view) throws RemoteException {
 
-        gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
-        if (gameModel.getPlayers().size() == 2) {
-            startTimerLobby(t);
-        }
-        if(gameModel.getPlayers().size() == 4){
-            t.cancel();
+        if (singlePlayerStarted){
+            gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
+            gameModel.getPlayers().get(0).setPrivateObjectives(gameModel.getAllColors().remove(0));
             gameModel.setDraft();
             gameModel.setSchemeCards();
             gameModel.setState(SELECTWINDOW);
         }
         else {
-            gameModel.setState(LOBBY);
+            gameModel.setPlayers(new Player(view.getUser(), gameModel.getAllColors().remove(0)));
+            if (gameModel.getPlayers().size() == 2) {
+                startTimerLobby(t);
+            }
+            if (gameModel.getPlayers().size() == 4) {
+                t.cancel();
+                gameModel.setDraft();
+                gameModel.setSchemeCards();
+                gameModel.setState(SELECTWINDOW);
+            } else {
+                gameModel.setState(LOBBY);
+            }
         }
     }
 
@@ -277,7 +363,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
         t.cancel();
 
-        if (view.getChoose1() > 0 && view.getChoose1() < 4){
+        if (view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getToolCards().size()){
 
             if(gameModel.getField().getToolCards().get(view.getChoose1()-1).select(gameModel)) {
 
@@ -285,12 +371,19 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     view.printError("You can't use this card now, you have already put a dice.");
                     gameModel.setState(SELECTCARD);
                 } else {
-                    if (gameModel.playerSelectToolCardMP(view.getChoose1() - 1)) {
+                    if (multiPlayerStarted && gameModel.playerSelectToolCardMP(view.getChoose1() - 1))
                         gameModel.setState(USETOOLCARD);
-                    } else {
+                    else if (singlePlayerStarted && gameModel.playerSelectToolCardSP(view.getChoose1() - 1))
+                        gameModel.setState(SELECTDIE);
+                    else {
                         beforeError = gameModel.getState();
-                        view.printError("You don't have enough tokens");
-                        gameModel.setState(ERROR);
+                        if (multiPlayerStarted)
+                            view.printError("You don't have enough tokens");
+                        else {
+                            view.printError("You already used this card or there are no dice in the draft that matches the color of the ToolCard. " +
+                                    "Try again later");
+                            gameModel.setState(ERROR);
+                        }
                     }
                 }
             }
@@ -305,23 +398,35 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
     }
 
+    private void selectDie(RemoteView view) throws RemoteException{
+
+        if (view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()){
+            if (gameModel.getField().getDraft().getDraft().get(view.getChoose1()-1).getColor().equals(gameModel.getActualPlayer().getToolCardSelected().getColor())) {
+                gameModel.getField().getDraft().extract(view.getChoose1()-1);
+                gameModel.setState(USETOOLCARD);
+            }
+            else {
+                beforeError = gameModel.getState();
+                gameModel.setState(ERROR);
+            }
+        }
+        else
+            checkError(view, view.getChoose1());
+    }
+
     private void useToolCard(RemoteView view) throws RemoteException{
 
         t.cancel();
-
         if(gameModel.playerUseToolCard(view.getChoices())) {
-
-            gameModel.decreaseToken();
-
+            if (multiPlayerStarted)
+                gameModel.decreaseToken();
             if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1)
                 setNextState();
             else
                 gameModel.setState(USETOOLCARD2);
-
         }
         else
             checkError(view, view.getChoices().get(0));
-
     }
 
     private void useToolCard2(RemoteView view) throws RemoteException{
@@ -348,13 +453,27 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
     }
 
+    private void verifyObserver() throws RemoteException {
+        for(int i=0; i<gameModel.getObservers().size(); i++){
+            try{
+                if(gameModel.getObservers().get(i) != null)
+                    gameModel.getObservers().get(i).getUser();
+            } catch(RemoteException e){
+                gameModel.getPlayers().get(i).setOnline(false);
+                gameModel.removeObserver(gameModel.getObservers().get(i));
+            }
+        }
+    }
 
     private void scoreCalculation(){
 
         int score;
 
         for(Player x : gameModel.getPlayers()){
-            score = x.getPrivateObjectives().get(0).calculateScoreMP(x);
+            if (multiPlayerStarted)
+                score = x.getPrivateObjectives().get(0).calculateScoreMP(x);
+            else
+                score = x.getPrivateObjectives().get(0).calculateScoreSP(x);
             for(PublicObjective po : gameModel.getField().getPublicObjectives())
                 score += po.calculateScore(x.getWindow());
             x.setFinalScore(score);
@@ -373,16 +492,18 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
 
     private void endTurn() throws RemoteException {
         int onPlayers = 0;
-        for(Player p : gameModel.getPlayers()){
-            if(p.getOnline())
-                onPlayers ++;
-            if(onPlayers > 1)
-                break;
-        }
-        if(onPlayers < 2){
-            scoreCalculation();
-            gameModel.setState(ENDMATCH);
-            return;
+        if (multiPlayerStarted) {
+            for (Player p : gameModel.getPlayers()) {
+                if (p.getOnline())
+                    onPlayers++;
+                if (onPlayers > 1)
+                    break;
+            }
+            if (onPlayers < 2) {
+                scoreCalculation();
+                gameModel.setState(ENDMATCH);
+                return;
+            }
         }
 
         if(nextPlayer()){

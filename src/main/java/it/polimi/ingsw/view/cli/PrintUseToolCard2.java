@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard2 implements Serializable {
 
+    private static final String inputErr = "Input error! Do it again correctly";
     private static final String STOP = "ENTER [-1] TO STOP. WARNING: THE CARD WILL BE SET AS USED";
     private static int tmp;
 
@@ -37,7 +38,7 @@ public class PrintUseToolCard2 implements Serializable {
                 }while(!correctInput(tmp, 2, gameModel));
                 if(choices.get(0) == -1)
                     break;
-                choices.add(2, tmp-1);
+                choices.add(tmp-1);
                 System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
                 do {
                     input = new Scanner(System.in);
@@ -49,7 +50,7 @@ public class PrintUseToolCard2 implements Serializable {
                 }while(!correctInput(tmp, 3, gameModel));
                 if(choices.get(0) == -1)
                     break;
-                choices.add(3, tmp-1);
+                choices.add(tmp-1);
                 break;
             case 4:                 //LATHEKIN
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
@@ -77,7 +78,7 @@ public class PrintUseToolCard2 implements Serializable {
                         break;
                     }
                     if(tmp<1 || tmp>6)
-                        System.out.println("Input error! Do it again correctly");
+                        System.out.println(inputErr);
                 }while(tmp<1 || tmp>6);
                 choices.add(tmp);
                 break;
@@ -87,7 +88,7 @@ public class PrintUseToolCard2 implements Serializable {
                     input = new Scanner(System.in);
                     tmp = input.nextInt();
                     if(tmp<1 || tmp>2)
-                        System.out.println("Input error! Do it again correctly");
+                        System.out.println(inputErr);
                 }while(tmp<1 || tmp>2);
                 choices.add(tmp);
                 if(tmp == 1){
@@ -187,7 +188,7 @@ public class PrintUseToolCard2 implements Serializable {
      * @return false
      */
     private static boolean error(){
-        System.out.println("Input error! Do it again correctly");
+        System.out.println(inputErr);
         return false;
     }
 }

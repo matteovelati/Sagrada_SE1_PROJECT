@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.model.GameModel;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.RemoteGameModel;
 import it.polimi.ingsw.model.States;
 import it.polimi.ingsw.view.RemoteView;
@@ -25,20 +26,87 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     private RemoteGameModel gameModel;
     private RemoteGameController network;
 
+    /**
+     * creates a ViewCLISinglePlayer object checking if the username is correct and if the game is already started
+     * initializes an arraylist of integer which will contains client's inputs
+     * @param network the RemoteGameController
+     * @throws RemoteException if the reference could not be accessed
+     */
     public ViewCLISinglePlayer(RemoteGameController network) throws RemoteException {
+        int level;
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
-        System.out.println("When playing Sagrada by yourself, you're trying to beat a Target Score." +
+        System.out.println("When playing Sagrada by yourself, you're trying to beat a Target Score. " +
         "The Target Score is the sum of the values from all the dice on the RoundTrack at the end of the game. \n");
         choices = new ArrayList<>();
         setOnline(true);
         endGame = false;
         this.network = network;
-        gameModel = network.getGameModel();
+        if (network.getSinglePlayerStarted()){
+            gameModel = network.getGameModel();
+            if(!gameModel.getObservers().contains(null)) {
+                System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+                System.exit(0);
+            }
+            else{
+                do{
+                    setUser();
+                }while(!verifyUserCrashed(user));
+                network.reAddObserver(this);
+                network.setPlayerOnline(user, true);
+                System.out.println("\n\nJOINING AGAIN THE MATCH...");
+                network.updateSP(this);
+            }
+        }
+        else {
+            input = new Scanner(System.in);
+            System.out.println("ENTER YOUR USERNAME:");
+            this.user = input.next().toUpperCase();
+            System.out.println("CHOOSE A LEVEL OF DIFFICULTY FROM 1 (VERY EASY) TO 5 (EXTREME)");
+            input = new Scanner(System.in);
+            do {
+                while (!input.hasNextInt())
+                    input = new Scanner(System.in);
+                level = input.nextInt();
+            } while (level < 0 || level > 6);
+            network.createGameModel(this, level);
+            gameModel = network.getGameModel();
+            network.addObserver(this);
+            network.updateSP(this);
+        }
+    }
+
+    /**
+     * asks the client to enter an username
+     * finally transform it in upper case
+     */
+    private void setUser() {
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
         this.user = input.next().toUpperCase();
     }
 
+    /**
+     * verifies if some client has lost connection to the main server
+     * @param s the name of the client to be verified
+     * @return true if the client has lost connection, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
+    private boolean verifyUserCrashed(String s) throws RemoteException {
+        for(Player x : gameModel.getPlayers()){
+            if(x.getUsername().equals(s)){
+                if(x.getOnline())
+                    return false;
+                else{
+                    for(RemoteView y : gameModel.getObservers()){
+                        if(y!=null && y.getUser().equals(s))
+                            return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * sets if the client is online or not
@@ -153,10 +221,13 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
                 viewPutDiceInWindow();
                 break;
             case SELECTDRAFT:
-                viewSelectDraft();
+                viewSelectDraft(false);
                 break;
             case SELECTCARD:
                 viewSelectCard();
+                break;
+            case SELECTDIE:
+                viewSelectDraft(true);
                 break;
             case USETOOLCARD:
                 viewUseToolCard();
@@ -182,7 +253,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     private void viewEndRound() throws RemoteException{
         System.out.println("\n\nEND OF ROUND " + gameModel.getField().getRoundTrack().getRound() +"\n\n");
         if(user.equals(gameModel.getActualPlayer().getUsername())){
-            network.update(this);
+            network.updateSP(this);
         }
     }
 
@@ -214,7 +285,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
-        network.update(this);
+        network.updateSP(this);
     }
 
     /**
@@ -231,7 +302,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
-        network.update(this);
+        network.updateSP(this);
     }
 
     /**
@@ -248,7 +319,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
-        network.update(this);
+        network.updateSP(this);
     }
 
     /**
@@ -257,33 +328,36 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      */
     private void viewPutDiceInWindow() throws RemoteException {
         PrintWindow.print(gameModel.getActualPlayer().getWindow());
-        System.out.println("CHOOSE A ROW TO PUT YOUR DICE (-1 TO ABORT)");
+        System.out.println("CHOOSE A ROW TO PUT YOUR DIE (-1 TO ABORT)");
         input = new Scanner(System.in);
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
         if (choose1 != -1) {
-            System.out.println("CHOOSE A COLUMN TO PUT YOUR DICE (-1 TO ABORT)");
+            System.out.println("CHOOSE A COLUMN TO PUT THE DIE (-1 TO ABORT)");
             input = new Scanner(System.in);
             while (!input.hasNextInt())
                 input = new Scanner(System.in);
             setChoose2(input.nextInt());
         }
-        network.update(this);
+        network.updateSP(this);
     }
 
     /**
      * prints the list of dice in the draft
      * @throws RemoteException if the reference could not be accessed
      */
-    private void viewSelectDraft() throws RemoteException {
-        System.out.println("SELECT A DICE (-1 TO ABORT)");
+    private void viewSelectDraft(boolean toolCard) throws RemoteException {
+        if (toolCard)
+            System.out.println("SELECT A DIE THAT MATCHES THE COLOR OF THE TOOLCARD, IT WILL BE REMOVED FROM GAME (-1 TO ABORT)");
+        else
+            System.out.println("SELECT A DIE (-1 TO ABORT)");
         PrintDraft.print(gameModel.getField().getDraft());
         input = new Scanner(System.in);
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
-            network.update(this);
+        network.updateSP(this);
     }
 
     /**
@@ -297,7 +371,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
-            network.update(this);
+            network.updateSP(this);
     }
 
     /**
@@ -306,8 +380,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      */
     private void viewUseToolCard() throws RemoteException {
         PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-        network.update(this);
-
+        network.updateSP(this);
     }
 
     /**
@@ -316,8 +389,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      */
     private void viewUseToolCard2() throws RemoteException {
         PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-        network.update(this);
-
+        network.updateSP(this);
     }
 
     /**
@@ -326,7 +398,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      */
     private void viewUseToolCard3() throws RemoteException {
         PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-        network.update(this);
+        network.updateSP(this);
     }
 
     /**
@@ -335,9 +407,13 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      */
     private void viewError() throws RemoteException {
         System.out.println("PLEASE DO IT AGAIN CORRECTLY!");
-        network.update(this);
+        network.updateSP(this);
     }
 
+    /**
+     * print a message
+     * @param s the message to be printed
+     */
     @Override
     public void print(String s){
         System.out.println(s);

@@ -43,6 +43,7 @@ public class PrintUseToolCard3 implements Serializable {
                         return;
                     }
                 }while(!correctInput(tmp, 3));
+                choices.add(tmp-1);
         }
     }
 

@@ -90,7 +90,6 @@ public class Player implements Serializable {
         }
     }
 
-    //lo chiama gamecontroller la seconda volta nel caso di single player
     public void setPrivateObjectives(Colors color) {
         this.privateObjectives.add(new PrivateObjective(color));
     }

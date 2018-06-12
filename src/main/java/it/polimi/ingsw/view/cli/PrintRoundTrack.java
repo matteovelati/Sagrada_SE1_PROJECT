@@ -10,10 +10,12 @@ public class PrintRoundTrack implements Serializable {
      * prints the roundtrack
      * @param roundTrack the roundtrack of the game
      */
-    public static void print(RoundTrack roundTrack){
+    public static void print(RoundTrack roundTrack, int score){
         for(int i=0; i<roundTrack.getGrid().size(); i++){
             System.out.println(i+1 +") " + roundTrack.getGrid().get(i).getValue() + roundTrack.getGrid().get(i).getColor());
         }
         System.out.println();
+        if (score != 0)
+            System.out.println("ACTUAL TARGET SCORE IS: "+ score + "\n");
     }
 }

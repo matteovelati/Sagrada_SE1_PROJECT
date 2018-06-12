@@ -47,7 +47,10 @@ public class ShowGameStuff {
                 PrintPrivateObjective.print(gameModel.getActualPlayer().getPrivateObjectives());
                 break;
             case 6:
-                PrintRoundTrack.print(gameModel.getField().getRoundTrack());
+                if (!SP)
+                    PrintRoundTrack.print(gameModel.getField().getRoundTrack(), 0);
+                else
+                    PrintRoundTrack.print(gameModel.getField().getRoundTrack(), gameModel.getField().getRoundTrack().calculateRoundTrack());
                 break;
             case 7:
                 if (!SP) {

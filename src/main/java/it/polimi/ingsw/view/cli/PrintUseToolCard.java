@@ -55,7 +55,7 @@ public class PrintUseToolCard implements Serializable {
                 if(!selectDraft(gameModel, choices))
                     break;
                 System.out.println("SELECT A DIE FROM THE ROUNDTRACK");
-                PrintRoundTrack.print(gameModel.getField().getRoundTrack());
+                PrintRoundTrack.print(gameModel.getField().getRoundTrack(), 0);
                 verifyInput(choices, 1, gameModel);
                 break;
             case 6:                 //FLUX BRUSH
@@ -72,11 +72,12 @@ public class PrintUseToolCard implements Serializable {
                 break;
             case 10:                //GRINDING STONE
                 selectDraft(gameModel, choices);
+                choices.add(0);
                 break;
             case 12:                //TAP WHEEL
                 System.out.println("SELECT A DIE FROM THE ROUNDRACK");
                 System.out.println(stop);
-                PrintRoundTrack.print(gameModel.getField().getRoundTrack());
+                PrintRoundTrack.print(gameModel.getField().getRoundTrack(), 0);
                 if (!verifyInput(choices, 1, gameModel))
                     break;
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");

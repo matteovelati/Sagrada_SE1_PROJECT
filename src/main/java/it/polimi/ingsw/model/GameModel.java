@@ -24,7 +24,7 @@ public class GameModel implements RemoteGameModel, Serializable {
 
 
     private GameModel(States state, int level){
-        this.players = new ArrayList<>();
+        this.players = new ArrayList<>(1);
         this.state = state;
         field = Field.getInstance(level);
         bag = Bag.getInstance();

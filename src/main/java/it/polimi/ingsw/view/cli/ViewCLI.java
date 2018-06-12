@@ -22,11 +22,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     private int choose1;
     private int choose2;
     private ArrayList<Integer> choices;
-
     private boolean online;
-
     private RemoteGameModel gameModel;
-
     private RemoteGameController network;
 
     /**
@@ -41,27 +38,43 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         setOnline(true);
         endGame = false;
         this.network = network;
-        gameModel = network.getGameModel();
-        if(gameModel.getState().equals(States.LOBBY)) {
-            network.addObserver(this);
-            do {
-                setUser();
-            } while (!verifyUser(user));
-            network.update(this);
-        }
-        else{
-            if(!gameModel.getObservers().contains(null)) {
-                System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
-                System.exit(0);
+        if (network.getMultiPlayerStarted()) {
+            gameModel = network.getGameModel();
+            if(gameModel.getState().equals(States.LOBBY)) {
+                network.addObserver(this);
+                do {
+                    setUser();
+                } while (!verifyUser(user));
+                network.update(this);
             }
             else{
-                do{
-                    setUser();
-                }while(!verifyUserCrashed(user));
-                network.reAddObserver(this);
-                network.setPlayerOnline(user, true);
-                System.out.println("\n\nJOINING AGAIN THE MATCH...");
+                if(!gameModel.getObservers().contains(null)) {
+                    System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+                    System.exit(0);
+                }
+                else {
+                    do {
+                        setUser();
+                    } while (!verifyUserCrashed(user));
+                    network.reAddObserver(this);
+                    network.setPlayerOnline(user, true);
+                    System.out.println("\n\nJOINING AGAIN THE MATCH...");
+                    network.update(this);
+                }
             }
+        }
+        else {
+            network.createGameModel(this, 0);
+            gameModel = network.getGameModel();
+            if (gameModel.getPlayers().isEmpty())
+                setUser();
+            else {
+                do {
+                    setUser();
+                } while (!verifyUser(user));
+            }
+            network.addObserver(this);
+            network.update(this);
         }
     }
 
@@ -73,6 +86,45 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
         this.user = input.next().toUpperCase();
+    }
+
+    /**
+     * verifies if the client has entered a not valid username
+     * @param s the name of the client to be verified
+     * @return true if the username is valid, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
+    private boolean verifyUser(String s) throws RemoteException{
+        for(int i=0; i<gameModel.getPlayers().size(); i++){
+            if(s.equals(gameModel.getPlayers().get(i).getUsername())){
+                System.out.println("THIS USERNAME ALREADY EXISTS");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * verifies if some client has lost connection to the main server
+     * @param s the name of the client to be verified
+     * @return true if the client has lost connection, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
+    private boolean verifyUserCrashed(String s) throws RemoteException {
+        for(Player x : gameModel.getPlayers()){
+            if(x.getUsername().equals(s)){
+                if(x.getOnline())
+                    return false;
+                else{
+                    for(RemoteView y : gameModel.getObservers()){
+                        if(y!=null && y.getUser().equals(s))
+                            return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -208,45 +260,6 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             default:
                 assert false;
         }
-    }
-
-    /**
-     * verifies if the client has entered a not valid username
-     * @param s the name of the client to be verified
-     * @return true if the username is valid, false otherwise
-     * @throws RemoteException if the reference could not be accessed
-     */
-    private boolean verifyUser(String s) throws RemoteException{
-        for(int i=0; i<gameModel.getPlayers().size(); i++){
-            if(s.equals(gameModel.getPlayers().get(i).getUsername())){
-                System.out.println("THIS USERNAME ALREADY EXISTS");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * verifies if some client has lost connection to the main server
-     * @param s the name of the client to be verified
-     * @return true if the client has lost connection, false otherwise
-     * @throws RemoteException if the reference could not be accessed
-     */
-    private boolean verifyUserCrashed(String s) throws RemoteException {
-        for(Player x : gameModel.getPlayers()){
-            if(x.getUsername().equals(s)){
-                if(x.getOnline())
-                    return false;
-                else{
-                    for(RemoteView y : gameModel.getObservers()){
-                        if(y!=null && y.getUser().equals(s))
-                            return false;
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
