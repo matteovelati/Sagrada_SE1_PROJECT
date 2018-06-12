@@ -19,7 +19,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
     private transient Timer t;
 
     public GameController() throws RemoteException{
-        gameModel = GameModel.getInstance(LOBBY);
+        gameModel = GameModel.getInstance(LOBBY, 0);
         t = new Timer();
     }
 
@@ -285,7 +285,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                     view.printError("You can't use this card now, you have already put a dice.");
                     gameModel.setState(SELECTCARD);
                 } else {
-                    if (gameModel.playerSelectToolCard(view.getChoose1() - 1)) {
+                    if (gameModel.playerSelectToolCardMP(view.getChoose1() - 1)) {
                         gameModel.setState(USETOOLCARD);
                     } else {
                         beforeError = gameModel.getState();
@@ -354,7 +354,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
         int score;
 
         for(Player x : gameModel.getPlayers()){
-            score = x.getPrivateObjective().calculateScore(x);
+            score = x.getPrivateObjectives().get(0).calculateScoreMP(x);
             for(PublicObjective po : gameModel.getField().getPublicObjectives())
                 score += po.calculateScore(x.getWindow());
             x.setFinalScore(score);
@@ -456,7 +456,7 @@ public class GameController extends UnicastRemoteObject implements ControllerObs
                             gameModel.setSchemeCards();
                             gameModel.setState(SELECTWINDOW);
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            //DO NOTHING
                         }
                     }
                 }, 30000

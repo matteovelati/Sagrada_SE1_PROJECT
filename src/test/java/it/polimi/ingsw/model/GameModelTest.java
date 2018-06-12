@@ -27,7 +27,7 @@ public class GameModelTest {
 
     @Before
     public void setUp() {
-        gameModel = GameModel.getInstance(States.LOBBY);
+        gameModel = GameModel.getInstance(States.LOBBY, 0);
         player1 = new Player("sara", Colors.R);
         player2 = new Player("matteo", Colors.G);
         try {
@@ -41,7 +41,7 @@ public class GameModelTest {
 
     @Test
     public void getInstance() {
-        assertEquals(gameModel, GameModel.getInstance(States.LOBBY));
+        assertEquals(gameModel, GameModel.getInstance(States.LOBBY, 0));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class GameModelTest {
     public void playerSelectToolCard() {
         gameModel.setSchemeCards();
         gameModel.playerSetWindow(1);
-        assertTrue(gameModel.playerSelectToolCard(2));
+        assertTrue(gameModel.playerSelectToolCardMP(2));
         setUp();
     }
 
@@ -97,7 +97,7 @@ public class GameModelTest {
     public void playerUseToolCard() {
         gameModel.setSchemeCards();
         gameModel.playerSetWindow(3);
-        gameModel.playerSelectToolCard(0);
+        gameModel.playerSelectToolCardMP(0);
         ArrayList<Integer> input = new ArrayList<>(1);
         input.add(-1);
         assertFalse(gameModel.playerUseToolCard(input));
@@ -137,7 +137,7 @@ public class GameModelTest {
     public void decreaseToken() {
         gameModel.setSchemeCards();
         gameModel.playerSetWindow(1);
-        gameModel.playerSelectToolCard(2);
+        gameModel.playerSelectToolCardMP(2);
         int oldtokens = gameModel.getActualPlayer().getTokens();
         gameModel.decreaseToken();
         assertTrue(gameModel.getActualPlayer().getTokens() < oldtokens);

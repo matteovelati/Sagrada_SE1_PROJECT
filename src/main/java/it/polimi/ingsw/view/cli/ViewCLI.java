@@ -325,9 +325,9 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     private void viewSelectMove1() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
-            int tmp = ShowGameStuff.print((GameModel) gameModel);
+            int tmp = ShowGameStuff.print((GameModel) gameModel, false);
             while (tmp != 0) {
-                tmp = ShowGameStuff.print((GameModel) gameModel);
+                tmp = ShowGameStuff.print((GameModel) gameModel, false);
             }
             if(getOnline()) {
                 PrintSelectMove1.print();
@@ -359,9 +359,9 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     private void viewSelectMove2() throws RemoteException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             network.startTimer(this);
-            int tmp = ShowGameStuff.print((GameModel) gameModel);
+            int tmp = ShowGameStuff.print((GameModel) gameModel, false);
             while (tmp != 0) {
-                tmp = ShowGameStuff.print((GameModel) gameModel);
+                tmp = ShowGameStuff.print((GameModel) gameModel, false);
             }
             if(getOnline()) {
                 PrintSelectMove2.print();

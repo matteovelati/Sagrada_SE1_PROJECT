@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard3 implements Serializable {
 
-    private static final String STOP = "ENTER [-1] TO STOP. YOU WILL LOSE YOUR TOKENS!!!";
+    private static final String STOP = "ENTER [-1] TO STOP. WARNING: THE CARD WILL BE SET AS USED";
 
     /**
      * prints some messages to ask the client to select the positions where he would like to place the die

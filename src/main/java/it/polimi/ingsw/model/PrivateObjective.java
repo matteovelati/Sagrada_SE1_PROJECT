@@ -50,12 +50,12 @@ public class PrivateObjective extends Card implements Serializable {
      * @param player is the player whose score is to be calculated
      * @return the player's final score
      */
-    public int calculateScore(Player player){                   //+1 per ogni dado dello stesso colore,
+    public int calculateScoreMP(Player player){                 //+1 per ogni dado dello stesso colore,
         int score = 0;                                          //+n segnalini favore residui,
         for (int i = 0; i < 4; i++){                            //-1 per ogni casella vuota
             for (int j = 0; j < 5; j++){
                 if (!player.getWindow().getWindow()[i][j].getIsEmpty()) {
-                    if (player.getPrivateObjective().getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
+                    if (player.getPrivateObjectives().get(0).getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
                     score++;
                 }
                 else
@@ -64,6 +64,42 @@ public class PrivateObjective extends Card implements Serializable {
         }
         score += player.getTokens();
         return score;
+    }
+
+    /**
+     * calculates the score of the player based on the color of his private objective
+     * the player gets one more point for each die in his window of the same color of the private objective
+     * and three less for every empty box
+     * @param player is the player whose score is to be calculated
+     * @return the player's best final score
+     */
+    public int calculateScoreSP(Player player){
+        int scoreA = 0;
+        int scoreB = 0;
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 5; j++){
+                if (!player.getWindow().getWindow()[i][j].getIsEmpty()) {
+                    if (player.getPrivateObjectives().get(0).getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
+                        scoreA++;
+                }
+                else
+                    scoreA -= 3;
+            }
+        }
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 5; j++){
+                if (!player.getWindow().getWindow()[i][j].getIsEmpty()) {
+                    if (player.getPrivateObjectives().get(1).getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
+                        scoreB++;
+                }
+                else
+                    scoreB -= 3;
+            }
+        }
+        if (scoreA > scoreB)
+            return scoreA;
+        else
+            return scoreB;
     }
 
 }

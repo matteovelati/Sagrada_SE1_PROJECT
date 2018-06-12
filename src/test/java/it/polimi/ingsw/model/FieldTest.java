@@ -13,12 +13,12 @@ public class FieldTest {
 
     @Before
     public void setUp() {
-        field = Field.getInstance();
+        field = Field.getInstance(0);
     }
 
     @Test
     public void getInstance() {
-        assertEquals(field, Field.getInstance());
+        assertEquals(field, Field.getInstance(0));
         assertEquals(field.getDraft(), Draft.getInstance());
         assertEquals(field.getRoundTrack(), RoundTrack.getInstance());
         assertEquals(3, field.getToolCards().size());

@@ -62,6 +62,18 @@ public class RoundTrack implements Serializable {
     }
 
     /**
+     * calculates the sum of dice's values and return it
+     * @return the sum of dice's value on the grid
+     */
+    public int calculateRoundTrack() {
+        int score = 0;
+        for (Dice d : grid){
+            score += d.getValue();
+        }
+        return score;
+    }
+
+    /**
      * switches one die with one die of the roundtrack
      * @param i the index of the roundtrack's die
      * @param dice the die to be exchanged

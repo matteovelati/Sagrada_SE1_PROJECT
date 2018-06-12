@@ -23,18 +23,18 @@ public class GameModel implements RemoteGameModel, Serializable {
     private static GameModel instance;
 
 
-    private GameModel(States state) {
+    private GameModel(States state, int level){
         this.players = new ArrayList<>();
         this.state = state;
-        field = Field.getInstance();
+        field = Field.getInstance(level);
         bag = Bag.getInstance();
         roundManager = RoundManager.getInstance();
         setAllColors();
     }
 
-    public static GameModel getInstance(States state){
+    public static GameModel getInstance(States state, int level){
         if (instance == null)
-            instance = new GameModel(state);
+            instance = new GameModel(state, level);
         return instance;
     }
 
@@ -53,6 +53,8 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     public void setDraft(){
         for (int i = 0; i < 2*players.size()+1; i++)
+            field.setDraft();
+        if (players.size() == 1)
             field.setDraft();
     }
 
@@ -129,8 +131,12 @@ public class GameModel implements RemoteGameModel, Serializable {
         return actualPlayer.putDice(i, j);
     }
 
-    public boolean playerSelectToolCard(int i){
-        return actualPlayer.selectToolCard(field.getToolCards(), i);
+    public boolean playerSelectToolCardMP(int i){
+        return actualPlayer.selectToolCardMP(field.getToolCards(), i);
+    }
+
+    public boolean playerSelectToolCardSP(int i){
+        return actualPlayer.selectToolCardSP(field.getToolCards(), i);
     }
 
     public boolean playerUseToolCard(ArrayList<Integer> input){
@@ -168,19 +174,13 @@ public class GameModel implements RemoteGameModel, Serializable {
                     }
                 }
             }catch (RemoteException e){
-                /*System.out.println("Rimosso player inattivo");
-                removeObserver(observer);*/
+                //DO NOTHING
             }
         }
         try {
             getObservers().get(tmp).update(this); //l'actual player è sempre online!
         }catch (RemoteException e){
-            /*if (!actualPlayer.getUsername().equals(players.get(tmp).getUsername()) && getPlayers().get(tmp).getOnline()) {
-                System.out.println(actualPlayer.getUsername());
-                getPlayers().get(tmp).setOnline(false);
-                removeObserver(getObservers().get(tmp));
-                System.out.println("Rimosso " + getPlayers().get(tmp).getUsername());
-            }*/
+            //DO NOTHING
         }
 
     }

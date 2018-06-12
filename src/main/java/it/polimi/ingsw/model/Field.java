@@ -13,30 +13,36 @@ public class Field implements Serializable {
 
     private RoundTrack roundTrack;
     private Draft draft;
-    private ArrayList<ToolCard> toolCards; //sono 3 carte
-    private ArrayList<PublicObjective> publicObjectives; //sono 3 carte
+    private ArrayList<ToolCard> toolCards;
+    private ArrayList<PublicObjective> publicObjectives;
 
     /**
      * creates a Field object which contains instance of Roundtrack and Draft
-     * initializes and sets an arraylist of 3 ToolCard objects and of 3 PublicObjective objects
+     * initializes and sets an arraylist of ToolCard objects and of PublicObjective objects
      */
-    private Field(){
+    private Field(int level){
         this.roundTrack = RoundTrack.getInstance();
         this.draft = Draft.getInstance();
         this.toolCards = new ArrayList<>(3);
-        setToolCards();
         this.publicObjectives = new ArrayList<>(3);
-        setPublicObjectives();
+        if (level == 0) {
+            setToolCards(0);
+            setPublicObjectives(false);
+        }
+        else {
+            setToolCards(level);
+            setPublicObjectives(true);
+        }
     }
 
     /**
-     * if the field already exists, the method returns the Field object,
+     * if the field already exists, the method returns the Field object for singleplayer match,
      * otherwise it creates a new Field.
      * @return the instance of the Field class
      */
-    public static Field getInstance(){
+    public static Field getInstance(int level){
         if (instance == null)
-            instance = new Field();
+            instance = new Field(level);
         return instance;
     }
 
@@ -84,8 +90,9 @@ public class Field implements Serializable {
     /**
      * creates an arraylist which contains 12 ToolCards (one each)
      * randomly extract 3 and put them in the list
+     * @param level an int to know how many toolcards has to be set for single player mode
      */
-    private void setToolCards(){
+    private void setToolCards(int level){
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>(12);
         allToolCards.add(new TCCopperFoilBurnisher());
@@ -100,16 +107,24 @@ public class Field implements Serializable {
         allToolCards.add(new TCLensCutter());
         allToolCards.add(new TCRunningPliers());
         allToolCards.add(new TCTapWheel());
-        for (int i = 0; i < 3; i++){
-            toolCards.add(allToolCards.remove(r.nextInt(allToolCards.size())));
+        if (level == 0) {
+            for (int i = 0; i < 3; i++) {
+                toolCards.add(allToolCards.remove(r.nextInt(allToolCards.size())));
+            }
+        }
+        else {
+            for (int i = 0; i < (6-level); i++) {
+                toolCards.add(allToolCards.remove(r.nextInt(allToolCards.size())));
+            }
         }
     }
 
     /**
      * creates an arraylist which contains 10 PublicObjectives (one each)
      * randomly extract 3 and put them in the list
+     * @param SP a boolean to know if is playing a in single player mode or not
      */
-    private void setPublicObjectives(){
+    private void setPublicObjectives(boolean SP){
         Random r = new Random();
         ArrayList<PublicObjective> allPublicObjectives = new ArrayList<>(10);
         allPublicObjectives.add(new POColorDiagonals());
@@ -122,7 +137,7 @@ public class Field implements Serializable {
         allPublicObjectives.add(new PORowColorVariety());
         allPublicObjectives.add(new PORowShadeVariety());
         allPublicObjectives.add(new POShadeVariety());
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < ((SP)?2:3); i++){
             publicObjectives.add(allPublicObjectives.remove(r.nextInt(allPublicObjectives.size())));
         }
     }

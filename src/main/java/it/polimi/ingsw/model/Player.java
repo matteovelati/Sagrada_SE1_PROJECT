@@ -8,7 +8,7 @@ public class Player implements Serializable {
     private String username;
     private int tokens;
     private Window window;
-    private PrivateObjective privateObjective;
+    private ArrayList<PrivateObjective> privateObjectives;
     private Dice dice;
     private ToolCard toolCardSelected;
     private int finalScore;
@@ -18,7 +18,8 @@ public class Player implements Serializable {
     public Player(String username, Colors color){
         this.username = username;
         setOnline(true);
-        setPrivateObjective(color);
+        privateObjectives = new ArrayList<>(1);
+        setPrivateObjectives(color);
     }
 
     public synchronized boolean getOnline() {
@@ -41,8 +42,8 @@ public class Player implements Serializable {
         return window;
     }
 
-    public PrivateObjective getPrivateObjective() {
-        return privateObjective;
+    public ArrayList<PrivateObjective> getPrivateObjectives() {
+        return privateObjectives;
     }
 
     public ToolCard getToolCardSelected() {
@@ -52,8 +53,6 @@ public class Player implements Serializable {
     public int getFinalScore(){
         return finalScore;
     }
-
-
 
     public synchronized void setOnline(boolean online) {
         this.online = online;
@@ -68,7 +67,6 @@ public class Player implements Serializable {
         this.dice = dice;
     }
 
-    /*vengono passate le carte schema mostrate e già il numero di quella selezionata*/
     public void setWindow(SchemeCard card1, SchemeCard card2, int i){
         switch(i){
             case 1:
@@ -92,21 +90,34 @@ public class Player implements Serializable {
         }
     }
 
-    public void setPrivateObjective(Colors color) {
-        this.privateObjective = new PrivateObjective(color);
+    //lo chiama gamecontroller la seconda volta nel caso di single player
+    public void setPrivateObjectives(Colors color) {
+        this.privateObjectives.add(new PrivateObjective(color));
     }
 
     public void setFinalScore(int finalScore){
         this.finalScore = finalScore;
     }
 
-    public boolean selectToolCard(ArrayList<ToolCard> toolCards, int i){
-
+    public boolean selectToolCardMP(ArrayList<ToolCard> toolCards, int i){
         toolCardSelected = toolCards.get(i);
         if(toolCardSelected.getIsUsed())
             return (this.tokens >= 2);
         else
             return (this.tokens >= 1);
+    }
+
+    public boolean selectToolCardSP(ArrayList<ToolCard> toolCards, int i){
+        toolCardSelected = toolCards.get(i);
+        if(toolCardSelected.getIsUsed())
+            return false;
+        else {
+            for (Dice d: Draft.getInstance().getDraft()){
+                if (toolCardSelected.getColor().equals(d.getColor()))
+                    return true;
+            }
+            return false;
+        }
     }
 
     public void pickDice(Draft draft, int i){
@@ -132,7 +143,6 @@ public class Player implements Serializable {
             return false;
     }
 
-    //CHIAMA IL METODO DELLA USETOOLCARD SELEZIONATA
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input){
         return toolCardSelected.useToolCard(gameModel, input);
     }

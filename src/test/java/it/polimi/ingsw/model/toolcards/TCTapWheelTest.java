@@ -20,7 +20,7 @@ public class TCTapWheelTest {
     @Before
     public void before() {
 
-        gameModel = GameModel.getInstance(States.LOBBY);
+        gameModel = GameModel.getInstance(States.LOBBY, 0);
         player1 = new Player("matteo", Colors.G);
         try {
             gameModel.setPlayers(player1);

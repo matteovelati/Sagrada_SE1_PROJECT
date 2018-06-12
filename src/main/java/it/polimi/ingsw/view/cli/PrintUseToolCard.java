@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard implements Serializable {
 
-    private static final String stop = "ENTER [-1] TO STOP. YOU WILL NOT LOSE YOUR TOKENS";
+    private static final String stop = "ENTER [-1] TO STOP. YOU WILL NOT BE SET AS USED";
     private static int tmp;
 
     /**

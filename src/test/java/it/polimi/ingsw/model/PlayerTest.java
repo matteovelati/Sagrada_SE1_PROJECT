@@ -21,7 +21,7 @@ public class PlayerTest {
 
     @Before
     public void setUp(){
-        gameModel = GameModel.getInstance(States.LOBBY);
+        gameModel = GameModel.getInstance(States.LOBBY, 0);
         sc1 = new SchemeCard(1);
         sc2 = new SchemeCard(2);
         player1 = new Player("P1", Colors.R);
@@ -55,9 +55,9 @@ public class PlayerTest {
     public void selectToolCard() {
         player1.setWindow(sc1, sc2, 1);
         player2.setWindow(sc1, sc2, 2);
-        assertTrue(player1.selectToolCard(toolCards, 0));
+        assertTrue(player1.selectToolCardMP(toolCards, 0));
         toolCards.get(1).setIsUsed(true);
-        assertTrue(player2.selectToolCard(toolCards, 1));
+        assertTrue(player2.selectToolCardMP(toolCards, 1));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class PlayerTest {
         input.add(1);
         input.add(2);
         player1.setWindow(sc1, sc2, 1);
-        player1.selectToolCard(toolCards, 0);
+        player1.selectToolCardMP(toolCards, 0);
         try {
             gameModel.setPlayers(player1);
         }
@@ -101,8 +101,8 @@ public class PlayerTest {
     public void decreaseToken() {
         player1.setWindow(sc1, sc2, 1);
         player2.setWindow(sc1, sc2, 2);
-        player1.selectToolCard(toolCards, 0);
-        player2.selectToolCard(toolCards, 0);
+        player1.selectToolCardMP(toolCards, 0);
+        player2.selectToolCardMP(toolCards, 0);
         assertEquals(3, player1.getTokens());
         player1.decreaseToken();
         assertEquals(2, player1.getTokens());

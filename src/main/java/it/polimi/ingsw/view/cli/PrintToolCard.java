@@ -18,7 +18,7 @@ public class PrintToolCard implements Serializable {
 
     /**
      * prints the toolcards
-     * @param toolCards the list of 3 toolcards of the game
+     * @param toolCards the list of toolcards of the game
      */
 
     public static void print(ArrayList<ToolCard> toolCards){

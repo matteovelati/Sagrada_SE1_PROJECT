@@ -3,9 +3,7 @@ package it.polimi.ingsw.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.concurrent.BlockingDeque;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class PrivateObjectiveTest {
 
@@ -62,7 +60,7 @@ public class PrivateObjectiveTest {
         player1.getWindow().setWindow(dice11, 3, 2);
         player1.getWindow().setWindow(dice14, 3, 3);
         player1.getWindow().setWindow(dice13, 3, 4);
-        assertEquals(3-1+3, player1.getPrivateObjective().calculateScore(player1));
+        assertEquals(3-1+3, player1.getPrivateObjectives().get(0).calculateScoreMP(player1));
         //expected: colored dice - empty spaces + tokens remaining
     }
     @Test
@@ -111,7 +109,7 @@ public class PrivateObjectiveTest {
         player1.getWindow().setWindow(dice11, 3, 2);
         player1.getWindow().setWindow(dice14, 3, 3);
         player1.getWindow().setWindow(dice13, 3, 4);
-        assertEquals(3-1+3, player1.getPrivateObjective().calculateScore(player1));
+        assertEquals(3-1+3, player1.getPrivateObjectives().get(0).calculateScoreMP(player1));
         //expected: colored dice - empty spaces + tokens remaining
     }
     @Test
@@ -160,7 +158,7 @@ public class PrivateObjectiveTest {
         player1.getWindow().setWindow(dice11, 3, 2);
         player1.getWindow().setWindow(dice14, 3, 3);
         player1.getWindow().setWindow(dice13, 3, 4);
-        assertEquals(4-1+3, player1.getPrivateObjective().calculateScore(player1));
+        assertEquals(4-1+3, player1.getPrivateObjectives().get(0).calculateScoreMP(player1));
         //expected: colored dice - empty spaces + tokens remaining
     }
     @Test
@@ -209,7 +207,7 @@ public class PrivateObjectiveTest {
         player1.getWindow().setWindow(dice11, 3, 2);
         player1.getWindow().setWindow(dice14, 3, 3);
         player1.getWindow().setWindow(dice13, 3, 4);
-        assertEquals(7-1+3, player1.getPrivateObjective().calculateScore(player1));
+        assertEquals(7-1+3, player1.getPrivateObjectives().get(0).calculateScoreMP(player1));
         //expected: colored dice - empty spaces + tokens remaining
     }
     @Test
@@ -258,7 +256,7 @@ public class PrivateObjectiveTest {
         player1.getWindow().setWindow(dice11, 3, 2);
         player1.getWindow().setWindow(dice14, 3, 3);
         player1.getWindow().setWindow(dice13, 3, 4);
-        assertEquals(2-1+3, player1.getPrivateObjective().calculateScore(player1));
+        assertEquals(2-1+3, player1.getPrivateObjectives().get(0).calculateScoreMP(player1));
         //expected: colored dice - empty spaces + tokens remaining
     }
 
