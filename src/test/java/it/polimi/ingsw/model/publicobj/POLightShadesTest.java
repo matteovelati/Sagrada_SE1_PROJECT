@@ -81,6 +81,7 @@ public class POLightShadesTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(8, po.calculateScore(window));
     }
 }

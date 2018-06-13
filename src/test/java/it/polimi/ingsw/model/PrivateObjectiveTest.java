@@ -10,13 +10,14 @@ public class PrivateObjectiveTest {
     private SchemeCard sc1;
 
     @Before
-    public void before() {
+    public void setUp() {
         sc1 = new SchemeCard(3);
     }
 
     @Test
     public void calculateScore1() {
         //PURPLE
+        setUp();
         Player player1 = new Player("1", Colors.P);
         player1.setWindow(sc1, null, 2);
 
@@ -66,6 +67,7 @@ public class PrivateObjectiveTest {
     @Test
     public void calculateScore2() {
         //RED
+        setUp();
         Player player1 = new Player("1", Colors.R);
         player1.setWindow(sc1, null, 2);
 
@@ -115,6 +117,7 @@ public class PrivateObjectiveTest {
     @Test
     public void calculateScore3() {
         //YELLOW
+        setUp();
         Player player1 = new Player("1", Colors.Y);
         player1.setWindow(sc1, null, 2);
 
@@ -164,6 +167,7 @@ public class PrivateObjectiveTest {
     @Test
     public void calculateScore4() {
         //BLUE
+        setUp();
         Player player1 = new Player("1", Colors.B);
         player1.setWindow(sc1, null, 2);
 
@@ -213,6 +217,7 @@ public class PrivateObjectiveTest {
     @Test
     public void calculateScore5() {
         //GREEN
+        setUp();
         Player player1 = new Player("1", Colors.G);
         player1.setWindow(sc1, null, 2);
 

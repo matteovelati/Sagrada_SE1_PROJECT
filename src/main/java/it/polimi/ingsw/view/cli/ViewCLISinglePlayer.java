@@ -57,7 +57,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
                 network.updateSP(this);
             }
         }
-        else {
+        else if (!network.getMultiPlayerStarted()){
             input = new Scanner(System.in);
             System.out.println("ENTER YOUR USERNAME:");
             this.user = input.next().toUpperCase();
@@ -72,6 +72,10 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
             gameModel = network.getGameModel();
             network.addObserver(this);
             network.updateSP(this);
+        }
+        else {
+            System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+            System.exit(0);
         }
     }
 
@@ -279,6 +283,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectWindow() throws RemoteException {
+        network.startTimerSP(this);
         System.out.println("SELECT YOUR WINDOW!");
         PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
         input = new Scanner(System.in);
@@ -293,6 +298,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectMove1() throws RemoteException {
+        network.startTimerSP(this);
         int tmp = ShowGameStuff.print((GameModel) gameModel, true);
         while (tmp != 0) {
             tmp = ShowGameStuff.print((GameModel) gameModel, true);
@@ -310,6 +316,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectMove2() throws RemoteException {
+        network.startTimerSP(this);
         int tmp = ShowGameStuff.print((GameModel) gameModel, true);
         while (tmp != 0) {
             tmp = ShowGameStuff.print((GameModel) gameModel, true);
@@ -327,6 +334,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewPutDiceInWindow() throws RemoteException {
+        network.startTimerSP(this);
         PrintWindow.print(gameModel.getActualPlayer().getWindow());
         System.out.println("CHOOSE A ROW TO PUT YOUR DIE (-1 TO ABORT)");
         input = new Scanner(System.in);
@@ -348,6 +356,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectDraft(boolean toolCard) throws RemoteException {
+        network.startTimerSP(this);
         if (toolCard)
             System.out.println("SELECT A DIE THAT MATCHES THE COLOR OF THE TOOLCARD, IT WILL BE REMOVED FROM GAME (-1 TO ABORT)");
         else
@@ -365,6 +374,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectCard() throws RemoteException {
+        network.startTimerSP(this);
         System.out.println("SELECT A TOOLCARD (-1 TO ABORT)");
         PrintToolCard.print(gameModel.getField().getToolCards());
         input = new Scanner(System.in);
@@ -379,6 +389,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException  if the reference could not be accessed
      */
     private void viewUseToolCard() throws RemoteException {
+        network.startTimerSP(this);
         PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
         network.updateSP(this);
     }
@@ -388,6 +399,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewUseToolCard2() throws RemoteException {
+        network.startTimerSP(this);
         PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
         network.updateSP(this);
     }
@@ -397,6 +409,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewUseToolCard3() throws RemoteException {
+        network.startTimerSP(this);
         PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
         network.updateSP(this);
     }

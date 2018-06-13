@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard implements Serializable {
 
-    private static final String stop = "ENTER [-1] TO STOP. YOU WILL NOT BE SET AS USED";
+    private static final String STOP = "ENTER [-1] TO STOP. YOU WILL NOT BE SET AS USED";
     private static int tmp;
 
     /**
@@ -76,7 +76,7 @@ public class PrintUseToolCard implements Serializable {
                 break;
             case 12:                //TAP WHEEL
                 System.out.println("SELECT A DIE FROM THE ROUNDRACK");
-                System.out.println(stop);
+                System.out.println(STOP);
                 PrintRoundTrack.print(gameModel.getField().getRoundTrack(), 0);
                 if (!verifyInput(choices, 1, gameModel))
                     break;
@@ -121,7 +121,7 @@ public class PrintUseToolCard implements Serializable {
      */
     private static boolean selectDraft(GameModel gameModel, ArrayList<Integer> choices){
         System.out.println("SELECT A DIE FROM THE DRAFT");
-        System.out.println(stop);
+        System.out.println(STOP);
         PrintDraft.print(gameModel.getField().getDraft());
         return (verifyInput(choices, 0, gameModel));
     }
@@ -137,7 +137,7 @@ public class PrintUseToolCard implements Serializable {
     private static boolean selectPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify, boolean first){
 
         if (verify){
-            System.out.println(stop);
+            System.out.println(STOP);
             PrintWindow.print(gameModel.getActualPlayer().getWindow());
         }
         if (first)

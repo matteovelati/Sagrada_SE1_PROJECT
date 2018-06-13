@@ -21,6 +21,12 @@ public class PlayerTest {
 
     @Before
     public void setUp(){
+        Bag.reset();
+        RoundTrack.reset();
+        Draft.reset();
+        RoundManager.reset();
+        Field.reset();
+        GameModel.reset();
         gameModel = GameModel.getInstance(States.LOBBY, 0);
         sc1 = new SchemeCard(1);
         sc2 = new SchemeCard(2);
@@ -45,6 +51,7 @@ public class PlayerTest {
 
     @Test
     public void setWindow() {
+        setUp();
         player1.setWindow(sc1, sc2, 1);
         assertEquals(player1.getWindow().getDifficulty(), player1.getTokens());
         player2.setWindow(sc1, sc2, 2);
@@ -53,6 +60,7 @@ public class PlayerTest {
 
     @Test
     public void selectToolCard() {
+        setUp();
         player1.setWindow(sc1, sc2, 1);
         player2.setWindow(sc1, sc2, 2);
         assertTrue(player1.selectToolCardMP(toolCards, 0));
@@ -62,6 +70,7 @@ public class PlayerTest {
 
     @Test
     public void pickDice() {
+        setUp();
         assertEquals(5, draft.getDraft().size());
         player1.pickDice(draft, 2);
         assertEquals(4, draft.getDraft().size());
@@ -69,6 +78,7 @@ public class PlayerTest {
 
     @Test
     public void putDice() {
+        setUp();
         player1.setWindow(sc1, sc2, 1);
         assertTrue(player1.getWindow().getIsEmpty());
         player1.pickDice(draft, 0);
@@ -81,6 +91,7 @@ public class PlayerTest {
 
     @Test
     public void useToolCard() {
+        setUp();
         input.add(-1);
         input.add(0);
         input.add(1);
@@ -99,6 +110,7 @@ public class PlayerTest {
 
     @Test
     public void decreaseToken() {
+        setUp();
         player1.setWindow(sc1, sc2, 1);
         player2.setWindow(sc1, sc2, 2);
         player1.selectToolCardMP(toolCards, 0);

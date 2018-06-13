@@ -15,6 +15,8 @@ public class PrintPrivateObjective implements Serializable {
     private static final String ANSI_PURPLE	= "\u001B[35m";
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String TITLE = "TITLE: ";
+    private static final String DESCRIPTION = "DESCRIPTION: ";
 
     /**
      * prints the private objective
@@ -31,28 +33,28 @@ public class PrintPrivateObjective implements Serializable {
 
             switch (colortmp) {
                 case R:
-                    System.out.println(ANSI_BOLD + "TITLE: " + ANSI_RED + po.getName());
-                    System.out.println(ANSI_BOLD + "DESCRIPTION: " + ANSI_RED + po.getDescription());
+                    System.out.println(ANSI_BOLD + TITLE + ANSI_RED + po.getName());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_RED + po.getDescription());
                     break;
                 case G:
-                    System.out.println(ANSI_BOLD + "TITLE: " + ANSI_GREEN + po.getName());
-                    System.out.println(ANSI_BOLD + "DESCRIPTION: " + ANSI_GREEN + po.getDescription());
+                    System.out.println(ANSI_BOLD + TITLE + ANSI_GREEN + po.getName());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_GREEN + po.getDescription());
                     break;
                 case P:
-                    System.out.println(ANSI_BOLD + "TITLE: " + ANSI_PURPLE + po.getName());
-                    System.out.println(ANSI_BOLD + "DESCRIPTION: " + ANSI_PURPLE + po.getDescription());
+                    System.out.println(ANSI_BOLD + TITLE + ANSI_PURPLE + po.getName());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_PURPLE + po.getDescription());
                     break;
                 case B:
-                    System.out.println(ANSI_BOLD + "TITLE: " + ANSI_BLUE + po.getName());
-                    System.out.println(ANSI_BOLD + "DESCRIPTION: " + ANSI_BLUE + po.getDescription());
+                    System.out.println(ANSI_BOLD + TITLE + ANSI_BLUE + po.getName());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_BLUE + po.getDescription());
                     break;
                 case Y:
-                    System.out.println(ANSI_BOLD + "TITLE: " + ANSI_YELLOW + po.getName());
-                    System.out.println(ANSI_BOLD + "DESCRIPTION: " + ANSI_YELLOW + po.getDescription());
+                    System.out.println(ANSI_BOLD + TITLE + ANSI_YELLOW + po.getName());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_YELLOW + po.getDescription());
                     break;
                 default:
-                    System.out.println(ANSI_BOLD + "TITLE: " + po.getName());
-                    System.out.println(ANSI_BOLD + "DESCRIPTION: " + po.getDescription());
+                    System.out.println(ANSI_BOLD + TITLE + po.getName());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + po.getDescription());
                     break;
             }
 

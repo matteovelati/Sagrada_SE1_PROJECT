@@ -20,6 +20,12 @@ public class TCFluxRemoverTest {
     @Before
     public void before() {
 
+        Bag.reset();
+        RoundTrack.reset();
+        Draft.reset();
+        RoundManager.reset();
+        Field.reset();
+        GameModel.reset();
         gameModel = GameModel.getInstance(States.LOBBY, 0);
         player1 = new Player("matteo", Colors.G);
         try {
@@ -75,6 +81,7 @@ public class TCFluxRemoverTest {
     @Test
     public void useToolCard1() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(2);
@@ -91,6 +98,7 @@ public class TCFluxRemoverTest {
     @Test
     public void useToolCard2() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(2);
         input.add(1);

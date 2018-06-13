@@ -28,6 +28,10 @@ public class Draft implements Serializable {
         return instance;
     }
 
+    public static synchronized void reset(){    //TEST METHOD
+        instance = null;
+    }
+
     /**
      * gets the list of dice inside the draft
      * @return the list of dice inside the Draft

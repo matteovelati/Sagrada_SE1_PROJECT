@@ -81,6 +81,7 @@ public class PORowColorVarietyTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(6, po.calculateScore(window));
     }
 }

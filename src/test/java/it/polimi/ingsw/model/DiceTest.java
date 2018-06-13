@@ -16,6 +16,7 @@ public class DiceTest {
 
     @Test
     public void setValue() {
+        setUp();
         dice.setValue();
         assertTrue(dice.getValue() <= 6);
         assertTrue(dice.getValue() >= 1);
@@ -23,6 +24,7 @@ public class DiceTest {
 
     @Test
     public void modifyValue() {
+        setUp();
         dice.modifyValue(5);
         assertEquals(5, dice.getValue());
     }

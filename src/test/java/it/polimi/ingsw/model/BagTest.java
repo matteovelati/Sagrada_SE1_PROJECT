@@ -11,23 +11,26 @@ public class BagTest {
 
     @Before
     public void setUp(){
+        Bag.reset();
         bag = Bag.getInstance();
     }
 
     @Test
     public void getInstance() {
+        setUp();
         assertEquals(bag, Bag.getInstance());
     }
 
     @Test
     public void getBag() {
+        setUp();
         assertEquals(90, bag.getBag().size());
     }
 
     @Test
     public void extract() {
-        Dice dicetmp = bag.extract(1);
+        setUp();
+        bag.extract(1);
         assertEquals(89, bag.getBag().size());
-        bag.getBag().add(dicetmp);
     }
 }

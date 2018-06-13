@@ -80,11 +80,13 @@ public class POColorVarietyTest {
 
     @Test
     public void calculateScore() {
+        before();
         assertEquals(8, po.calculateScore(window));
     }
 
     @Test
     public void getters() {
+        before();
         assertEquals("Color Variety", po.getTitle());
         assertEquals("Sets of one of each COLOR anywhere", po.getDescr());
         assertEquals(4, po.getScore());

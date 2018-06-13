@@ -20,6 +20,12 @@ public class TCGlazingHammerTest {
     @Before
     public void before() {
 
+        Bag.reset();
+        RoundTrack.reset();
+        Draft.reset();
+        RoundManager.reset();
+        Field.reset();
+        GameModel.reset();
         gameModel = GameModel.getInstance(States.LOBBY, 0);
         player1 = new Player("matteo", Colors.G);
         try {
@@ -74,6 +80,7 @@ public class TCGlazingHammerTest {
     @Test
     public void useToolCard1() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         ArrayList<Dice> draft = new ArrayList<>();
 

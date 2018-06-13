@@ -81,6 +81,7 @@ public class POMediumShadesTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(2, po.calculateScore(window));
     }
 }

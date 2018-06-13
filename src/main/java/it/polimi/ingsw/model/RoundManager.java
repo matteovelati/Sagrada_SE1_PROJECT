@@ -30,6 +30,10 @@ public class RoundManager implements Serializable {
         return instance;
     }
 
+    public static synchronized void reset (){   //TEST METHOD
+        instance = null;
+    }
+
     /**
      * gets the turn
      * @return the turn

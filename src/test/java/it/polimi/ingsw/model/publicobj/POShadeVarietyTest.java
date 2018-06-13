@@ -81,6 +81,7 @@ public class POShadeVarietyTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(5, po.calculateScore(window));
     }
 }

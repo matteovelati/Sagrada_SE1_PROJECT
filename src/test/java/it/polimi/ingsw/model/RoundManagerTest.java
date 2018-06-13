@@ -15,7 +15,11 @@ public class RoundManagerTest {
     private RoundTrack roundTrack;
 
     @Before
-    public void before() {
+    public void setUp() {
+        Bag.reset();
+        RoundTrack.reset();
+        Draft.reset();
+        RoundManager.reset();
         roundManager = RoundManager.getInstance();
         actualPlayer0 = 0;
         actualPlayer1 = 1;
@@ -32,6 +36,7 @@ public class RoundManagerTest {
 
     @Test
     public void changeActualPlayer() {
+        setUp();
         assertEquals(1, roundManager.changeActualPlayer(actualPlayer0, nPlayers));
         assertEquals(1, roundManager.getTurn());
 
@@ -59,6 +64,7 @@ public class RoundManagerTest {
 
     @Test
     public void endRound() {
+        setUp();
         Dice dice = draft.getDraft().get(0);
         roundManager.endRound(draft, roundTrack);
         assertEquals(dice, roundTrack.getGrid().get(0));

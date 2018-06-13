@@ -81,6 +81,7 @@ public class PODarkShadesTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(4, po.calculateScore(window));
     }
 }

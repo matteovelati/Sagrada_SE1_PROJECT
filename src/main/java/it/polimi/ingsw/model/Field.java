@@ -46,6 +46,10 @@ public class Field implements Serializable {
         return instance;
     }
 
+    public static synchronized void reset (){   //TEST METHOD
+        instance = null;
+    }
+
     /**
      * gets the roundtrack
      * @return a roundtrack object

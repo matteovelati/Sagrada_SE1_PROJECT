@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class PrintWindow implements Serializable {
 
-    private static final String format = "       ";
+    private static final String FORMAT = "       ";
     private static final String ANSI_RESET = "\u001b[0m";
     private static final String ANSI_BOLD = "\u001b[1m";
     private static final String ANSI_REVERSE = "\u001b[7m";
@@ -42,7 +42,7 @@ public class PrintWindow implements Serializable {
                 switch (colortmp){
                     case R:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONRED + format + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONRED + FORMAT + ANSI_BOLD);
                             System.out.print("|");
                         }
                         else {
@@ -52,7 +52,7 @@ public class PrintWindow implements Serializable {
                         break;
                     case G:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONGREEN + format + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONGREEN + FORMAT + ANSI_BOLD);
                             System.out.print("|");
                         }
                         else {
@@ -62,7 +62,7 @@ public class PrintWindow implements Serializable {
                         break;
                     case P:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONPURPLE + format + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONPURPLE + FORMAT + ANSI_BOLD);
                             System.out.print("|");
                         }
                         else {
@@ -72,7 +72,7 @@ public class PrintWindow implements Serializable {
                         break;
                     case B:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONBLUE + format + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONBLUE + FORMAT + ANSI_BOLD);
                             System.out.print("|");
                         }
                         else {
@@ -82,7 +82,7 @@ public class PrintWindow implements Serializable {
                         break;
                     case Y:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONYELLOW + format + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONYELLOW + FORMAT + ANSI_BOLD);
                             System.out.print("|");
                         }
                         else {

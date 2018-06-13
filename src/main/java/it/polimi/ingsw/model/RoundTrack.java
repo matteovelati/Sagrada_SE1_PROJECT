@@ -30,6 +30,10 @@ public class RoundTrack implements Serializable {
         return instance;
     }
 
+    public static synchronized void reset (){   //TEST METHODz
+        instance = null;
+    }
+
     /**
      * adds the die to the arraylist of dice.
      * @param dice the die to be added

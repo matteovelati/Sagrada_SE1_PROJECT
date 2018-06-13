@@ -82,6 +82,7 @@ public class POColorDiagonalsTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(15, po.calculateScore(window));
     }
 }

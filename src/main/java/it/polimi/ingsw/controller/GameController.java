@@ -13,7 +13,8 @@ import static it.polimi.ingsw.model.States.*;
 public class GameController extends UnicastRemoteObject implements RemoteGameController {
 
     private GameModel gameModel;
-    private int actualPlayer, check;
+    private int actualPlayer;
+    private int check;
     private boolean roundEnded;
     private States beforeError;
     private transient Timer t;
@@ -81,6 +82,28 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                         }
                     }
                 }, 30000
+        );
+    }
+
+    @Override
+    public void startTimerSP(final RemoteView view){
+        t = new Timer();
+        t.schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            view.getUser();
+                            startTimerSP(view);
+                        } catch (RemoteException e) {
+                            try {
+                                verifyObserver();
+                            } catch (RemoteException e1) {
+                                //
+                            }
+                        }
+                    }
+                }, 5000
         );
     }
 
@@ -491,8 +514,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     private void endTurn() throws RemoteException {
-        int onPlayers = 0;
         if (multiPlayerStarted) {
+            int onPlayers = 0;
             for (Player p : gameModel.getPlayers()) {
                 if (p.getOnline())
                     onPlayers++;

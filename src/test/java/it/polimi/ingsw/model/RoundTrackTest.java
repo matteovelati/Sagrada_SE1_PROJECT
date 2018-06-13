@@ -11,17 +11,20 @@ public class RoundTrackTest {
 
     @Before
     public void setUp(){
+        RoundTrack.reset();
         roundTrack = RoundTrack.getInstance();
     }
 
     @Test
     public void getInstance() {
+        setUp();
         assertEquals(roundTrack, RoundTrack.getInstance());
     }
 
 
     @Test
     public void incrementRound() {
+        setUp();
         assertEquals(1, roundTrack.getRound());
         roundTrack.incrementRound();
         assertEquals(2, roundTrack.getRound());
@@ -29,6 +32,7 @@ public class RoundTrackTest {
 
     @Test
     public void changeDice() {
+        setUp();
         Dice dice1 = new Dice(Colors.R);
         Dice dice2 = new Dice(Colors.G);
         Dice dice3 = new Dice(Colors.Y);

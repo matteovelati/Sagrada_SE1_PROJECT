@@ -32,6 +32,7 @@ public class WindowTest {
 
     @Test
     public void windowSwitch(){
+        setUp();
         for (int x = 1; x < 25; x ++){
             window = new Window(x);
             assertNotNull(window.getName());
@@ -41,6 +42,7 @@ public class WindowTest {
 
     @Test
     public void setWindow() {
+        setUp();
         assertTrue(window.getIsEmpty());
         window.setWindow(dice1, 0, 0);
         assertFalse(window.getIsEmpty());
@@ -52,6 +54,7 @@ public class WindowTest {
 
     @Test
     public void neighboursColorRestriction() {
+        setUp();
         window.setWindow(dice1,1,1);
         assertFalse(window.neighboursColorRestriction(dice2, 0, 1));
         assertFalse(window.neighboursColorRestriction(dice2, 1, 0));
@@ -65,6 +68,7 @@ public class WindowTest {
 
     @Test
     public void neighboursNumberRestriction() {
+        setUp();
         window.setWindow(dice2,1,1);
         assertFalse(window.neighboursNumberRestriction(dice3, 0, 1));
         assertFalse(window.neighboursNumberRestriction(dice3, 1, 0));
@@ -78,6 +82,7 @@ public class WindowTest {
 
     @Test
     public void neighboursPositionRestriction() {
+        setUp();
         window.setWindow(dice1,1,1);
         assertTrue(window.neighboursPositionRestriction(0, 1));
         assertTrue(window.neighboursPositionRestriction(1, 0));
@@ -94,6 +99,7 @@ public class WindowTest {
 
     @Test
     public void spaceColorRestriction() {
+        setUp();
         window = new Window(1);
         assertFalse(window.spaceColorRestriction(dice2, 0, 0));
         assertTrue(window.spaceColorRestriction(dice3, 0, 0));
@@ -104,6 +110,7 @@ public class WindowTest {
 
     @Test
     public void spaceNumberRestriction() {
+        setUp();
         window = new Window(2);
         assertTrue(window.spaceNumberRestriction(dice1, 3, 0));
         assertFalse(window.spaceNumberRestriction(dice3, 3, 0));
@@ -113,6 +120,7 @@ public class WindowTest {
 
     @Test
     public void verifyFirstDiceRestriction() {
+        setUp();
         window = new Window(3);
         assertFalse(window.verifyFirstDiceRestriction(dice1, 1, 1));
         assertFalse(window.verifyFirstDiceRestriction(dice3, 1, 2));
@@ -128,6 +136,7 @@ public class WindowTest {
 
     @Test
     public void verifyAllRestrictions() {
+        setUp();
         window = new Window(4);
         assertFalse(window.verifyAllRestrictions(dice1, 1, 1));
         assertFalse(window.verifyAllRestrictions(dice2, 0, 0));

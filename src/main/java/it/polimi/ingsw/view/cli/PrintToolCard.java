@@ -15,6 +15,8 @@ public class PrintToolCard implements Serializable {
     private static final String ANSI_PURPLE	= "\u001B[35m";
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String TITLE = ") Title: ";
+    private static final String DESCRIPTION = "Description: ";
 
     /**
      * prints the toolcards
@@ -32,28 +34,28 @@ public class PrintToolCard implements Serializable {
 
             switch (colortmp){
                 case R:
-                    System.out.println(ANSI_BOLD + (i+1) +") Title: " + ANSI_RED + toolCards.get(i).getTitle());
-                    System.out.println(ANSI_BOLD + "Description: " + ANSI_RED + toolCards.get(i).getDescr());
+                    System.out.println(ANSI_BOLD + (i+1) +TITLE + ANSI_RED + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_RED + toolCards.get(i).getDescr());
                     break;
                 case G:
-                    System.out.println(ANSI_BOLD + (i+1) +") Title: " + ANSI_GREEN + toolCards.get(i).getTitle());
-                    System.out.println(ANSI_BOLD + "Description: " + ANSI_GREEN + toolCards.get(i).getDescr());
+                    System.out.println(ANSI_BOLD + (i+1) +TITLE + ANSI_GREEN + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_GREEN + toolCards.get(i).getDescr());
                     break;
                 case P:
-                    System.out.println(ANSI_BOLD + (i+1) +") Title: " + ANSI_PURPLE + toolCards.get(i).getTitle());
-                    System.out.println(ANSI_BOLD + "Description: " + ANSI_PURPLE + toolCards.get(i).getDescr());
+                    System.out.println(ANSI_BOLD + (i+1) +TITLE + ANSI_PURPLE + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + DESCRIPTION+ ANSI_PURPLE + toolCards.get(i).getDescr());
                     break;
                 case B:
-                    System.out.println(ANSI_BOLD + (i+1) +") Title: " + ANSI_BLUE + toolCards.get(i).getTitle());
-                    System.out.println(ANSI_BOLD + "Description: " + ANSI_BLUE + toolCards.get(i).getDescr());
+                    System.out.println(ANSI_BOLD + (i+1)+TITLE + ANSI_BLUE + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + DESCRIPTION+ ANSI_BLUE + toolCards.get(i).getDescr());
                     break;
                 case Y:
-                    System.out.println(ANSI_BOLD + (i+1) +") Title: " + ANSI_YELLOW + toolCards.get(i).getTitle());
-                    System.out.println(ANSI_BOLD + "Description: " + ANSI_YELLOW + toolCards.get(i).getDescr());
+                    System.out.println(ANSI_BOLD + TITLE + ANSI_YELLOW + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_YELLOW + toolCards.get(i).getDescr());
                     break;
                 default:
-                    System.out.println(ANSI_BOLD + (i+1) +") Title: " + toolCards.get(i).getTitle());
-                    System.out.println(ANSI_BOLD + "Description: " + toolCards.get(i).getDescr());
+                    System.out.println(ANSI_BOLD + (i+1) + TITLE + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + DESCRIPTION + toolCards.get(i).getDescr());
                     break;
 
             }

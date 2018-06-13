@@ -20,6 +20,12 @@ public class TCEglomiseBrushTest {
     @Before
     public void before(){
 
+        Bag.reset();
+        RoundTrack.reset();
+        Draft.reset();
+        RoundManager.reset();
+        Field.reset();
+        GameModel.reset();
         gameModel = GameModel.getInstance(States.LOBBY, 0);
         player1 = new Player("matteo", Colors.G);
         try {
@@ -74,6 +80,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard1() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(0);
@@ -87,6 +94,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard2() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(1);
@@ -100,6 +108,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard3() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(1);
@@ -113,6 +122,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard4() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(0);
@@ -126,6 +136,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard5() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(0);
@@ -139,6 +150,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard6() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(1);
@@ -151,6 +163,7 @@ public class TCEglomiseBrushTest {
     @Test
     public void useToolCard7() {
 
+        before();
         ArrayList<Integer> input = new ArrayList<>();
         input.add(0);
         input.add(1);

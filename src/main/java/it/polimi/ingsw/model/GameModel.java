@@ -38,6 +38,10 @@ public class GameModel implements RemoteGameModel, Serializable {
         return instance;
     }
 
+    public static synchronized void reset() {    //TEST METHOD
+        instance = null;
+    }
+
     //SETTER
     public void setSchemeCards(){
         schemeCards = new ArrayList<>();
@@ -52,7 +56,12 @@ public class GameModel implements RemoteGameModel, Serializable {
     }
 
     public void setDraft(){
-        for (int i = 0; i < 2*players.size()+1; i++)
+        int onPlayers = 0;
+        for (Player p : players){
+            if (p.getOnline())
+                onPlayers++;
+        }
+        for (int i = 0; i < 2*onPlayers+1; i++)
             field.setDraft();
         if (players.size() == 1)
             field.setDraft();
@@ -60,7 +69,7 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     public void setPlayers(Player player) throws RemoteException {
         this.players.add(player);
-        list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
+        //list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
         actualPlayer = this.players.get(0);
 
     }
@@ -144,6 +153,11 @@ public class GameModel implements RemoteGameModel, Serializable {
     }
 
     public int nextPlayer(int actualPlayer){
+        int onPlayers = 0;
+        for (Player p : players){
+            if (p.getOnline())
+                    onPlayers++;
+        }
         return roundManager.changeActualPlayer(actualPlayer, players.size());
     }
 

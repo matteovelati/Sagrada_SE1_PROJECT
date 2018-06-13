@@ -19,6 +19,7 @@ public class SpaceTest {
 
     @Test
     public void setDice() {
+        setUp();
         space.setValue(3);
         space.setColor(Colors.Y);
         assertEquals(Colors.Y, space.getColor());

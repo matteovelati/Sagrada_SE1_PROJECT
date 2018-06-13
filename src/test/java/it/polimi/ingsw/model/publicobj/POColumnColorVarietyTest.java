@@ -81,6 +81,7 @@ public class POColumnColorVarietyTest {
     @Test
 
     public void calculateScore() {
+        before();
         assertEquals(15, po.calculateScore(window));
     }
 }

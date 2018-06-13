@@ -44,6 +44,10 @@ public class Bag implements Serializable {
         return instance;
     }
 
+    public static synchronized void reset(){
+        instance = null;
+    }
+
     /**
      * gets the list of dice inside the bag
      * @return the list of dice inside the bag.

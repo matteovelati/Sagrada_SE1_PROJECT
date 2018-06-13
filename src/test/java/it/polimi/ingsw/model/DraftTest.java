@@ -11,18 +11,22 @@ public class DraftTest {
     private Bag bag;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp(){
+        Bag.reset();
+        Draft.reset();
         draft = Draft.getInstance();
         bag = Bag.getInstance();
     }
 
     @Test
     public void getInstance() {
+        setUp();
         assertEquals(draft, Draft.getInstance());
     }
 
     @Test
     public void setDraft() {
+        setUp();
         assertTrue(draft.getDraft().isEmpty());
         draft.setDraft(bag);
         assertFalse(draft.getDraft().isEmpty());

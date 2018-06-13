@@ -13,11 +13,17 @@ public class FieldTest {
 
     @Before
     public void setUp() {
+        Bag.reset();
+        RoundTrack.reset();
+        Draft.reset();
+        RoundManager.reset();
+        Field.reset();
         field = Field.getInstance(0);
     }
 
     @Test
     public void getInstance() {
+        setUp();
         assertEquals(field, Field.getInstance(0));
         assertEquals(field.getDraft(), Draft.getInstance());
         assertEquals(field.getRoundTrack(), RoundTrack.getInstance());

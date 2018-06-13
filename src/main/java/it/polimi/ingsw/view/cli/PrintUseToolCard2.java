@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard2 implements Serializable {
 
-    private static final String inputErr = "Input error! Do it again correctly";
+    private static final String INPUT_ERR = "Input error! Do it again correctly";
     private static final String STOP = "ENTER [-1] TO STOP. WARNING: THE CARD WILL BE SET AS USED";
     private static int tmp;
 
@@ -78,7 +78,7 @@ public class PrintUseToolCard2 implements Serializable {
                         break;
                     }
                     if(tmp<1 || tmp>6)
-                        System.out.println(inputErr);
+                        System.out.println(INPUT_ERR);
                 }while(tmp<1 || tmp>6);
                 choices.add(tmp);
                 break;
@@ -88,7 +88,7 @@ public class PrintUseToolCard2 implements Serializable {
                     input = new Scanner(System.in);
                     tmp = input.nextInt();
                     if(tmp<1 || tmp>2)
-                        System.out.println(inputErr);
+                        System.out.println(INPUT_ERR);
                 }while(tmp<1 || tmp>2);
                 choices.add(tmp);
                 if(tmp == 1){
@@ -188,7 +188,7 @@ public class PrintUseToolCard2 implements Serializable {
      * @return false
      */
     private static boolean error(){
-        System.out.println(inputErr);
+        System.out.println(INPUT_ERR);
         return false;
     }
 }

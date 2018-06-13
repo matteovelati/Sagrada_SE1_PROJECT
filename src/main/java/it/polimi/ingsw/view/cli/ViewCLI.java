@@ -59,11 +59,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                     network.reAddObserver(this);
                     network.setPlayerOnline(user, true);
                     System.out.println("\n\nJOINING AGAIN THE MATCH...");
-                    network.update(this);
                 }
             }
         }
-        else {
+        else if (!network.getSinglePlayerStarted()){
             network.createGameModel(this, 0);
             gameModel = network.getGameModel();
             if (gameModel.getPlayers().isEmpty())
@@ -75,6 +74,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             }
             network.addObserver(this);
             network.update(this);
+        }
+        else {
+            System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+            System.exit(0);
         }
     }
 
