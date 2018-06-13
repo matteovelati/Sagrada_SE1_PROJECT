@@ -6,6 +6,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.3, 0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="768.0" prefWidth="1366.0" styleClass="gamebg" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.MatchController">
+<SplitPane dividerPositions="0.3, 0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="800.0" prefWidth="1280.0" styleClass="gamebg" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.MatchController">
     <items>
         <HBox alignment="CENTER">
             <children>
@@ -25,35 +26,26 @@
                                 <Font name="System Bold" size="15.0" />
                             </font>
                             <VBox.margin>
-                                <Insets bottom="5.0" />
+                                <Insets />
                             </VBox.margin>
                         </Label>
-                        <ImageView fitHeight="226.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
-                            <image>
-                                <Image url="@../images/objectives/public_objective_back.png" />
-                            </image>
-                        </ImageView>
                         <Region VBox.vgrow="ALWAYS" />
-                        <ImageView fitHeight="226.0" fitWidth="170.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
-                            <image>
-                                <Image url="@../images/objectives/public_objective_back.png" />
-                            </image>
-                        </ImageView>
+                  <GridPane fx:id="publicObjectives" vgap="20.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="162.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                              <ImageView fx:id="publicObjOne" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="0" />
+                              <ImageView fx:id="publicObjTwo" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="1" />
+                              <ImageView fx:id="publicObjThree" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
                         <Region VBox.vgrow="ALWAYS" />
-                        <ImageView fitHeight="226.0" fitWidth="270.0" layoutX="10.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
-                            <image>
-                                <Image url="@../images/objectives/public_objective_back.png" />
-                            </image>
-                        </ImageView>
                     </children>
                     <opaqueInsets>
                         <Insets />
@@ -69,26 +61,26 @@
                                 <Font name="System Bold" size="15.0" />
                             </font>
                             <VBox.margin>
-                                <Insets bottom="5.0" />
+                                <Insets />
                             </VBox.margin>
                         </Label>
-                        <ImageView fitHeight="226.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true" styleClass="startbg">
-                            <image>
-                                <Image url="@../images/toolcards/toolcards_back.png" />
-                            </image>
-                        </ImageView>
                         <Region VBox.vgrow="ALWAYS" />
-                        <ImageView fitHeight="226.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true" styleClass="startbg">
-                            <image>
-                                <Image url="@../images/toolcards/toolcards_back.png" />
-                            </image>
-                        </ImageView>
+                  <GridPane fx:id="toolcards" vgap="20.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="162.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                              <ImageView fx:id="toolcardOne" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="0" />
+                              <ImageView fx:id="toolcardTwo" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="1" />
+                              <ImageView fx:id="toolcardThree" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
                         <Region VBox.vgrow="ALWAYS" />
-                        <ImageView fitHeight="226.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true" styleClass="startbg">
-                            <image>
-                                <Image url="@../images/toolcards/toolcards_back.png" />
-                            </image>
-                        </ImageView>
                     </children>
                     <opaqueInsets>
                         <Insets />
@@ -104,52 +96,114 @@
         </HBox>
         <VBox alignment="CENTER" prefHeight="766.0" prefWidth="388.0">
             <children>
-                <GridPane alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="600.0" style="-fx-background-color: white;">
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="182.0" prefWidth="678.0" styleClass="roundtrackbg" stylesheets="@../css/style.css">
+               <children>
+                      <GridPane fx:id="roundtrack" alignment="CENTER" gridLinesVisible="true" hgap="8.0" layoutX="37.0" layoutY="91.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="600.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="37.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="91.0">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="1" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="2" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="3" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="4" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="5" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="6" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="7" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="8" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="-26.0" layoutY="10.0" pickOnBounds="true" GridPane.columnIndex="9" />
+                     </children>
+                      </GridPane>
+               </children>
+            </AnchorPane>
+                <Region VBox.vgrow="ALWAYS" />
+            <HBox alignment="CENTER">
+               <children>
+                  <GridPane fx:id="draft" hgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
                     </rowConstraints>
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                </GridPane>
-                <Region VBox.vgrow="ALWAYS" />
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" />
+                     </children>
+                  </GridPane>
+               </children>
+            </HBox>
                 <Region VBox.vgrow="ALWAYS" />
                 <HBox alignment="CENTER">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
                     <children>
-                        <GridPane alignment="CENTER" gridLinesVisible="true" style="-fx-background-color: white;">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <HBox.margin>
-                                <Insets right="15.0" />
-                            </HBox.margin>
-                        </GridPane>
-                        <ImageView fitHeight="240.0" fitWidth="173.0" pickOnBounds="true" preserveRatio="true">
+                  <AnchorPane fx:id="clientWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="300.0">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                     <children>
+                              <GridPane fx:id="grid" alignment="CENTER" gridLinesVisible="true" layoutX="0.5" layoutY="0.5" AnchorPane.bottomAnchor="29.5" AnchorPane.leftAnchor="0.5" AnchorPane.rightAnchor="0.5" AnchorPane.topAnchor="0.5">
+                                  <columnConstraints>
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                  </columnConstraints>
+                                  <rowConstraints>
+                                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+                                  </rowConstraints>
+                           <children>
+                              <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="70.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="130.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="190.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="250.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="70.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="130.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="190.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="250.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="70.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="130.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="190.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="250.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                           </children>
+                              </GridPane>
+                     </children>
+                  </AnchorPane>
+                        <ImageView fx:id="privateObjective" fitHeight="240.0" fitWidth="173.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../images/objectives/private_objective_back.png" />
                             </image>
@@ -200,7 +254,7 @@
                 </HBox>
             </children>
             <padding>
-                <Insets bottom="30.0" top="30.0" />
+                <Insets bottom="30.0" />
             </padding>
         </VBox>
         <VBox alignment="TOP_CENTER" prefHeight="498.0" prefWidth="480.0" SplitPane.resizableWithParent="false">
@@ -217,7 +271,7 @@
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font></Label>
-                <GridPane alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: white;">
+                <GridPane fx:id="playerTwoWindow" alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: white;">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
@@ -240,7 +294,7 @@
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font></Label>
-                <GridPane alignment="CENTER" gridLinesVisible="true" layoutX="10.0" layoutY="207.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: white;">
+                <GridPane fx:id="playerThreeWindow" alignment="CENTER" gridLinesVisible="true" layoutX="10.0" layoutY="207.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: white;">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
@@ -263,7 +317,7 @@
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font></Label>
-                <GridPane alignment="CENTER" gridLinesVisible="true" layoutX="10.0" layoutY="307.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: white;">
+                <GridPane fx:id="playerFourWindow" alignment="CENTER" gridLinesVisible="true" layoutX="10.0" layoutY="307.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: white;">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />

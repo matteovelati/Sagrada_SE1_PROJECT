@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Window implements Serializable {
 
+    private int idNumber;
     private boolean isEmpty;
     private String name;
     private int difficulty;
@@ -28,6 +29,7 @@ public class Window implements Serializable {
             case 1:
                 this.name = "Bellesguard";
                 this.difficulty = 3;
+                this.idNumber = x;
                 window[0][0].setColor(Colors.B);
                 window[0][1].setValue(6);
                 window[0][4].setColor(Colors.Y);
@@ -44,6 +46,7 @@ public class Window implements Serializable {
             case 2:
                 this.name = "Battlo";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][2].setValue(6);
                 window[1][1].setValue(5);
                 window[1][2].setColor(Colors.B);
@@ -63,6 +66,7 @@ public class Window implements Serializable {
             case 3:
                 this.name = "Chromatic Splendor";
                 this.difficulty = 4;
+                this.idNumber = x;
                 window[0][2].setColor(Colors.G);
                 window[1][0].setValue(2);
                 window[1][1].setColor(Colors.Y);
@@ -80,6 +84,7 @@ public class Window implements Serializable {
             case 4:
                 this.name = "Comitas";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setColor(Colors.Y);
                 window[0][2].setValue(2);
                 window[0][4].setValue(6);
@@ -97,6 +102,7 @@ public class Window implements Serializable {
             case 5:
                 this.name = "Fulgor del Cielo";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][1].setColor(Colors.B);
                 window[0][2].setColor(Colors.R);
                 window[1][1].setValue(4);
@@ -115,6 +121,7 @@ public class Window implements Serializable {
             case 6:
                 this.name = "Luz Celestial";
                 this.difficulty = 3;
+                this.idNumber = x;
                 window[0][2].setColor(Colors.R);
                 window[0][3].setValue(5);
                 window[1][0].setColor(Colors.P);
@@ -130,6 +137,7 @@ public class Window implements Serializable {
             case 7:
                 this.name = "Lux Mundi";
                 this.difficulty = 6;
+                this.idNumber = x;
                 window[0][2].setValue(1);
                 window[1][0].setValue(1);
                 window[1][1].setColor(Colors.G);
@@ -149,6 +157,7 @@ public class Window implements Serializable {
             case 8:
                 this.name = "Lux Astram";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][1].setValue(1);
                 window[0][2].setColor(Colors.G);
                 window[0][3].setColor(Colors.P);
@@ -168,6 +177,7 @@ public class Window implements Serializable {
             case 9:
                 this.name = "Industria";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setValue(1);
                 window[0][1].setColor(Colors.R);
                 window[0][2].setValue(3);
@@ -186,6 +196,7 @@ public class Window implements Serializable {
             case 11:
                 this.name = "Symphony of Light";
                 this.difficulty = 6;
+                this.idNumber = x;
                 window[0][0].setValue(2);
                 window[0][2].setValue(5);
                 window[0][4].setValue(1);
@@ -204,6 +215,7 @@ public class Window implements Serializable {
             case 13:
                 this.name = "Water of Life";
                 this.difficulty = 6;
+                this.idNumber = x;
                 window[0][0].setValue(6);
                 window[0][1].setColor(Colors.B);
                 window[0][4].setValue(1);
@@ -223,6 +235,7 @@ public class Window implements Serializable {
             case 15:
                 this.name = "Sun's Glory";
                 this.difficulty = 6;
+                this.idNumber = x;
                 window[0][0].setValue(1);
                 window[0][1].setColor(Colors.P);
                 window[0][2].setColor(Colors.Y);
@@ -242,6 +255,7 @@ public class Window implements Serializable {
             case 10:
                 this.name = "Via Lux";
                 this.difficulty = 4;
+                this.idNumber = x;
                 window[0][0].setColor(Colors.Y);
                 window[0][2].setValue(6);
                 window[1][1].setValue(1);
@@ -259,6 +273,7 @@ public class Window implements Serializable {
             case 12:
                 this.name = "Virtus";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setValue(4);
                 window[0][2].setValue(2);
                 window[0][3].setValue(5);
@@ -277,6 +292,7 @@ public class Window implements Serializable {
             case 14:
                 this.name = "Gravitas";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setValue(1);
                 window[0][2].setValue(3);
                 window[0][3].setColor(Colors.B);
@@ -294,6 +310,7 @@ public class Window implements Serializable {
             case 16:
                 this.name = "Firelight";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setValue(3);
                 window[0][1].setValue(4);
                 window[0][2].setValue(1);
@@ -312,6 +329,7 @@ public class Window implements Serializable {
             case 17:
                 this.name = "Shadow Thief";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setValue(6);
                 window[0][1].setColor(Colors.P);
                 window[0][4].setValue(5);
@@ -330,6 +348,7 @@ public class Window implements Serializable {
             case 19:
                 this.name = "Ripples of Light";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][3].setColor(Colors.R);
                 window[0][4].setValue(5);
                 window[1][2].setColor(Colors.P);
@@ -349,6 +368,7 @@ public class Window implements Serializable {
             case 21:
                 this.name = "Firmitas";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setColor(Colors.P);
                 window[0][1].setValue(6);
                 window[0][4].setValue(3);
@@ -367,6 +387,7 @@ public class Window implements Serializable {
             case 23:
                 this.name = "Aurorae Magnificus";
                 this.difficulty = 5;
+                this.idNumber = x;
                 window[0][0].setValue(5);
                 window[0][1].setColor(Colors.G);
                 window[0][2].setColor(Colors.B);
@@ -385,6 +406,7 @@ public class Window implements Serializable {
             case 18:
                 this.name = "Sun Catcher";
                 this.difficulty = 3;
+                this.idNumber = x;
                 window[0][1].setColor(Colors.B);
                 window[0][2].setValue(2);
                 window[0][4].setColor(Colors.Y);
@@ -400,6 +422,7 @@ public class Window implements Serializable {
             case 20:
                 this.name = "Fractal Drops";
                 this.difficulty = 3;
+                this.idNumber = x;
                 window[0][1].setValue(4);
                 window[0][3].setColor(Colors.Y);
                 window[0][4].setValue(6);
@@ -415,6 +438,7 @@ public class Window implements Serializable {
             case 22:
                 this.name = "Kaleidoscopic Dream";
                 this.difficulty = 4;
+                this.idNumber = x;
                 window[0][0].setColor(Colors.Y);
                 window[0][1].setColor(Colors.B);
                 window[0][4].setValue(1);
@@ -432,6 +456,7 @@ public class Window implements Serializable {
             case 24:
                 this.name = "Aurora Sagradis";
                 this.difficulty = 4;
+                this.idNumber = x;
                 window[0][0].setColor(Colors.R);
                 window[0][2].setColor(Colors.B);
                 window[0][4].setColor(Colors.Y);
@@ -480,6 +505,14 @@ public class Window implements Serializable {
      */
     public Space[][] getWindow() {
         return window;
+    }
+
+    /**
+     * gets the id number of the window
+     * @return the id number of the window
+     */
+    public int getIdNumber(){
+        return idNumber;
     }
 
     /**

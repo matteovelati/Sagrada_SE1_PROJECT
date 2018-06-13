@@ -8,23 +8,13 @@
     -fx-background-size: 100% 100%;
 }
 
-.window1front{
-    -fx-background-image: url("../images/windows/aurorae_magnificus.png");
+.roundtrackbg{
+    -fx-background-image: url("../images/roundtrack.png");
     -fx-background-size: 100% 100%;
 }
 
-.window1back{
-    -fx-background-image: url("../images/windows/bellesguard.png");
-    -fx-background-size: 100% 100%;
-}
-
-.window2front{
-    -fx-background-image: url("../images/windows/sun_catcher.png");
-    -fx-background-size: 100% 100%;
-}
-
-.window2back{
-    -fx-background-image: url("../images/windows/via_lux.png");
+.bgexample{
+    -fx-background-image: url("../images/windows/1.png");
     -fx-background-size: 100% 100%;
 }
 

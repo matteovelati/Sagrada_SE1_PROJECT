@@ -32,7 +32,7 @@ public class StartController {
         try {
             checkState();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            //do nothing
         }
     }
 
@@ -42,11 +42,24 @@ public class StartController {
         String user = username.getText().trim().toUpperCase();
 
         if(!user.isEmpty()) {
-            if (viewGUI.verifyUser(user)) {
-                setUser(user);
-            } else {
-                usernameTaken.setText("THIS USERNAME ALREADY EXIST");
-                username.clear();
+            if(viewGUI.reconnecting()){
+                if(viewGUI.verifyUserCrashed(user)) {
+                    setUser(user);
+                    viewGUI.reAddPlayer();
+                    container.getChildren().removeAll(startButton, username);
+                    usernameTaken.setText("JOINING AGAIN THE MATCH");
+                }
+                else
+                    usernameTaken.setText("INSERT A VALID NAME");
+            }
+            else {
+                if (viewGUI.verifyUser(user)) {
+                    setUser(user);
+                    viewGUI.refresh();
+                } else {
+                    usernameTaken.setText("THIS USERNAME ALREADY EXIST");
+                    username.clear();
+                }
             }
         }
         else {
@@ -84,6 +97,7 @@ public class StartController {
         SelectWindowController selectWindowController = loader.getController();
         selectWindowController.setViewGUI(viewGUI);
         viewGUI.setSelectWindowController(selectWindowController);
+        selectWindowController.init();
         if(!viewGUI.actualPlayer())
             selectWindowController.waitTurn();
 

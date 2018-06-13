@@ -30,26 +30,10 @@
                 <RowConstraints vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-            <ImageView fx:id="card1front" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
-               <image>
-                  <Image url="@../images/windows/aurorae_magnificus.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="card1back" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
-               <image>
-                  <Image url="@../images/windows/bellesguard.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="card2front" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="1">
-               <image>
-                  <Image url="@../images/windows/sun_catcher.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="card2back" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <image>
-                  <Image url="@../images/windows/via_lux.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="card1front" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <ImageView fx:id="card1back" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="0"></ImageView>
+            <ImageView fx:id="card2front" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <ImageView fx:id="card2back" fitHeight="280.0" fitWidth="350.0" onMouseClicked="#selectWindow" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             </children>
             <VBox.margin>
                 <Insets bottom="20.0" />
