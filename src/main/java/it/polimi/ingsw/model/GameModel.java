@@ -2,7 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.view.RemoteView;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +14,7 @@ import java.util.Random;
 
 public class GameModel implements RemoteGameModel, Serializable {
 
+    private transient ArrayList<Socket> listSocket = new ArrayList<>();
     private List<RemoteView> list = new ArrayList<>();
     private ArrayList<Player> players;
     private ArrayList<Colors> allColors = new ArrayList<>(5);
@@ -176,6 +180,7 @@ public class GameModel implements RemoteGameModel, Serializable {
     @Override
     public void notifyObservers() throws RemoteException {
         int tmp = 0;
+        boolean socketActualPlayer = false;
         for(RemoteView observer: getObservers()) {
             try {
                 if(observer!=null) {
@@ -191,12 +196,61 @@ public class GameModel implements RemoteGameModel, Serializable {
                 //DO NOTHING
             }
         }
+        for(Socket observer: getObserverSocket()) {
+            if(observer!=null) {
+                if (!actualPlayer.getUsername().equals(getPlayers().get(getObserverSocket().indexOf(observer)).getUsername())) {
+                    try {
+                        if(getPlayers().get(getObserverSocket().indexOf(observer)).getOnline()) {
+                            ObjectOutputStream ob = new ObjectOutputStream(observer.getOutputStream());
+                            ob.writeObject(this);
+                        }
+                    } catch (IOException e) {
+                        //do nothing
+                    }
+                } else {
+                    socketActualPlayer = true;
+                    tmp = getObserverSocket().indexOf(observer);
+                }
+            }
+        }
         try {
-            getObservers().get(tmp).update(this); //l'actual player è sempre online!
+            if(socketActualPlayer){
+                ObjectOutputStream ob = new ObjectOutputStream(getObserverSocket().get(tmp).getOutputStream());
+                ob.writeObject(this);
+            }
+            else
+                getObservers().get(tmp).update(this); //l'actual player è sempre online!
         }catch (RemoteException e){
             //DO NOTHING
         }
+        catch (IOException e) {
+            //do nothing
+        }
 
+    }
+
+    public ArrayList<Socket> getObserverSocket(){
+        return listSocket;
+    }
+
+    public void addObserverSocket(Socket socket){
+        listSocket.add(socket);
+        list.add(null);
+    }
+
+    public void removeObserverSocket(Socket socket){
+        listSocket.set(getObserverSocket().indexOf(socket), null);
+    }
+
+    public void reAddObserverSocket(Socket socket, String user){
+        int index = 0;
+        for(Player x : players){
+            if(x.getUsername().equals(user)) {
+                index = players.indexOf(x);
+                break;
+            }
+        }
+        listSocket.set(index, socket);
     }
 
     @Override
@@ -207,6 +261,7 @@ public class GameModel implements RemoteGameModel, Serializable {
     @Override
     public void addObserver(RemoteView observer) throws RemoteException {
         list.add(observer);
+        listSocket.add(null);
     }
 
     @Override

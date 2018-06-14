@@ -3,6 +3,11 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.RemoteView;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Timer;
@@ -21,10 +26,72 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     private boolean singlePlayerStarted;
     private boolean multiPlayerStarted;
 
-    public GameController() throws RemoteException{
+    private boolean gameEnded;
+    private ServerSocket serverSocket;
+
+    public GameController(ServerSocket serverSocket) throws RemoteException{
+        gameEnded = false;
         singlePlayerStarted = false;
         multiPlayerStarted = false;
         t = new Timer();
+        this.serverSocket = serverSocket;
+    }
+
+    public void addSocketConnection() throws IOException, ClassNotFoundException {
+        while (true){
+            Socket socket = serverSocket.accept();
+            if(getMultiPlayerStarted()){
+                if(gameModel.getState().equals(LOBBY))
+                    gameModel.addObserverSocket(socket);
+                else{
+                    ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
+                    String user = (String) obj.readObject();
+                    gameModel.reAddObserverSocket(socket, user);
+                }
+            }
+            else if(!getSinglePlayerStarted()){
+                createGameModel( 0);
+                gameModel.addObserverSocket(socket);
+            }
+
+            socketListener(socket);
+            if(gameEnded)
+                break;
+        }
+    }
+
+    public void socketListener(final Socket socket){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
+                        RemoteView view = (RemoteView) obj.readObject();
+                        if(view.getDeleteConnectionSocket()){
+                            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                            ob.writeObject(gameModel);
+                        }
+                        if(view.getStartTimerSocket())
+                            startTimer(view, socket);
+                        else {
+                            if(view.getReturnOnline())
+                                setPlayerOnline(view.getUser(), true);
+                            else
+                                update(view);
+                        }
+                    } catch (IOException e) {
+                        //
+                    }
+                    catch (ClassNotFoundException e) {
+                        //do nothing
+                    }
+                    if(gameEnded)
+                        break;
+                }
+
+            }
+        }).start();
     }
 
     @Override
@@ -62,21 +129,35 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     @Override
-    public void startTimer(final RemoteView view){
+    public void startTimer(final RemoteView view, final Socket socket){
         t = new Timer();
         t.schedule(
                 new TimerTask() {
                     @Override
                     public void run() {
-                        try {
-                            view.setOnline(false);
-                            setPlayerOnline(view.getUser(), false);
-                            endTurn();
-                        } catch (RemoteException e) {
+                        if(socket == null) {
                             try {
-                                verifyObserver();
+                                view.setOnline(false);
+                                setPlayerOnline(view.getUser(), false);
                                 endTurn();
-                            } catch (RemoteException e1) {
+                            } catch (RemoteException e) {
+                                try {
+                                    verifyObserver();
+                                    endTurn();
+                                } catch (RemoteException e1) {
+                                    //
+                                }
+                            }
+                        }
+                        else {
+                            try {
+                                setPlayerOnline(view.getUser(), false);
+                                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                                ob.writeObject(gameModel);
+                                endTurn();
+                            }catch (RemoteException e){
+                                //
+                            }catch (IOException e1){
                                 //
                             }
                         }
@@ -108,7 +189,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     @Override
-    public void createGameModel(RemoteView view, int level) throws RemoteException{
+    public void createGameModel(int level) throws RemoteException{
         gameModel = GameModel.getInstance(LOBBY, level);
         if (level == 0)
             multiPlayerStarted = true;

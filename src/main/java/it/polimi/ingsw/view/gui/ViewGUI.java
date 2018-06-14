@@ -42,6 +42,21 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private MatchController matchController;
 
     @Override
+    public boolean getStartTimerSocket() {
+        return false;
+    }
+
+    @Override
+    public boolean getReturnOnline(){
+        return false;
+    }
+
+    @Override
+    public boolean getDeleteConnectionSocket() {
+        return false;
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception{
         setOnline(true);
         choices = new ArrayList<>();
@@ -53,7 +68,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             gameModel = network.getGameModel();
         }
         else if(!network.getSinglePlayerStarted()) {
-            network.createGameModel(this, 0);
+            network.createGameModel( 0);
             this.gameModel = network.getGameModel();
         }
 

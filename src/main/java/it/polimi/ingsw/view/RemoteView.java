@@ -15,6 +15,12 @@ public interface RemoteView extends Remote {
      */
     void setOnline(boolean online) throws RemoteException;
 
+    boolean getStartTimerSocket() throws RemoteException;
+
+    boolean getReturnOnline() throws RemoteException;
+
+    boolean getDeleteConnectionSocket() throws RemoteException;
+
     /**
      * gets if player is online or not
      * @return true if the player is online, false otherwise

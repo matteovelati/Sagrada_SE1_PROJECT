@@ -68,7 +68,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
                     input = new Scanner(System.in);
                 level = input.nextInt();
             } while (level < 0 || level > 6);
-            network.createGameModel(this, level);
+            network.createGameModel(level);
             gameModel = network.getGameModel();
             network.addObserver(this);
             network.updateSP(this);
@@ -109,6 +109,21 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
                 }
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean getStartTimerSocket() {
+        return false;
+    }
+
+    @Override
+    public boolean getReturnOnline(){
+        return false;
+    }
+
+    @Override
+    public boolean getDeleteConnectionSocket() {
         return false;
     }
 
