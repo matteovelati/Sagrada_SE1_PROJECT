@@ -55,7 +55,7 @@ public class StartController {
             else {
                 if (viewGUI.verifyUser(user)) {
                     setUser(user);
-                    viewGUI.refresh();
+                    viewGUI.notifyNetwork();
                 } else {
                     usernameTaken.setText("THIS USERNAME ALREADY EXIST");
                     username.clear();

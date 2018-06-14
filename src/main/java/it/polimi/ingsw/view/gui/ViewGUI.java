@@ -1,10 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.controller.RemoteGameController;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.RemoteGameModel;
-import it.polimi.ingsw.model.States;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.RemoteView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -112,20 +109,23 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             case SELECTMOVE1:
                 viewSelectMove1();
                 break;
+            case SELECTDRAFT:
+                viewSelectDraft();
+                break;
+            case PUTDICEINWINDOW:
+                viewPutDiceInWindow();
+                break;
+            case SELECTMOVE2:
+                viewSelectMove2();
+                break;
+            case ERROR:
+                network.update(this);
+                break;
             /*case ENDROUND:
                 viewEndRound();
                 break;
             case ENDMATCH:
                 viewEndMatch();
-                break;
-            case SELECTMOVE2:
-                viewSelectMove2();
-                break;
-            case PUTDICEINWINDOW:
-                viewPutDiceInWindow();
-                break;
-            case SELECTDRAFT:
-                viewSelectDraft();
                 break;
             case SELECTCARD:
                 viewSelectCard();
@@ -138,9 +138,6 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 break;
             case USETOOLCARD3:
                 viewUseToolCard3();
-                break;
-            case ERROR:
-                viewError();
                 break;*/
             default:
                 assert false;
@@ -196,6 +193,45 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             });
         }
     }
+
+    private void viewSelectDraft(){
+        Platform.runLater(() -> {
+            try {
+                if(actualPlayer())
+                    matchController.selectDraftView();
+                else
+                    matchController.waitTurn();
+            } catch (RemoteException e) {
+                //do nothing
+            }
+        });
+    }
+
+    private void viewPutDiceInWindow(){
+        Platform.runLater(() -> {
+            try {
+                if(actualPlayer())
+                    matchController.putDiceInWindowView();
+                else
+                    matchController.waitTurn();
+            } catch (RemoteException e) {
+                //do nothing
+            }
+        });
+    }
+
+    private void viewSelectMove2(){
+        Platform.runLater(() -> {
+            try {
+                if(actualPlayer()){
+                    matchController.refresh();
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     /**
      * sets if the client is online or not
      */
@@ -273,7 +309,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      */
     @Override
     public void printError(String error) throws RemoteException {
-
+        Platform.runLater(() ->{
+            matchController.error(error);
+        });
     }
 
 
@@ -313,9 +351,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return user.equals(gameModel.getActualPlayer().getUsername());
     }
 
-    public void setChoose1(int i) throws RemoteException {
+    public void setChoose1(int i){
         this.choose1 = i;
-        network.update(this);
+    }
+
+    public void setChoose2(int i){
+        this.choose2 = i;
     }
 
     public int getWindowId(int i, boolean front) throws RemoteException {
@@ -325,11 +366,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             return gameModel.getSchemeCards().get(i).getBack().getIdNumber();
     }
 
-    public int getDiceValue(int i) throws RemoteException {
+    public int getDraftDiceValue(int i) throws RemoteException {
         return gameModel.getField().getDraft().getDraft().get(i).getValue();
     }
 
-    public Colors getDiceColor(int i) throws RemoteException {
+    public Colors getDraftDiceColor(int i) throws RemoteException {
         return gameModel.getField().getDraft().getDraft().get(i).getColor();
     }
 
@@ -367,7 +408,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         network.setPlayerOnline(user, true);
     }
 
-    public void refresh() throws RemoteException {
+    public void notifyNetwork() throws RemoteException {
         network.update(this);
     }
 
@@ -397,5 +438,25 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             default:
                 assert false;
         }
+    }
+
+    public States getGameState() throws RemoteException {
+        return gameModel.getState();
+    }
+
+    public boolean checkDraftSize(int i) throws RemoteException {
+        return i<gameModel.getField().getDraft().getDraft().size();
+    }
+
+    public boolean checkEmptyCell(int i, int j) throws RemoteException {
+        return gameModel.getActualPlayer().getWindow().getWindow()[i][j].getIsEmpty();
+    }
+
+    public Colors getWindowDiceColor(int i, int j) throws RemoteException {
+        return gameModel.getActualPlayer().getWindow().getWindow()[i][j].getDice().getColor();
+    }
+
+    public int getWindowDiceValue(int i, int j) throws RemoteException {
+        return gameModel.getActualPlayer().getWindow().getWindow()[i][j].getDice().getValue();
     }
 }

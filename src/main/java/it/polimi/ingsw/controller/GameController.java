@@ -429,7 +429,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
                 } else {
                     beforeError = gameModel.getState();
-                    view.printError("Restriction error");
+                    view.printError("RESTRICTION ERROR");
                     gameModel.setState(ERROR);
                 }
             }
@@ -684,7 +684,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             //DO NOTHING
                         }
                     }
-                }, 30000
+                }, 3000
         );
     }
 

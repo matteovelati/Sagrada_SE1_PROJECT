@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
@@ -52,6 +50,7 @@ public class SelectWindowController {
         waitTurn();
         viewGUI.setSelectedWindow(selection);
         viewGUI.setChoose1(selection);
+        viewGUI.notifyNetwork();
     }
 
     public void setActualPlayer(){
@@ -91,8 +90,9 @@ public class SelectWindowController {
         matchController.setViewGUI(viewGUI);
         viewGUI.setMatchController(matchController);
         matchController.init();
-        if(!viewGUI.actualPlayer())
-            matchController.waitTurn();
+        matchController.waitTurn();
+        if(viewGUI.actualPlayer())
+            matchController.selectMove1View();
 
         Scene startScene;
         startScene = new Scene(selectWindow, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
