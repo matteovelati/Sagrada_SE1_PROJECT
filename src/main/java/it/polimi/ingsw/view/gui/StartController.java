@@ -108,6 +108,7 @@ public class StartController {
         primaryStage.setMaximized(true);
         primaryStage.setFullScreen(true);
         primaryStage.show();
+        selectWindow.requestFocus();
     }
 
     public void print(String s){

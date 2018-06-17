@@ -48,7 +48,6 @@ public class SelectWindowController {
         ImageView selected = (ImageView) e.getSource();
         int selection = GridPane.getRowIndex(selected)*2 + GridPane.getColumnIndex(selected) + 1;
         waitTurn();
-        viewGUI.setSelectedWindow(selection);
         viewGUI.setChoose1(selection);
         viewGUI.notifyNetwork();
     }
@@ -84,7 +83,7 @@ public class SelectWindowController {
 
     public void changeScene(Stage mainStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/match.fxml"));
-        Parent selectWindow = loader.load();
+        Parent match = loader.load();
 
         MatchController matchController = loader.getController();
         matchController.setViewGUI(viewGUI);
@@ -95,11 +94,12 @@ public class SelectWindowController {
             matchController.selectMove1View();
 
         Scene startScene;
-        startScene = new Scene(selectWindow, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+        startScene = new Scene(match, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
         Stage primaryStage = mainStage;
         primaryStage.setScene(startScene);
         primaryStage.setMaximized(true);
         primaryStage.setFullScreen(true);
         primaryStage.show();
+        match.requestFocus();
     }
 }
