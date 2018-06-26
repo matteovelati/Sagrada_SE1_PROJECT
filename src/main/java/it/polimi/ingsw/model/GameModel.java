@@ -60,12 +60,7 @@ public class GameModel implements RemoteGameModel, Serializable {
     }
 
     public void setDraft(){
-        int onPlayers = 0;
-        for (Player p : players){
-            if (p.getOnline())
-                onPlayers++;
-        }
-        for (int i = 0; i < 2*onPlayers+1; i++)
+        for (int i = 0; i < (2*players.size())+1; i++)
             field.setDraft();
         if (players.size() == 1)
             field.setDraft();
@@ -73,9 +68,7 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     public void setPlayers(Player player) throws RemoteException {
         this.players.add(player);
-        //list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
         actualPlayer = this.players.get(0);
-
     }
 
     public void setState(States state) throws RemoteException {
@@ -223,7 +216,7 @@ public class GameModel implements RemoteGameModel, Serializable {
                 try {
                     if(socketActualPlayer){
                         ObjectOutputStream ob = new ObjectOutputStream(getObserverSocket().get(tmp).getOutputStream());
-                        ob.writeObject(this);
+                        ob.writeObject(gameModel);
                     }
                     else
                         getObservers().get(tmp).update(gameModel); //l'actual player è sempre online!

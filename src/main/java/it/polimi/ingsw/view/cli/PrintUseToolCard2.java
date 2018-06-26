@@ -38,12 +38,7 @@ public class PrintUseToolCard2 implements Serializable {
                 }while(!correctInput(tmp, 2, gameModel));
                 if(choices.get(0) == -1)
                     break;
-                try {
-                    choices.get(2);
-                    choices.set(2, tmp-1);
-                } catch (IndexOutOfBoundsException e){
-                    choices.add(tmp-1);
-                }
+                choices.add(tmp-1);
                 System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
                 do {
                     input = new Scanner(System.in);
@@ -55,12 +50,7 @@ public class PrintUseToolCard2 implements Serializable {
                 }while(!correctInput(tmp, 3, gameModel));
                 if(choices.get(0) == -1)
                     break;
-                try {
-                    choices.get(3);
-                    choices.set(3, tmp-1);
-                } catch (IndexOutOfBoundsException e) {
-                    choices.add(tmp - 1);
-                }
+                choices.add(tmp - 1);
                 break;
             case 4:                 //LATHEKIN
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
