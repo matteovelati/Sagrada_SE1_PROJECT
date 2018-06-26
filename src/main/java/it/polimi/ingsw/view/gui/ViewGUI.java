@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.RemoteView;
@@ -120,7 +119,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 viewSelectMove2();
                 break;
             case ERROR:
-                network.update(this);
+                if(actualPlayer())
+                    network.update(this);
                 break;
             case ENDROUND:
                 viewEndRound();
@@ -413,11 +413,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     public boolean checkLobby() throws RemoteException {
-        if(gameModel.getState().equals(States.LOBBY)) {
-            network.addObserver(this);
-            return true;
-        }else
-            return false;
+        return gameModel.getState().equals(States.LOBBY);
     }
 
     public boolean reconnecting() throws RemoteException {
@@ -600,5 +596,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     public int getPlayerScore(String s) throws RemoteException {
         Player player = findPlayer(s);
         return player.getFinalScore();
+    }
+
+    public RemoteGameController getNetwork() throws RemoteException{
+        return this.network;
     }
 }

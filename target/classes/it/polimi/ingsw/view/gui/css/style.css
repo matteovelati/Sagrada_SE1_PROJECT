@@ -1,0 +1,23 @@
+.startbg{
+    -fx-background-image: url("../images/sagrada_cover.png");
+    -fx-background-size: 100% 100%;
+}
+
+.gamebg{
+    -fx-background-image: url("../images/background.png");
+    -fx-background-size: 100% 100%;
+}
+
+.roundtrackbg{
+    -fx-background-image: url("../images/roundtrack.png");
+    -fx-background-size: 100% 100%
+}
+
+.bgexample{
+    -fx-background-image: url("../images/windows/1.png");
+    -fx-background-size: 100% 100%;
+}
+
+.messagelabel{
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+}

@@ -55,6 +55,7 @@ public class StartController {
             else {
                 if (viewGUI.verifyUsername(user)) {
                     setUser(user);
+                    viewGUI.getNetwork().addObserver(viewGUI);
                     viewGUI.notifyNetwork();
                 } else {
                     usernameTaken.setText("THIS USERNAME ALREADY EXIST");
