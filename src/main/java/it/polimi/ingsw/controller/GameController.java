@@ -139,11 +139,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             try {
                                 view.setOnline(false);
                                 setPlayerOnline(view.getUser(), false);
-                                endTurn();
+                                endTurn(false);
                             } catch (RemoteException e) {
                                 try {
                                     verifyObserver();
-                                    endTurn();
+                                    endTurn(false);
                                 } catch (RemoteException e1) {
                                     //
                                 }
@@ -154,7 +154,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                                 setPlayerOnline(view.getUser(), false);
                                 ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
                                 ob.writeObject(gameModel);
-                                endTurn();
+                                endTurn(false);
                             }catch (RemoteException e){
                                 //
                             }catch (IOException e1){
@@ -162,7 +162,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             }
                         }
                     }
-                }, 30000
+                }, 90000
         );
     }
 
@@ -382,7 +382,6 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     private void selectMove1(RemoteView view) throws RemoteException{
 
-        t.cancel();
         gameModel.getRoundManager().setFirstMove(view.getChoose1());
         check = 1;
 
@@ -393,7 +392,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             gameModel.setState(SELECTCARD);
 
         else if(gameModel.getRoundManager().getFirstMove() == 0)
-            endTurn();
+            endTurn(true);
 
         else
             checkError(view, view.getChoose1());
@@ -402,7 +401,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     private void selectDraft(RemoteView view) throws RemoteException{
 
-        t.cancel();
+
         if(view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()) {
             gameModel.playerPickDice(view.getChoose1() - 1);
             gameModel.setState(PUTDICEINWINDOW);
@@ -414,7 +413,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     private void putDiceInWindow(RemoteView view) throws RemoteException{
 
-        t.cancel();
+
         if(view.getChoose1() > 0 && view.getChoose1() < 5) {
 
             if(view.getChoose2() > 0 && view.getChoose2() < 6) {
@@ -425,7 +424,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                         gameModel.setState(SELECTMOVE2);
 
                     else if (gameModel.getRoundManager().getFirstMove() == 2)
-                        endTurn();
+                        endTurn(true);
 
                 } else {
                     beforeError = gameModel.getState();
@@ -443,7 +442,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     private void selectMove2(RemoteView view) throws RemoteException{
 
-        t.cancel();
+
         check = 2;
 
         if(view.getChoose1() == 1){
@@ -456,7 +455,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
         }
         else if(view.getChoose1() == 0)
-            endTurn();
+            endTurn(true);
 
         else
             checkError(view, view.getChoose1());
@@ -465,7 +464,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     private void selectCard(RemoteView view) throws RemoteException{
 
-        t.cancel();
+
 
         if (view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getToolCards().size()){
 
@@ -520,7 +519,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     private void useToolCard(RemoteView view) throws RemoteException{
 
-        t.cancel();
+
         if(gameModel.playerUseToolCard(view.getChoices())) {
             if (singlePlayerStarted)
                 gameModel.getActualPlayer().getToolCardSelected().setIsUsed(true);
@@ -596,7 +595,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         return roundEnded;
     }
 
-    private void endTurn() throws RemoteException {
+    private void endTurn(boolean stopTimer) throws RemoteException {
+        if(stopTimer)
+            t.cancel();
         if (multiPlayerStarted) {
             int onPlayers = 0;
             for (Player p : gameModel.getPlayers()) {
@@ -639,7 +640,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     private void setNextState() throws RemoteException {
 
         if (gameModel.getRoundManager().getFirstMove() == 1 || gameModel.getActualPlayer().getToolCardSelected().getForceTurn())
-            endTurn();
+            endTurn(true);
         else if (gameModel.getRoundManager().getFirstMove() == 2)
             gameModel.setState(SELECTMOVE2);
 
@@ -660,7 +661,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                     gameModel.setState(SELECTMOVE1);
             } else if(check == 2) {
                 if(beforeError.equals(USETOOLCARD2) || beforeError.equals(USETOOLCARD3))
-                    endTurn();
+                    endTurn(true);
                 else
                     gameModel.setState(SELECTMOVE2);
             }
