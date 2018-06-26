@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

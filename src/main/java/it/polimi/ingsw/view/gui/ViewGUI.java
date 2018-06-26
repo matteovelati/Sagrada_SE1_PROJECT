@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.RemoteView;
@@ -158,42 +159,32 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     private void viewSelectWindow() {
-        if(firstCallWindow) {
-            firstCallWindow = false;
-            Platform.runLater(() -> {
-                try {
+        Platform.runLater(()-> {
+            try{
+                if(firstCallWindow){
+                    firstCallWindow = false;
                     startController.changeScene(mainStage);
-                } catch (IOException e) {
-                    //do nothing
                 }
-            });
-        }else{
-            Platform.runLater(() -> {
-                try {
+                else{
                     if(actualPlayer()) {
                         selectWindowController.loadWindowPatterns();
                         selectWindowController.showWindowPatterns();
                     }
-                } catch (RemoteException e) {
-                    //do nothing
                 }
-            });
-        }
+            }catch (IOException e){
+                //do nothing
+            }
+        });
     }
 
     private void viewSelectMove1(){
-        if(firstCallMatch){
-            firstCallMatch = false;
-            Platform.runLater(() -> {
-                try {
+        Platform.runLater(()-> {
+            try{
+                if(firstCallMatch){
+                    firstCallMatch = false;
                     selectWindowController.changeScene(mainStage);
-                } catch (IOException e) {
-                    //do nothing
                 }
-            });
-        }else{
-            Platform.runLater(() -> {
-                try {
+                else{
                     matchController.refresh();
                     matchController.refreshOtherPlayerWindow();
                     if(actualPlayer()) {
@@ -202,12 +193,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     else {
                         matchController.waitTurn();
                     }
-                } catch (RemoteException e) {
-                    //do nothing
                 }
-
-            });
-        }
+            }catch (IOException e){
+                //do nothing
+            }
+        });
     }
 
     private void viewSelectDraft(){

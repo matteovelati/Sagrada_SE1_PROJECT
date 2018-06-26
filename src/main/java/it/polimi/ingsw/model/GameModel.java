@@ -80,7 +80,7 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     public void setState(States state) throws RemoteException {
         this.state = state;
-        notifyObservers();
+        notifyObservers(this);
     }
 
     public void setActualPlayer(int i){
@@ -177,55 +177,65 @@ public class GameModel implements RemoteGameModel, Serializable {
         actualPlayer.decreaseToken();
     }
 
-    @Override
-    public void notifyObservers() throws RemoteException {
-        int tmp = 0;
-        boolean socketActualPlayer = false;
-        for(RemoteView observer: getObservers()) {
-            try {
-                if(observer!=null) {
-                    if (!actualPlayer.getUsername().equals(observer.getUser())) {
-                        if (observer.getOnline()) {
-                            observer.update(this);
+
+    public void notifyObservers(GameModel gameModel) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int tmp = 0;
+                boolean socketActualPlayer = false;
+                try {
+                    for(RemoteView observer: getObservers()) {
+                        try {
+                            if(observer!=null) {
+                                if (!actualPlayer.getUsername().equals(observer.getUser())) {
+                                    if (observer.getOnline()) {
+                                        observer.update(gameModel);
+                                    }
+                                } else {
+                                    tmp = getObservers().indexOf(observer);
+                                }
+                            }
+                        }catch (RemoteException e){
+                            //DO NOTHING
                         }
-                    } else {
-                        tmp = getObservers().indexOf(observer);
+                    }
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+                for(Socket observer: getObserverSocket()) {
+                    if(observer!=null) {
+                        if (!actualPlayer.getUsername().equals(getPlayers().get(getObserverSocket().indexOf(observer)).getUsername())) {
+                            try {
+                                if(getPlayers().get(getObserverSocket().indexOf(observer)).getOnline()) {
+                                    ObjectOutputStream ob = new ObjectOutputStream(observer.getOutputStream());
+                                    ob.writeObject(gameModel);
+                                }
+                            } catch (IOException e) {
+                                //do nothing
+                            }
+                        } else {
+                            socketActualPlayer = true;
+                            tmp = getObserverSocket().indexOf(observer);
+                        }
                     }
                 }
-            }catch (RemoteException e){
-                //DO NOTHING
-            }
-        }
-        for(Socket observer: getObserverSocket()) {
-            if(observer!=null) {
-                if (!actualPlayer.getUsername().equals(getPlayers().get(getObserverSocket().indexOf(observer)).getUsername())) {
-                    try {
-                        if(getPlayers().get(getObserverSocket().indexOf(observer)).getOnline()) {
-                            ObjectOutputStream ob = new ObjectOutputStream(observer.getOutputStream());
-                            ob.writeObject(this);
-                        }
-                    } catch (IOException e) {
-                        //do nothing
+                try {
+                    if(socketActualPlayer){
+                        ObjectOutputStream ob = new ObjectOutputStream(getObserverSocket().get(tmp).getOutputStream());
+                        ob.writeObject(this);
                     }
-                } else {
-                    socketActualPlayer = true;
-                    tmp = getObserverSocket().indexOf(observer);
+                    else
+                        getObservers().get(tmp).update(gameModel); //l'actual player è sempre online!
+                }catch (RemoteException e){
+                    //DO NOTHING
                 }
+                catch (IOException e) {
+                    //do nothing
+                }
+
             }
-        }
-        try {
-            if(socketActualPlayer){
-                ObjectOutputStream ob = new ObjectOutputStream(getObserverSocket().get(tmp).getOutputStream());
-                ob.writeObject(this);
-            }
-            else
-                getObservers().get(tmp).update(this); //l'actual player è sempre online!
-        }catch (RemoteException e){
-            //DO NOTHING
-        }
-        catch (IOException e) {
-            //do nothing
-        }
+        }).start();
 
     }
 

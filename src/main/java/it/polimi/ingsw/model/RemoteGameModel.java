@@ -10,11 +10,6 @@ import java.util.List;
 
 public interface RemoteGameModel extends Remote {
 
-    /**
-     * notifies the observers in game
-     * @throws RemoteException if the reference could not be accessed
-     */
-    void notifyObservers() throws RemoteException;
 
     /**
      * adds again an observer after he has lost connection
