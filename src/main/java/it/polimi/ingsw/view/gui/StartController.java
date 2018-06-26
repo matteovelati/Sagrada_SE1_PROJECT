@@ -53,7 +53,7 @@ public class StartController {
                     usernameTaken.setText("INSERT A VALID NAME");
             }
             else {
-                if (viewGUI.verifyUser(user)) {
+                if (viewGUI.verifyUsername(user)) {
                     setUser(user);
                     viewGUI.notifyNetwork();
                 } else {
@@ -97,7 +97,7 @@ public class StartController {
         SelectWindowController selectWindowController = loader.getController();
         selectWindowController.setViewGUI(viewGUI);
         viewGUI.setSelectWindowController(selectWindowController);
-        selectWindowController.init();
+        selectWindowController.loadWindowPatterns();
         if(!viewGUI.actualPlayer())
             selectWindowController.waitTurn();
 

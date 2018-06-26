@@ -10,7 +10,7 @@
 
 .roundtrackbg{
     -fx-background-image: url("../images/roundtrack.png");
-    -fx-background-size: 678 212;
+    -fx-background-size: 100% 100%
 }
 
 .bgexample{

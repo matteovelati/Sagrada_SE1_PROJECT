@@ -33,9 +33,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private RemoteGameController network;
     private RemoteGameModel gameModel;
 
-    private StartController startController;
-    private SelectWindowController selectWindowController;
-    private MatchController matchController;
+    private transient StartController startController;
+    private transient SelectWindowController selectWindowController;
+    private transient MatchController matchController;
 
     @Override
     public boolean getStartTimerSocket() {
@@ -79,7 +79,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
 
         primaryStage.setTitle("Sagrada");
         primaryStage.setScene(new Scene(root, 544, 635));
-        //primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         mainStage = primaryStage;
         primaryStage.show();
         root.requestFocus();
@@ -136,10 +136,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             case USETOOLCARD3:
                 viewUseToolCard3();
                 break;
-            /*
             case ENDMATCH:
                 viewEndMatch();
-                break;;*/
+                break;
             default:
                 assert false;
         }
@@ -172,8 +171,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> {
                 try {
                     if(actualPlayer()) {
-                        selectWindowController.init();
-                        selectWindowController.setActualPlayer();
+                        selectWindowController.loadWindowPatterns();
+                        selectWindowController.showWindowPatterns();
                     }
                 } catch (RemoteException e) {
                     //do nothing
@@ -196,6 +195,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> {
                 try {
                     matchController.refresh();
+                    matchController.refreshOtherPlayerWindow();
                     if(actualPlayer()) {
                         matchController.selectMove1View();
                     }
@@ -239,9 +239,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private void viewSelectMove2(){
         Platform.runLater(() -> {
             try {
+                matchController.refreshOtherPlayerWindow();
                 matchController.refresh();
                 if(actualPlayer())
                     matchController.selectMove2View();
+                else
+                    matchController.waitTurn();
             } catch (RemoteException e) {
                 //do nothing
             }
@@ -252,6 +255,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         Platform.runLater(() -> {
             try {
                 matchController.endRoundView();
+                if(actualPlayer())
+                    notifyNetwork();
             } catch (RemoteException e) {
                 //do nothing
             }
@@ -287,6 +292,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private void viewUseToolCard2(){
         Platform.runLater(() -> {
             try {
+                matchController.refreshOtherPlayerWindow();
                 if(actualPlayer())
                     matchController.useToolcard2View();
                 else
@@ -300,12 +306,24 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private void viewUseToolCard3(){
         Platform.runLater(() -> {
             try {
+                matchController.refreshOtherPlayerWindow();
                 if(actualPlayer())
                     matchController.useToolcard3View();
                 else
                     matchController.waitTurn();
             } catch (RemoteException e) {
                 //do nothing
+            }
+        });
+    }
+
+    private void viewEndMatch(){
+        Platform.runLater(() -> {
+            try {
+                matchController.refreshOtherPlayerWindow();
+                matchController.endMatchView();
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -396,7 +414,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         this.user = s;
     }
 
-    public boolean verifyUser(String s) throws RemoteException{
+    public boolean verifyUsername(String s) throws RemoteException{
         for(int i=0; i<gameModel.getPlayers().size(); i++){
             if(s.equals(gameModel.getPlayers().get(i).getUsername()))
                 return false;
@@ -443,6 +461,53 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             return gameModel.getSchemeCards().get(i).getBack().getIdNumber();
     }
 
+    String getDraftDice(int index) throws RemoteException {
+        return gameModel.getField().getDraft().getDraft().get(index).getColor().toString() + gameModel.getField().getDraft().getDraft().get(index).getValue();
+    }
+
+    int getPlayerWindow(String username) throws RemoteException {
+        Player player = findPlayer(username);
+        return player.getWindow().getIdNumber();
+    }
+
+    String getCardId(String type, int i) throws RemoteException{
+        String id = null;
+
+        if(type.equals("toolcards"))
+            id = String.valueOf(gameModel.getField().getToolCards().get(i).getNumber());
+        else if(type.equals("public_obj"))
+            id = String.valueOf(gameModel.getField().getPublicObjectives().get(i).getIdNumber());
+        else if(type.equals("private_obj")) {
+            Player p = findPlayer(user);
+            id = p.getPrivateObjectives().get(i).getColor().toString();
+        }
+
+        return id;
+    }
+
+    int getTokens(String username) throws RemoteException {
+        Player player = findPlayer(username);
+        return player.getTokens();
+    }
+
+    private Player findPlayer(String s) throws RemoteException {
+        for(Player p : gameModel.getPlayers()) {
+            if(p.getUsername().equals(s)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public String getPlayerUsername(int i) throws RemoteException {
+        if(gameModel.getPlayers().get(i).getUsername().equals(user))
+            return "next";
+        else
+            return gameModel.getPlayers().get(i).getUsername();
+    }
+
+    //
+
     public int getDraftDiceValue(int i) throws RemoteException {
         return gameModel.getField().getDraft().getDraft().get(i).getValue();
     }
@@ -455,17 +520,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return gameModel.getField().getDraft().getDraft();
     }
 
-    public int getToolcardId(int i) throws RemoteException {
-        return gameModel.getField().getToolCards().get(i).getNumber();
-    }
-
-    public int getPublicObjId(int i) throws RemoteException {
-        return gameModel.getField().getPublicObjectives().get(i).getIdNumber();
-    }
-
-    public int getSelectedWindow() throws RemoteException {
-        Player player = findPlayer();
-        return player.getWindow().getIdNumber();
+    public int getNumberOfPlayers() throws RemoteException {
+        return gameModel.getPlayers().size();
     }
 
     public States getGameState() throws RemoteException {
@@ -477,17 +533,17 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     public boolean checkWindowEmptyCell(int i, int j) throws RemoteException {
-        Player player = findPlayer();
+        Player player = findPlayer(user);
         return player.getWindow().getWindow()[i][j].getIsEmpty();
     }
 
     public Colors getWindowDiceColor(int i, int j) throws RemoteException {
-        Player player = findPlayer();
+        Player player = findPlayer(user);
         return player.getWindow().getWindow()[i][j].getDice().getColor();
     }
 
     public int getWindowDiceValue(int i, int j) throws RemoteException {
-        Player player = findPlayer();
+        Player player = findPlayer(user);
         return player.getWindow().getWindow()[i][j].getDice().getValue();
     }
 
@@ -499,27 +555,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return gameModel.getField().getRoundTrack().getGrid();
     }
 
-    public Colors getPrivateObj() throws RemoteException {
-        Player player = findPlayer();
-        return player.getPrivateObjectives().get(0).getColor();
-    }
-
-    public int getTokens() throws RemoteException {
-        Player player = findPlayer();
-        return player.getTokens();
-    }
-
     public int getSelectedToolcardId() throws RemoteException {
         return gameModel.getActualPlayer().getToolCardSelected().getNumber();
-    }
-
-    private Player findPlayer() throws RemoteException {
-        for(Player p : gameModel.getPlayers()) {
-            if(p.getUsername().equals(user)) {
-                return p;
-            }
-        }
-        return null;
     }
 
     public boolean verifyUserCrashed(String s) throws RemoteException {
@@ -548,13 +585,30 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         network.update(this);
     }
 
-    public int nPlayers() throws RemoteException {
-        int onPlayers = 0;
-        for (Player p : gameModel.getPlayers()){
-            if (p.getOnline())
-                onPlayers++;
-        }
-        return onPlayers;
+    public int getNextPlayerWindowId(int i) throws RemoteException {
+        if(gameModel.getPlayers().get(i).getUsername().equals(user))
+            return 0;
+        else
+            return gameModel.getPlayers().get(i).getWindow().getIdNumber();
     }
 
+    public boolean checkOtherPlayerWindowEmptyCell(String s, int i, int j) throws RemoteException {
+        Player player = findPlayer(s);
+        return player.getWindow().getWindow()[i][j].getIsEmpty();
+    }
+
+    public Colors getOtherPlayerDiceColor(String s, int i, int j) throws RemoteException {
+        Player player = findPlayer(s);
+        return player.getWindow().getWindow()[i][j].getDice().getColor();
+    }
+
+    public int getOtherPlayerDiceValue(String s, int i, int j) throws RemoteException {
+        Player player = findPlayer(s);
+        return player.getWindow().getWindow()[i][j].getDice().getValue();
+    }
+
+    public int getPlayerScore(String s) throws RemoteException {
+        Player player = findPlayer(s);
+        return player.getFinalScore();
+    }
 }

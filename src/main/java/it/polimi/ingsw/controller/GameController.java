@@ -684,7 +684,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             //DO NOTHING
                         }
                     }
-                }, 3000
+                }, 20000
         );
     }
 
