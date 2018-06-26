@@ -86,9 +86,9 @@ public class TCCopperFoilBurnisherTest {
         input.add(1);
         input.add(0);
 
+        assertTrue(tc.select(gameModel));
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice(), dice1);
-        setDraft();
     }
 
     @Test
@@ -103,7 +103,6 @@ public class TCCopperFoilBurnisherTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice(), dice1);
-        setDraft();
     }
 
     @Test
@@ -118,7 +117,6 @@ public class TCCopperFoilBurnisherTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice(), dice2);
-        setDraft();
     }
 
     @Test
@@ -133,7 +131,6 @@ public class TCCopperFoilBurnisherTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertNotNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice());
-        setDraft();
     }
 
     @Test
@@ -148,6 +145,15 @@ public class TCCopperFoilBurnisherTest {
 
         assertFalse(tc.useToolCard(gameModel, input));
         assertNotNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice());
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard6() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+        input.add(-1);
+
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 }

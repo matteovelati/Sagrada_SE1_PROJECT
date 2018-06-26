@@ -108,7 +108,6 @@ public class TCTapWheelTest {
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(8)][input.get(9)].getDice(), dice6);
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getIsEmpty());
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(6)][input.get(7)].getIsEmpty());
-        setDraft();
     }
 
     @Test
@@ -132,8 +131,6 @@ public class TCTapWheelTest {
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(3)][input.get(4)].getDice(), dice1);
         assertFalse(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(3)][input.get(4)].getDice(), dice1);
-        assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(8)][input.get(9)].getDice());
-        setDraft();
     }
 
     @Test
@@ -156,7 +153,6 @@ public class TCTapWheelTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(4)][input.get(5)].getDice());
         assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(8)][input.get(9)].getDice());
-        setDraft();
     }
 
     @Test
@@ -182,7 +178,17 @@ public class TCTapWheelTest {
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(3)][input.get(4)].getDice(), dice1);
         assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(8)][input.get(9)].getDice());
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard5() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+
+        input.add(-1);
+
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 
 }

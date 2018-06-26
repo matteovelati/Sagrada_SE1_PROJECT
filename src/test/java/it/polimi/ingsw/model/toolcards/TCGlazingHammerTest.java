@@ -84,12 +84,12 @@ public class TCGlazingHammerTest {
         ArrayList<Integer> input = new ArrayList<>();
         ArrayList<Dice> draft = new ArrayList<>();
 
+        assertFalse(tc.select(gameModel));
         draft.addAll(gameModel.getField().getDraft().getDraft());
         gameModel.getRoundManager().changeActualPlayer(1,1);
         gameModel.getRoundManager().setFirstMove(2);
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getField().getDraft().getDraft().containsAll(draft));
-        setDraft();
     }
 }

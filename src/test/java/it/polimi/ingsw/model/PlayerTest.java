@@ -44,14 +44,16 @@ public class PlayerTest {
         diceB.modifyValue(3);
         draft.addDice(diceR);
         draft.addDice(diceB);
-        for (int i=0; i<3; i++)
-            draft.setDraft(bag);
+        draft.addDice(new Dice(Colors.Y));
+        draft.addDice(new Dice(Colors.G));
+        draft.addDice(new Dice(Colors.P));
         input = new ArrayList<>(1);
     }
 
     @Test
     public void setWindow() {
         setUp();
+        assertEquals("P1", player1.getUsername());
         player1.setWindow(sc1, sc2, 1);
         assertEquals(player1.getWindow().getDifficulty(), player1.getTokens());
         player2.setWindow(sc1, sc2, 2);
@@ -59,7 +61,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void selectToolCard() {
+    public void selectToolCardMP() {
         setUp();
         player1.setWindow(sc1, sc2, 1);
         player2.setWindow(sc1, sc2, 2);
@@ -68,6 +70,18 @@ public class PlayerTest {
         assertTrue(player2.selectToolCardMP(toolCards, 1));
     }
 
+    @Test
+    public void selectToolCardSP() {
+        setUp();
+        player1.setWindow(sc1, sc2, 1);
+        assertTrue(player1.selectToolCardSP(toolCards, 0));
+        assertEquals(toolCards.get(0), player1.getToolCardSelected());
+        toolCards.get(0).setIsUsed(true);
+        assertFalse(player1.selectToolCardSP(toolCards, 0));
+        draft.getDraft().clear();
+        assertFalse(player1.selectToolCardSP(toolCards, 1));
+    }
+    
     @Test
     public void pickDice() {
         setUp();

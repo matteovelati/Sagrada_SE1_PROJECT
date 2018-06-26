@@ -99,7 +99,6 @@ public class TCLathekinTest {
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(6)][input.get(7)].getDice(), dice1);
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(4)][input.get(5)].getIsEmpty());
-        setDraft();
     }
 
     @Test
@@ -120,8 +119,6 @@ public class TCLathekinTest {
         assertTrue(tc.useToolCard(gameModel, input));
         assertFalse(tc.useToolCard(gameModel, input));
         assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
-        assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(4)][input.get(5)].getIsEmpty());
-        setDraft();
     }
 
     @Test
@@ -143,6 +140,18 @@ public class TCLathekinTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
         assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(4)][input.get(5)].getIsEmpty());
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard4() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+
+        input.add(-1);
+
+        assertTrue(tc.select(gameModel));
+        assertFalse(tc.useToolCard(gameModel, input));
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 }

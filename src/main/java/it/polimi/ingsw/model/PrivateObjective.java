@@ -67,11 +67,11 @@ public class PrivateObjective extends Card implements Serializable {
     }
 
     /**
-     * calculates the score of the player based on the color of his private objective
+     * calculates the score of the player based on the color of his two private objectives
      * the player gets one more point for each die in his window of the same color of the private objective
      * and three less for every empty box
      * @param player is the player whose score is to be calculated
-     * @return the player's best final score
+     * @return the player's best final score based on one private objective
      */
     public int calculateScoreSP(Player player){
         int scoreA = 0;

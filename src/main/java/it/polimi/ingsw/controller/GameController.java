@@ -522,6 +522,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
         t.cancel();
         if(gameModel.playerUseToolCard(view.getChoices())) {
+            if (singlePlayerStarted)
+                gameModel.getActualPlayer().getToolCardSelected().setIsUsed(true);
             if (multiPlayerStarted)
                 gameModel.decreaseToken();
             if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 1)

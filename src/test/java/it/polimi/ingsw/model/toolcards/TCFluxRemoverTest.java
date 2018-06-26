@@ -110,4 +110,14 @@ public class TCFluxRemoverTest {
         assertFalse(tc.useToolCard(gameModel, input));
         setDraft();
     }
+
+    @Test
+    public void useToolCard3() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+        input.add(-1);
+
+        assertFalse(tc.useToolCard(gameModel, input));
+    }
 }

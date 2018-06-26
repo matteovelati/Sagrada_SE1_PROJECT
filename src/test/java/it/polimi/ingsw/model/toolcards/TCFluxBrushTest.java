@@ -90,7 +90,6 @@ public class TCFluxBrushTest {
         assertTrue(tc.useToolCard(gameModel, input));
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice1);
-        setDraft();
     }
 
     @Test
@@ -105,7 +104,6 @@ public class TCFluxBrushTest {
         assertTrue(tc.useToolCard(gameModel, input));
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice2);
-        setDraft();
     }
 
     @Test
@@ -119,8 +117,17 @@ public class TCFluxBrushTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertFalse(tc.useToolCard(gameModel, input));
-        assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice());
         assertTrue(gameModel.getField().getDraft().getDraft().contains(dice4));
-        setDraft();
     }
+
+    @Test
+    public void useToolCard4() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+        input.add(-1);
+
+        assertFalse(tc.useToolCard(gameModel, input));
+        assertFalse(tc.useToolCard(gameModel, input));
+        }
 }

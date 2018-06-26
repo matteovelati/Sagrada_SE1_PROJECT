@@ -47,9 +47,23 @@ public class TCTapWheel extends ToolCard {
                     return false;
             }
             if (flag == 2) {
-                flag = 1;
                 if (input.get(5) == 1) {
-                    return (moveDice(gameModel.getActualPlayer().getWindow(), input.get(6), input.get(7), input.get(8), input.get(9), gameModel.getField().getRoundTrack(), input.get(0)));
+                    if (moveDice(gameModel.getActualPlayer().getWindow(), input.get(6), input.get(7), input.get(8), input.get(9), gameModel.getField().getRoundTrack(), input.get(0))) {
+                        flag = 1;
+                        return true;
+                    }
+                    else {
+                        try {
+                            input.remove(6);
+                            input.remove(6);
+                            input.remove(6);
+                            input.remove(6);
+                        }
+                        catch (IndexOutOfBoundsException e){
+                            //DO NOTHING
+                        }
+                        return false;
+                    }
                 }
                 else {
                     return true;

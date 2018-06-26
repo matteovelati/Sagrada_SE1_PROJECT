@@ -36,9 +36,13 @@ public class TCLensCutter extends ToolCard {
                 flag = 2;
                 swapDice(gameModel.getField().getRoundTrack(), input.get(1), gameModel.getField().getDraft(), input.get(0));
                 return true;
-            } if (flag == 2) {
-                flag = 1;
-                return diePlacement(gameModel, input);
+            } else if (flag == 2) {
+                if (diePlacement(gameModel, input)){
+                    flag = 1;
+                    return true;
+                }
+                else
+                    return false;
             } else
                 return false;
         }

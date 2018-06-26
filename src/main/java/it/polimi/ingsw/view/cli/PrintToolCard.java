@@ -50,7 +50,7 @@ public class PrintToolCard implements Serializable {
                     System.out.println(ANSI_BOLD + DESCRIPTION+ ANSI_BLUE + toolCards.get(i).getDescr());
                     break;
                 case Y:
-                    System.out.println(ANSI_BOLD + TITLE + ANSI_YELLOW + toolCards.get(i).getTitle());
+                    System.out.println(ANSI_BOLD + (i+1)+TITLE + ANSI_YELLOW + toolCards.get(i).getTitle());
                     System.out.println(ANSI_BOLD + DESCRIPTION + ANSI_YELLOW + toolCards.get(i).getDescr());
                     break;
                 default:

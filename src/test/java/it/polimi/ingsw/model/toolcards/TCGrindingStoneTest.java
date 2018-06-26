@@ -85,13 +85,29 @@ public class TCGrindingStoneTest {
         ArrayList<Integer> input = new ArrayList<>();
         int value;
 
+        input.add(4);
+        input.add(-2);
+        input.add(3);
         input.add(0);
         value = gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue();
 
         assertTrue(tc.useToolCard(gameModel, input));
-        assertEquals(gameModel.getField().getDraft().getDraft().get(input.get(0)), dice1);
+        assertEquals(gameModel.getField().getDraft().getDraft().get(input.get(0)), dice5);
         assertEquals(7 - value, gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue());
-        setDraft();
+        assertTrue(tc.useToolCard(gameModel, input));
+        assertFalse(gameModel.getField().getDraft().getDraft().contains(dice5));
+    }
+
+    @Test
+    public void useToolCard2() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+
+        input.add(-1);
+
+        assertFalse(tc.useToolCard(gameModel, input));
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 
 }

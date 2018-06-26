@@ -94,10 +94,9 @@ public class TCRunningPliersTest {
         input.add(4);
 
         gameModel.getRoundManager().setFirstMove(1);
-
+        assertTrue(tc.select(gameModel));
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(dice2, gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice());
-        setDraft();
     }
 
     @Test
@@ -114,7 +113,6 @@ public class TCRunningPliersTest {
 
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getField().getDraft().getDraft().contains(dice3));
-        setDraft();
     }
 
     @Test
@@ -131,6 +129,15 @@ public class TCRunningPliersTest {
 
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getField().getDraft().getDraft().contains(dice3));
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard4() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+
+        input.add(-1);
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 }

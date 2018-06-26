@@ -30,11 +30,9 @@ public class TCLathekin extends ToolCard {
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylist: in 0,1 le i,j del dado1; in 2,3 le i,j della new pos dado1; in 4,5 le i,j del dado2; in 6,7 le i,j della new pos dado2
         //IN 0 (-1) PER ANNULLARE
-        boolean check;
         if (input.get(0) != -1) {
             if (flag == 1) {
-                check = (moveDice(gameModel.getActualPlayer().getWindow(), input.get(0), input.get(1), input.get(2), input.get(3)));
-                if (check){
+                if (moveDice(gameModel.getActualPlayer().getWindow(), input.get(0), input.get(1), input.get(2), input.get(3))){
                     flag = 2;
                     return true;
                 }
@@ -42,19 +40,27 @@ public class TCLathekin extends ToolCard {
                     return false;
             }
             if (flag == 2) {
-                flag = 1;
-                check = (moveDice(gameModel.getActualPlayer().getWindow(), input.get(4), input.get(5), input.get(6), input.get(7)));
-                if (check) {
+                if (moveDice(gameModel.getActualPlayer().getWindow(), input.get(4), input.get(5), input.get(6), input.get(7))) {
+                    flag = 1;
                     return true;
-                } else {
+                }
+                else {
                     replaceDice(gameModel.getActualPlayer().getWindow(), input.get(2), input.get(3), input.get(0), input.get(1));
+                    try {
+                        input.remove(4);
+                        input.remove(4);
+                        input.remove(4);
+                        input.remove(4);
+                    }
+                    catch (IndexOutOfBoundsException e){
+                        //DO NOTHING
+                    }
                     return false;
                 }
             } else
                 return false;
         }
-        else
-        if (flag == 2){
+        else if (flag == 2){
             replaceDice(gameModel.getActualPlayer().getWindow(), input.get(3), input.get(4), input.get(1), input.get(2));
         }
         flag = 1;

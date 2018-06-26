@@ -40,8 +40,12 @@ public class TCGrindingStone extends ToolCard {
                 flipDice(gameModel.getField().getDraft().getDraft().get(input.get(0)));
                 return true;
             } else if (flag == 2) {
-                flag = 1;
-                return diePlacement(gameModel, input);
+                if (diePlacement(gameModel, input)){
+                    flag = 1;
+                    return true;
+                }
+                else
+                    return false;
             } else
                 return false;
         }

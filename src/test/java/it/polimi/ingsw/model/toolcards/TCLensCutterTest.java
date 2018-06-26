@@ -85,7 +85,6 @@ public class TCLensCutterTest {
         gameModel.getField().getDraft().addDice(dice5);
     }
 
-
     @Test
     public void useToolCard1() {
 
@@ -94,10 +93,29 @@ public class TCLensCutterTest {
 
         input.add(0);
         input.add(0);
+        input.add(1);
+        input.add(0);
 
+        assertTrue(tc.useToolCard(gameModel, input));
         assertTrue(tc.useToolCard(gameModel, input));
         assertFalse(gameModel.getField().getDraft().getDraft().contains( gameModel.getField().getRoundTrack().getGrid().get(input.get(1)) ));
         assertFalse(gameModel.getField().getRoundTrack().getGrid().contains( gameModel.getField().getDraft().getDraft().get(input.get(0)) ));
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard2(){
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+
+        input.add(-1);
+        input.add(2);
+        input.add(1);
+        input.add(0);
+
+        assertTrue(tc.select(gameModel));
+        assertFalse(tc.useToolCard(gameModel, input));
+        assertFalse(tc.useToolCard(gameModel, input));
+
     }
 }

@@ -30,5 +30,7 @@ public class DraftTest {
         assertTrue(draft.getDraft().isEmpty());
         draft.setDraft(bag);
         assertFalse(draft.getDraft().isEmpty());
+        draft.extract(0);
+        assertTrue(draft.getDraft().isEmpty());
     }
 }

@@ -89,7 +89,6 @@ public class TCCorkbackedStraightedgeTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice4);
-        setDraft();
     }
 
     @Test
@@ -103,7 +102,6 @@ public class TCCorkbackedStraightedgeTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice1);
-        setDraft();
     }
 
     @Test
@@ -117,7 +115,6 @@ public class TCCorkbackedStraightedgeTest {
 
         assertFalse(tc.useToolCard(gameModel, input));
         assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice());
-        setDraft();
     }
 
     @Test
@@ -130,6 +127,15 @@ public class TCCorkbackedStraightedgeTest {
         input.add(2);
 
         assertFalse(tc.useToolCard(gameModel, input));
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard5() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+        input.add(-1);
+
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 }

@@ -19,6 +19,8 @@ public class Server {
 
         GameController network = new GameController(serverSocket);
 
+        LocateRegistry.createRegistry(1099);
+
         Registry registry = LocateRegistry.getRegistry();
         registry.bind("network", network);
 

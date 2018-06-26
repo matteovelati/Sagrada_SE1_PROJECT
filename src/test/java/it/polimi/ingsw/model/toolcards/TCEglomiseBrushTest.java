@@ -87,6 +87,7 @@ public class TCEglomiseBrushTest {
         input.add(1);
         input.add(4);
 
+        assertTrue(tc.select(gameModel));
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice(), dice1);
     }

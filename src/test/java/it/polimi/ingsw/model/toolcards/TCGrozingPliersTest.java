@@ -93,7 +93,6 @@ public class TCGrozingPliersTest {
         assertEquals(value -1, gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue());
         assertTrue(tc.useToolCard(gameModel, input));
         assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getIsEmpty());
-        setDraft();
     }
 
     @Test
@@ -111,7 +110,6 @@ public class TCGrozingPliersTest {
         assertEquals(value, gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue());
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getIsEmpty());
-        setDraft();
     }
 
     @Test
@@ -129,7 +127,6 @@ public class TCGrozingPliersTest {
         assertEquals(value + 1, gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue());
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getIsEmpty());
-        setDraft();
     }
 
     @Test
@@ -147,6 +144,14 @@ public class TCGrozingPliersTest {
         assertEquals(value, gameModel.getField().getDraft().getDraft().get(input.get(0)).getValue());
         assertFalse(tc.useToolCard(gameModel, input));
         assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getIsEmpty());
-        setDraft();
+    }
+
+    @Test
+    public void useToolCard5() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+        input.add(-1);
+        assertFalse(tc.useToolCard(gameModel, input));
     }
 }

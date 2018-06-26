@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PrintUseToolCard implements Serializable {
 
-    private static final String STOP = "ENTER [-1] TO STOP. YOU WILL NOT BE SET AS USED";
+    private static final String STOP = "ENTER [-1] TO STOP. THE CARD WILL NOT BE SET AS USED";
     private static int tmp;
 
     /**
@@ -44,7 +44,7 @@ public class PrintUseToolCard implements Serializable {
                     }
                 }while(tmp<1 || tmp>2);
                 break;
-            case 2: case 3: case 4:                //EGLOMISE BRUSH & COPPER FOIL BURNISHER
+            case 2: case 3: case 4:       //EGLOMISE BRUSH & COPPER FOIL BURNISHER & LATHEKIN
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                 if (!selectPosition(gameModel, choices, true, true))
                     break;
