@@ -142,11 +142,17 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             try {
                                 view.setOnline(false);
                                 setPlayerOnline(view.getUser(), false);
-                                endTurn(false);
+                                if(gameModel.getState().equals(SELECTWINDOW))
+                                    selectWindow(view, false);
+                                else
+                                    endTurn(false);
                             } catch (RemoteException e) {
                                 try {
                                     verifyObserver();
-                                    endTurn(false);
+                                    if(gameModel.getState().equals(SELECTWINDOW))
+                                        selectWindow(view, false);
+                                    else
+                                        endTurn(false);
                                 } catch (RemoteException e1) {
                                     //
                                 }
@@ -157,18 +163,24 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                                 ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
                                 ob.writeObject(gameModel);
                                 setPlayerOnline(view.getUser(), false);
-                                endTurn(false);
+                                if(gameModel.getState().equals(SELECTWINDOW))
+                                    selectWindow(view, false);
+                                else
+                                    endTurn(false);
                             }catch (IOException e1){
                                 try {
                                     verifyObserver();
-                                    endTurn(false);
+                                    if(gameModel.getState().equals(SELECTWINDOW))
+                                        selectWindow(view, false);
+                                    else
+                                        endTurn(false);
                                 } catch (RemoteException e) {
                                     //do nothing
                                 }
                             }
                         }
                     }
-                }, 90000
+                }, 30000
         );
     }
 
@@ -215,7 +227,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 break;
 
             case SELECTWINDOW:
-                selectWindow(view);
+                selectWindow(view, true);
                 break;
 
             case SELECTMOVE1:
@@ -280,7 +292,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 break;
 
             case SELECTWINDOW:
-                selectWindow(view);
+                selectWindow(view, false);
                 break;
 
             case SELECTMOVE1:
@@ -360,12 +372,19 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
-    private void selectWindow(RemoteView view) throws RemoteException {
+    private void selectWindow(RemoteView view, boolean stopTimer) throws RemoteException {
 
-        //t.cancel();
-        if(view.getChoose1() > 0 && view.getChoose1() < 5) {
+        if(stopTimer)
+            t.cancel();
+        int choose = 1;
+        try{
+            choose = view.getChoose1();
+        }catch (IOException e){
+            //do nothing
+        }
+        if(choose > 0 && choose < 5) {
 
-            gameModel.playerSetWindow(view.getChoose1());
+            gameModel.playerSetWindow(choose);
 
             actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
             gameModel.setActualPlayer(actualPlayer);

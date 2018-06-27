@@ -54,7 +54,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         connectionRequest();
 
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
-        choices = new ArrayList<>();
+        choices = new ArrayList<>(1);
+        setChoose1(1);
         endGame = false;
         if (network.getMultiPlayerStarted()) {
             gameModel = network.getGameModel();
@@ -459,18 +460,39 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     //The selectwindow is without timer
     private void viewSelectWindow() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            if(socketConnection){
+                startTimerSocket = true;
+                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                ob.writeObject(this);
+                socketTimeOut();
+            }
+            else
+                network.startTimer(this, null);
+            startTimerSocket = false;
             System.out.println("SELECT YOUR WINDOW!");
             PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
             input = new Scanner(System.in);
             while(!input.hasNextInt())
                 input = new Scanner(System.in);
             setChoose1(input.nextInt());
-            if(socketConnection){
-                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-                ob.writeObject(this);
+            if(getOnline()) {
+                if (socketConnection) {
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                } else
+                    network.update(this);
+            }else {
+                if(socketConnection){
+                    returnOnline = true;
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                    this.setOnline(true);
+                }
+                else {
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
             }
-            else
-                network.update(this);
         }
         else{
             System.out.println("\n\nWAIT YOUR TURN...\n\n");
