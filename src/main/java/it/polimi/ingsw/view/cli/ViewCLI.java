@@ -184,8 +184,9 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                     gameModel = (RemoteGameModel) ob.readObject();
                     setDeleteConnectionSocket(false);
                     for(Player x : gameModel.getPlayers()){
-                        if(x.getUsername().equals(user) && !x.getOnline())
+                        if(x.getUsername().equals(user) && !x.getOnline()) {
                             setOnline(false);
+                        }
                     }
                 }catch (IOException e){
                     //

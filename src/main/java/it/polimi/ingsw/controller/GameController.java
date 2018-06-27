@@ -41,6 +41,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         while (true){
             Socket socket = serverSocket.accept();
             if(getMultiPlayerStarted()){
+                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                ob.writeObject(this);
                 if(gameModel.getState().equals(LOBBY))
                     gameModel.addObserverSocket(socket);
                 else{
@@ -53,9 +55,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             else if(!getSinglePlayerStarted()){
                 createGameModel( 0);
                 gameModel.addObserverSocket(socket);
+                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                ob.writeObject(this);
             }
-            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-            ob.writeObject(this);
             socketListener(socket);
             if(gameEnded)
                 break;
@@ -141,6 +143,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             try {
                                 view.setOnline(false);
                                 setPlayerOnline(view.getUser(), false);
+                                verifyObserver();
                                 if(gameModel.getState().equals(SELECTWINDOW))
                                     selectWindow(view, false);
                                 else
@@ -159,9 +162,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                         }
                         else {
                             try {
+                                setPlayerOnline(view.getUser(), false);
                                 ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
                                 ob.writeObject(gameModel);
-                                setPlayerOnline(view.getUser(), false);
+                                verifyObserver();
                                 if(gameModel.getState().equals(SELECTWINDOW))
                                     selectWindow(view, false);
                                 else

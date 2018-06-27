@@ -58,7 +58,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         choices = new ArrayList<>();
         endGame = false;
 
-        Registry registry = LocateRegistry.getRegistry();
+        Registry registry = LocateRegistry.getRegistry("169.254.148.232");
         this.network = (RemoteGameController) registry.lookup("network");
         if(network.getMultiPlayerStarted()){
             gameModel = network.getGameModel();
