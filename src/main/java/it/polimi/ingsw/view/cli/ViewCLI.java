@@ -12,12 +12,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializable {
+
+    private String ipAddress;
 
     private States state;
     private String user;
@@ -43,64 +48,128 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     /**
      * creates a ViewCLI object checking if the username is correct and if the game is already started
      * initializes an arraylist of integer which will contains client's inputs
-     * @param network the RemoteGameController
      * @throws RemoteException if the reference could not be accessed
      */
-    public ViewCLI(RemoteGameController network, boolean socketConnection, Socket socket) throws IOException, ClassNotFoundException {
+    public ViewCLI() throws IOException, ClassNotFoundException {
+        connectionRequest();
+
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
-        this.socketConnection = socketConnection;
-        this.socket = socket;
         choices = new ArrayList<>();
-        returnOnline = false;
-        startTimerSocket = false;
-        deleteConnectionSocket = false;
-        setOnline(true);
         endGame = false;
-        if (this.socketConnection) {
-            setUser();
-            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-            ob.writeObject(this);
-            updateSocket();
-        } else {
-            this.network = network;
-            if (network.getMultiPlayerStarted()) {
-                gameModel = network.getGameModel();
-                if (gameModel.getState().equals(States.LOBBY)) {
-                    do {
-                        setUser();
-                    } while (!verifyUser(user));
+        if (network.getMultiPlayerStarted()) {
+            gameModel = network.getGameModel();
+            if (gameModel.getState().equals(States.LOBBY)) {
+                do {
+                    setUser();
+                } while (!verifyUser(user));
+                if(socketConnection){
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                    updateSocket();
+                }
+                else {
                     network.addObserver(this);
                     network.update(this);
+                }
+            } else {
+                if (!verifyReconnection()) {
+                    System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+                    System.exit(0);
                 } else {
-                    if (!gameModel.getObservers().contains(null)) {
-                        System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
-                        System.exit(0);
-                    } else {
-                        do {
-                            setUser();
-                        } while (!verifyUserCrashed(user));
+                    do {
+                        setUser();
+                    } while (!verifyUserCrashed(user));
+                    if(socketConnection){
+                        ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                        ob.writeObject(user);
+                        System.out.println("\n\nJOINING AGAIN THE MATCH...");
+                        updateSocket();
+                    }
+                    else {
                         network.reAddObserver(this);
                         network.setPlayerOnline(user, true);
                         System.out.println("\n\nJOINING AGAIN THE MATCH...");
                     }
                 }
-            } else if (!network.getSinglePlayerStarted()) {
-                network.createGameModel( 0);
-                gameModel = network.getGameModel();
-                if (gameModel.getPlayers().isEmpty())
+            }
+        } else if (!network.getSinglePlayerStarted()) {
+            network.createGameModel( 0);
+            gameModel = network.getGameModel();
+            if (gameModel.getPlayers().isEmpty())
+                setUser();
+            else {
+                do {
                     setUser();
-                else {
-                    do {
-                        setUser();
-                    } while (!verifyUser(user));
-                }
-                network.addObserver(this);
-                network.update(this);
-            } else {
-                System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+                } while (!verifyUser(user));
+            }
+            network.addObserver(this);
+            network.update(this);
+        } else {
+            System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Request of connection type you want to use. You have to insert the Server ip address.
+     * If you insert a wrong ip address you have to restart the client for a new connection
+     * request.
+     */
+    private void connectionRequest() {
+
+        System.out.println("IP ADDRES: ");
+        input = new Scanner(System.in);
+        ipAddress = input.next();
+
+        System.out.println("WHICH CONNECTION DO YOU WANT TO USE?\n1) RMI\n2)SOCKET");
+        input = new Scanner(System.in);
+        while(!input.hasNextInt())
+            input = new Scanner(System.in);
+        if(input.nextInt() == 1){       //RMI CONNECTION
+            socketConnection = false;
+            socket = null;
+            try {
+                Registry registry = LocateRegistry.getRegistry(ipAddress);
+                network = (RemoteGameController) registry.lookup("network");
+            } catch (RemoteException e) {
+                System.out.println("\n\nTHIS IP ADDRESS DOES NOT EXIST");
+                System.exit(0);
+            } catch (NotBoundException e){
+                System.out.println("\n\nOPS... AN ERROR OCCURRED. PLEASE RESTART THE GAME.");
                 System.exit(0);
             }
         }
+        else{                           //SOCKET CONNECTION
+            socketConnection = true;
+            try {
+                socket = new Socket(ipAddress, 1337);
+                ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                network = (RemoteGameController) ob.readObject();
+            } catch (IOException e) {
+                System.out.println("\n\nTHIS IP ADDRESS DOES NOT EXIST");
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                //do nothing
+            }
+        }
+        returnOnline = false;
+        startTimerSocket = false;
+        deleteConnectionSocket = false;
+        setOnline(true);
+    }
+
+    /**
+     * verify the possibility to join again the game already started
+     * @return true if you can join again the match, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
+    private boolean verifyReconnection() throws RemoteException{
+        for(int i=0; i<gameModel.getObservers().size(); i++){
+            if((gameModel.getObservers() == null ||gameModel.getObservers().get(i) == null) &&
+                    (gameModel.getObserverSocket() == null ||gameModel.getObserverSocket().get(i)==null))
+                return true;
+        }
+        return false;
     }
 
     public void socketTimeOut(){
@@ -181,8 +250,9 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 if(x.getOnline())
                     return false;
                 else{
-                    for(RemoteView y : gameModel.getObservers()){
-                        if(y!=null && y.getUser().equals(s))
+                    for(int i =0; i<gameModel.getObservers().size(); i++){
+                        if((gameModel.getObservers()!=null && gameModel.getObservers().get(i)!=null && gameModel.getObservers().get(i).getUser().equals(s))
+                                || (gameModel.getObserverSocket()!=null && gameModel.getObserverSocket().get(i)!=null && gameModel.getObserverSocket().get(i).equals(s)))
                             return false;
                     }
                     return true;
@@ -760,6 +830,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             if(!getDeleteConnectionSocket()) {
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
                 this.gameModel = (RemoteGameModel) ob.readObject();
+                ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
+                this.gameModel = (RemoteGameModel) obj.readObject();
                 this.run();
             }
         }

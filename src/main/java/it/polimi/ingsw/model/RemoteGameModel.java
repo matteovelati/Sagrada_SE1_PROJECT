@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.view.RemoteView;
 
 import java.awt.*;
+import java.net.Socket;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -10,7 +11,12 @@ import java.util.List;
 
 public interface RemoteGameModel extends Remote {
 
-
+    /**
+     * gets the list of SOCKET observers in game
+     * @return the list of SOCKET observers in game
+     * @throws RemoteException if the reference could not be accessed
+     */
+    ArrayList<Socket> getObserverSocket() throws RemoteException;
     /**
      * adds again an observer after he has lost connection
      * @param observer the observer to be added
@@ -19,8 +25,8 @@ public interface RemoteGameModel extends Remote {
     void reAddObserver(RemoteView observer) throws RemoteException;
 
     /**
-     * gets the list of observers in game
-     * @return the list of observers in game
+     * gets the list of RMI observers in game
+     * @return the list of RMI observers in game
      * @throws RemoteException if the reference could not be accessed
      */
     List<RemoteView> getObservers() throws RemoteException;

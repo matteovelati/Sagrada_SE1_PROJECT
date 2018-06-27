@@ -26,18 +26,6 @@ public class Client {
         /*System.setProperty("java.security.policy", "stupid.policy");
         System.setSecurityManager(new SecurityManager());*/
 
-        Registry registry = LocateRegistry.getRegistry(args[0]);
-
-        String remoteObj = "network";
-
-        RemoteGameController centralNetwork = (RemoteGameController) registry.lookup(remoteObj);
-
-        System.out.println("Choose your connection:\n1) RMI\n2) SOCKET");
-        connection = askInput();
-        if(connection == 1)
-            socketConnection = false;
-        else
-            socketConnection = true;
 
         System.out.println("Choose your UI:\n1) CLI\n2) GUI");
         UI = askInput();
@@ -48,13 +36,10 @@ public class Client {
 
         if (UI == 1) {
             if (match == 1)
-                new ViewCLISinglePlayer(centralNetwork);
+                System.out.println("da sistemare il costruttore");
+                //new ViewCLISinglePlayer(centralNetwork);
             else if (match == 2) {
-                if(socketConnection){
-                    socket = new Socket(args[0], 1337);
-                    new ViewCLI(centralNetwork, true, socket);
-                }
-                new ViewCLI(centralNetwork, false, null);
+                new ViewCLI();
             }
         }
         else if (UI == 2) {

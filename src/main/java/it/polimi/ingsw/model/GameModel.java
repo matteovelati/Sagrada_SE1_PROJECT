@@ -232,6 +232,7 @@ public class GameModel implements RemoteGameModel, Serializable {
 
     }
 
+    @Override
     public ArrayList<Socket> getObserverSocket(){
         return listSocket;
     }
