@@ -40,8 +40,6 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void addSocketConnection() throws IOException, ClassNotFoundException {
         while (true){
             Socket socket = serverSocket.accept();
-            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-            ob.writeObject(this);
             if(getMultiPlayerStarted()){
                 if(gameModel.getState().equals(LOBBY))
                     gameModel.addObserverSocket(socket);
@@ -56,7 +54,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 createGameModel( 0);
                 gameModel.addObserverSocket(socket);
             }
-
+            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+            ob.writeObject(this);
             socketListener(socket);
             if(gameEnded)
                 break;
