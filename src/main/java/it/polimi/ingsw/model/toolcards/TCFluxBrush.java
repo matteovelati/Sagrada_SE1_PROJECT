@@ -48,13 +48,6 @@ public class  TCFluxBrush extends ToolCard {
                     gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
                     return (gameModel.getActualPlayer().putDice(input.get(1), input.get(2)));
                 }
-                try {
-                    input.remove(1);
-                    input.remove(1);
-                }
-                catch (IndexOutOfBoundsException e){
-                    //DO NOTHING
-                }
                 return false;
             }
             else

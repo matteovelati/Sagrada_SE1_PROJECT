@@ -22,28 +22,38 @@ public class PrintUseToolCard3 implements Serializable {
         int tmp;
 
         if (toolCard.getNumber() == 11){    //FLUX REMOVER
-                PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                System.out.println("SELECT THE ROW TO INSERT THE DIE");
-                System.out.println(STOP);
-                do {
+            try {
+                choices.remove(2);
+                choices.remove(2);
+            } catch (IndexOutOfBoundsException e){
+                //DO NOTHING
+            }
+            PrintWindow.print(gameModel.getActualPlayer().getWindow());
+            System.out.println("SELECT THE ROW TO INSERT THE DIE");
+            System.out.println(STOP);
+            do {
+                input = new Scanner(System.in);
+                while (!input.hasNextInt())
                     input = new Scanner(System.in);
-                    tmp = input.nextInt();
-                    if (tmp == -1) {
-                        choices.add(0, tmp);
-                        return;
-                    }
-                }while(!correctInput(tmp, 2));
-                choices.add(tmp-1);
-                System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
-                do {
+                tmp = input.nextInt();
+                if (tmp == -1) {
+                    choices.add(0, tmp);
+                    return;
+                }
+            }while(!correctInput(tmp, 2));
+            choices.add(tmp-1);
+            System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
+            do {
+                input = new Scanner(System.in);
+                while (!input.hasNextInt())
                     input = new Scanner(System.in);
-                    tmp = input.nextInt();
-                    if (tmp == -1) {
-                        choices.add(0, tmp);
-                        return;
-                    }
-                }while(!correctInput(tmp, 3));
-                choices.add(tmp-1);
+                tmp = input.nextInt();
+                if (tmp == -1) {
+                    choices.add(0, tmp);
+                    return;
+                }
+            }while(!correctInput(tmp, 3));
+            choices.add(tmp-1);
         }
     }
 

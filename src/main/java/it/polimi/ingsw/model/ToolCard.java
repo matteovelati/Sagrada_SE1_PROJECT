@@ -140,6 +140,8 @@ public abstract class ToolCard extends Card {
      */
     private boolean moveDice(Window window, int i, int j, int x, int y, int card) { //i,j dado da muovere - x,y nuova casella
         Dice dicetmp = window.getWindow()[i][j].getDice();
+        if (dicetmp == null)
+            return false;
         window.getWindow()[i][j].setDice(null);
         if ((window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y) && window.neighboursPositionRestriction(x, y)) ||
                 (window.getIsEmpty() && window.neighboursColorRestriction(dicetmp, x, y) && window.neighboursNumberRestriction(dicetmp, x, y))) {

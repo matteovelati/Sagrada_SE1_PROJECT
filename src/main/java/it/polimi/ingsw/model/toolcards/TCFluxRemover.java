@@ -46,16 +46,8 @@ public class TCFluxRemover extends ToolCard {
                     flag = 1;
                     gameModel.getActualPlayer().pickDice(gameModel.getField().getDraft(), input.get(0));
                     return (gameModel.getActualPlayer().putDice(input.get(2), input.get(3)));
-                } else {
-                    try {
-                        input.remove(2);
-                        input.remove(2);
-                    }
-                    catch (IndexOutOfBoundsException e){
-                        //DO NOTHING
-                    }
-                    return false;
                 }
+                return false;
             } else
                 return false;
         }

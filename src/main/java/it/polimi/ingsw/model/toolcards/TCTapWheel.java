@@ -52,18 +52,7 @@ public class TCTapWheel extends ToolCard {
                         flag = 1;
                         return true;
                     }
-                    else {
-                        try {
-                            input.remove(6);
-                            input.remove(6);
-                            input.remove(6);
-                            input.remove(6);
-                        }
-                        catch (IndexOutOfBoundsException e){
-                            //DO NOTHING
-                        }
-                        return false;
-                    }
+                    return false;
                 }
                 else {
                     return true;
@@ -103,6 +92,8 @@ public class TCTapWheel extends ToolCard {
      */
     private boolean moveDice(Window window, int i, int j, int x, int y, RoundTrack grid, int k){ //i,j dado da muovere - x,y nuova casella - k dado roundtrack
         Dice dicetmp = window.getWindow()[i][j].getDice();
+        if (dicetmp == null)
+            return false;
         window.getWindow()[i][j].setDice(null);
         if (dicetmp.getColor().equals(grid.getGrid().get(k).getColor()) && ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y)))){
             window.getWindow()[x][y].setDice(dicetmp);

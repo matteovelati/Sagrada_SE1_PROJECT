@@ -20,17 +20,19 @@ public class PrintUseToolCard2 implements Serializable {
      * @param choices the list of integer that contains the client's inputs
      */
     public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
-
-        Scanner input;
-
         switch (toolCard.getNumber()){
             case 1: case 5: case 10:         //GROZING PLIERS & LENS CUTTER & GRINDING STONE
+                try {
+                    choices.remove(2);
+                    choices.remove(2);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 PrintWindow.print(gameModel.getActualPlayer().getWindow());
                 System.out.println("SELECT THE ROW TO INSERT THE DIE");
                 System.out.println(STOP);
                 do {
-                    input = new Scanner(System.in);
-                    tmp = input.nextInt();
+                    tmp = askInput();
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -41,8 +43,7 @@ public class PrintUseToolCard2 implements Serializable {
                 choices.add(tmp-1);
                 System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
                 do {
-                    input = new Scanner(System.in);
-                    tmp = input.nextInt();
+                    tmp = askInput();
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -53,6 +54,14 @@ public class PrintUseToolCard2 implements Serializable {
                 choices.add(tmp - 1);
                 break;
             case 4:                 //LATHEKIN
+                try {
+                    choices.remove(4);
+                    choices.remove(4);
+                    choices.remove(4);
+                    choices.remove(4);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                 if (!selectPosition(gameModel, choices, true, true))
                     break;
@@ -60,6 +69,12 @@ public class PrintUseToolCard2 implements Serializable {
                     break;
                 break;
             case 6:                 //FLUX BRUSH
+                try {
+                    choices.remove(1);
+                    choices.remove(1);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 System.out.println("YOU HAVE ROLLED THE DIE IN POSITION "+ (choices.get(0)+1));
                 PrintDraft.print(gameModel.getField().getDraft());
                 System.out.println("INSERT THIS DICE IN YOUR WINDOW");
@@ -71,8 +86,7 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println("CHOOSE A NEW VALUE FOR THE DIE");
                 System.out.println(STOP);
                 do {
-                    input = new Scanner(System.in);
-                    tmp = input.nextInt();
+                    tmp = askInput();
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -83,10 +97,18 @@ public class PrintUseToolCard2 implements Serializable {
                 choices.add(tmp);
                 break;
             case 12:                //TAP WHEEL
+                try {
+                    choices.remove(5);
+                    choices.remove(5);
+                    choices.remove(5);
+                    choices.remove(5);
+                    choices.remove(5);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 System.out.println("DO YOU WANT TO MOVE ANOTHER DIE?\n1) YES\n2) NO");
                 do {
-                    input = new Scanner(System.in);
-                    tmp = input.nextInt();
+                    tmp = askInput();
                     if(tmp<1 || tmp>2)
                         System.out.println(INPUT_ERR);
                 }while(tmp<1 || tmp>2);
@@ -106,6 +128,17 @@ public class PrintUseToolCard2 implements Serializable {
     }
 
     /**
+     * asks to insert a number
+     * @return the number inserted
+     */
+    private static int askInput(){
+        Scanner input = new Scanner(System.in);
+        while (!input.hasNextInt())
+            input = new Scanner(System.in);
+        return input.nextInt();
+    }
+
+    /**
      * asks to insert a number and verifies if the client's input is '-1'
      * @param choices the list of integer that contains the client's inputs
      * @param check a value to know what's the bounds of input
@@ -114,8 +147,7 @@ public class PrintUseToolCard2 implements Serializable {
      */
     private static boolean verifyInput(ArrayList<Integer> choices, int check, GameModel gameModel){
         do {
-            Scanner input = new Scanner(System.in);
-            tmp = input.nextInt();
+            tmp = askInput();
             if (tmp == -1) {
                 choices.add(0, tmp);
                 return false;

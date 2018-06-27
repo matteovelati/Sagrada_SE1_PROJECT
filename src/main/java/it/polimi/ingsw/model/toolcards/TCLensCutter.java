@@ -41,16 +41,7 @@ public class TCLensCutter extends ToolCard {
                     flag = 1;
                     return true;
                 }
-                else {
-                    try {
-                        input.remove(2);
-                        input.remove(2);
-                    }
-                    catch (IndexOutOfBoundsException e){
-                        //DO NOTHING
-                    }
-                    return false;
-                }
+                return false;
             } else
                 return false;
         }

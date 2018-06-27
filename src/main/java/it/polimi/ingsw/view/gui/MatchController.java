@@ -251,14 +251,34 @@ public class MatchController {
         setWindowGrid();
         switch(viewGUI.getSelectedToolcardId()){
             case 1: case 5: case 10:        //GROZING PLIERS & LENS CUTTER & GRINDING STONE
+                try {
+                    viewGUI.getChoices().remove(2);
+                    viewGUI.getChoices().remove(2);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
                 clientWindow.setDisable(false);
                 break;
             case 4:                     //LATHEKIN
+                try {
+                    viewGUI.getChoices().remove(4);
+                    viewGUI.getChoices().remove(4);
+                    viewGUI.getChoices().remove(4);
+                    viewGUI.getChoices().remove(4);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
                 clientWindow.setDisable(false);
                 break;
             case 6:                     //FLUX BRUSH
+                try {
+                    viewGUI.getChoices().remove(1);
+                    viewGUI.getChoices().remove(1);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
                 showErrorMessage("YOU HAVE ROLLED THE DICE IN POSITION: " + (viewGUI.getChoices().get(0)+1));
                 clientWindow.setDisable(false);
@@ -269,6 +289,15 @@ public class MatchController {
                 input.setVisible(true);
                 break;
             case 12:            //TAP WHEEL
+                try {
+                    viewGUI.getChoices().remove(5);
+                    viewGUI.getChoices().remove(5);
+                    viewGUI.getChoices().remove(5);
+                    viewGUI.getChoices().remove(5);
+                    viewGUI.getChoices().remove(5);
+                } catch (IndexOutOfBoundsException e){
+                    //DO NOTHING
+                }
                 endTurn.setDisable(true);
                 message.setText("DO YOU WANT TO MOVE ANOTHER DICE?");
                 pickDice.setDisable(false);
@@ -285,6 +314,12 @@ public class MatchController {
         refreshTokens();
         refreshDraft();
         if(viewGUI.getSelectedToolcardId() == 11){
+            try {
+                viewGUI.getChoices().remove(2);
+                viewGUI.getChoices().remove(2);
+            } catch (IndexOutOfBoundsException e){
+                //DO NOTHING
+            }
             message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
             showErrorMessage("(THE SELECTED DICE IS IN POSITION " + (viewGUI.getChoices().get(0)+1) + ")");
             clientWindow.setDisable(false);

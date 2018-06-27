@@ -46,15 +46,6 @@ public class TCLathekin extends ToolCard {
                 }
                 else {
                     replaceDice(gameModel.getActualPlayer().getWindow(), input.get(2), input.get(3), input.get(0), input.get(1));
-                    try {
-                        input.remove(4);
-                        input.remove(4);
-                        input.remove(4);
-                        input.remove(4);
-                    }
-                    catch (IndexOutOfBoundsException e){
-                        //DO NOTHING
-                    }
                     return false;
                 }
             } else
@@ -99,6 +90,8 @@ public class TCLathekin extends ToolCard {
      */
     private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
         Dice dicetmp = window.getWindow()[i][j].getDice();
+        if (dicetmp == null)
+            return false;
         window.getWindow()[i][j].setDice(null);
         if ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y))){
             window.getWindow()[x][y].setDice(dicetmp);

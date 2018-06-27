@@ -31,6 +31,8 @@ public class PrintUseToolCard implements Serializable {
                 System.out.println("1) INCREASE\n2) DECREASE");
                 do {
                     input = new Scanner(System.in);
+                    while (!input.hasNextInt())
+                        input = new Scanner(System.in);
                     tmp = input.nextInt();
                     if (tmp == 2) {
                         choices.add(-2);
@@ -103,6 +105,8 @@ public class PrintUseToolCard implements Serializable {
     private static boolean verifyInput(ArrayList<Integer> choices, int check, GameModel gameModel){
         do {
             Scanner input = new Scanner(System.in);
+            while (!input.hasNextInt())
+                input = new Scanner(System.in);
             tmp = input.nextInt();
             if (tmp == -1) {
                 choices.add(0, tmp);
