@@ -150,12 +150,13 @@ public class GameModel implements RemoteGameModel, Serializable {
     }
 
     public int nextPlayer(int actualPlayer){
-        int onPlayers = 0;
-        for (Player p : players){
-            if (p.getOnline())
-                    onPlayers++;
+        actualPlayer = roundManager.changeActualPlayer(actualPlayer, players.size());
+        if (getActualPlayer().getSkipNextTurn()) {
+            getActualPlayer().setSkipNextTurn(false);
+            return roundManager.changeActualPlayer(actualPlayer, players.size());
         }
-        return roundManager.changeActualPlayer(actualPlayer, players.size());
+        else
+            return actualPlayer;
     }
 
     public void endRound(){

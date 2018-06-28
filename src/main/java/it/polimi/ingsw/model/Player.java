@@ -12,11 +12,12 @@ public class Player implements Serializable {
     private Dice dice;
     private ToolCard toolCardSelected;
     private int finalScore;
-
+    private boolean skipNextTurn;
     private boolean online;
 
     public Player(String username, Colors color){
         this.username = username;
+        this.setSkipNextTurn(false);
         setOnline(true);
         privateObjectives = new ArrayList<>(1);
         setPrivateObjectives(color);
@@ -153,6 +154,14 @@ public class Player implements Serializable {
             this.tokens--;
             toolCardSelected.setIsUsed(true);
         }
+    }
+
+    public boolean getSkipNextTurn() {
+        return skipNextTurn;
+    }
+
+    public void setSkipNextTurn(boolean skipNextTurn) {
+        this.skipNextTurn = skipNextTurn;
     }
 }
 

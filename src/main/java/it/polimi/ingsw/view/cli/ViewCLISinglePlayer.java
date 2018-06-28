@@ -7,8 +7,15 @@ import it.polimi.ingsw.model.RemoteGameModel;
 import it.polimi.ingsw.model.States;
 import it.polimi.ingsw.view.RemoteView;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.net.Socket;
+import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -25,22 +32,28 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     private boolean online;
     private RemoteGameModel gameModel;
     private RemoteGameController network;
+    private String ipAddress;
+    private boolean returnOnline;
+    private boolean socketConnection;
+    private transient Socket socket;
+    private boolean startTimerSocket;
+    private boolean deleteConnectionSocket;
 
     /**
      * creates a ViewCLISinglePlayer object checking if the username is correct and if the game is already started
      * initializes an arraylist of integer which will contains client's inputs
-     * @param network the RemoteGameController
      * @throws RemoteException if the reference could not be accessed
      */
-    public ViewCLISinglePlayer(RemoteGameController network) throws RemoteException {
+    public ViewCLISinglePlayer() throws RemoteException {
         int level;
+        connectionRequest();
+
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
         System.out.println("When playing Sagrada by yourself, you're trying to beat a Target Score. " +
         "The Target Score is the sum of the values from all the dice on the RoundTrack at the end of the game. \n");
         choices = new ArrayList<>();
-        setOnline(true);
+        choices.add(-1);
         endGame = false;
-        this.network = network;
         if (network.getSinglePlayerStarted()){
             gameModel = network.getGameModel();
             if(!gameModel.getObservers().contains(null)) {
@@ -53,7 +66,9 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
                 }while(!verifyUserCrashed(user));
                 network.reAddObserver(this);
                 network.setPlayerOnline(user, true);
-                System.out.println("\n\nJOINING AGAIN THE MATCH...");
+                System.out.
+                        println("\n\nJOINING AGAIN THE MATCH...");
+                network.startTimerSP(this);
                 network.updateSP(this);
             }
         }
@@ -71,12 +86,62 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
             network.createGameModel(level);
             gameModel = network.getGameModel();
             network.addObserver(this);
+            network.startTimerSP(this);
             network.updateSP(this);
         }
         else {
             System.out.println("OPS! THE GAME IS ALREADY STARTED!\n\nCOME BACK LATER!");
             System.exit(0);
         }
+    }
+
+    /**
+     * Request of connection type you want to use. You have to insert the Server ip address.
+     * If you insert a wrong ip address you have to restart the client for a new connection
+     * request.
+     */
+    private void connectionRequest() {
+
+        System.out.println("IP ADDRES: ");
+        input = new Scanner(System.in);
+        ipAddress = input.next();
+
+        System.out.println("WHICH CONNECTION DO YOU WANT TO USE?\n1) RMI\n2)SOCKET");
+        input = new Scanner(System.in);
+        while(!input.hasNextInt())
+            input = new Scanner(System.in);
+        if(input.nextInt() == 1){       //RMI CONNECTION
+            socketConnection = false;
+            socket = null;
+            try {
+                Registry registry = LocateRegistry.getRegistry(ipAddress);
+                network = (RemoteGameController) registry.lookup("network");
+            } catch (RemoteException e) {
+                System.out.println("\n\nTHIS IP ADDRESS DOES NOT EXIST");
+                System.exit(0);
+            } catch (NotBoundException e){
+                System.out.println("\n\nOPS... AN ERROR OCCURRED. PLEASE RESTART THE GAME.");
+                System.exit(0);
+            }
+        }
+        else{                           //SOCKET CONNECTION
+            socketConnection = true;
+            try {
+                socket = new Socket(ipAddress, 1337);
+
+                ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                network = (RemoteGameController) ob.readObject();
+            } catch (IOException e) {
+                System.out.println("\n\nTHIS IP ADDRESS DOES NOT EXIST");
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                //do nothing
+            }
+        }
+        returnOnline = false;
+        startTimerSocket = false;
+        deleteConnectionSocket = false;
+        setOnline(true);
     }
 
     /**
@@ -298,7 +363,6 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectWindow() throws RemoteException {
-        network.startTimerSP(this);
         System.out.println("SELECT YOUR WINDOW!");
         PrintSchemeCard.print(gameModel.getSchemeCards().get(0), gameModel.getSchemeCards().get(1));
         input = new Scanner(System.in);
@@ -313,7 +377,6 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectMove1() throws RemoteException {
-        network.startTimerSP(this);
         int tmp = ShowGameStuff.print((GameModel) gameModel, true);
         while (tmp != 0) {
             tmp = ShowGameStuff.print((GameModel) gameModel, true);
@@ -331,7 +394,6 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectMove2() throws RemoteException {
-        network.startTimerSP(this);
         int tmp = ShowGameStuff.print((GameModel) gameModel, true);
         while (tmp != 0) {
             tmp = ShowGameStuff.print((GameModel) gameModel, true);
@@ -349,7 +411,6 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewPutDiceInWindow() throws RemoteException {
-        network.startTimerSP(this);
         PrintWindow.print(gameModel.getActualPlayer().getWindow());
         System.out.println("CHOOSE A ROW TO PUT YOUR DIE (-1 TO ABORT)");
         input = new Scanner(System.in);
@@ -371,7 +432,6 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectDraft(boolean toolCard) throws RemoteException {
-        network.startTimerSP(this);
         if (toolCard)
             System.out.println("SELECT A DIE THAT MATCHES THE COLOR OF THE TOOLCARD, IT WILL BE REMOVED FROM GAME (-1 TO ABORT)");
         else
@@ -389,7 +449,6 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectCard() throws RemoteException {
-        network.startTimerSP(this);
         System.out.println("SELECT A TOOLCARD (-1 TO ABORT)");
         PrintToolCard.print(gameModel.getField().getToolCards());
         input = new Scanner(System.in);
@@ -404,8 +463,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException  if the reference could not be accessed
      */
     private void viewUseToolCard() throws RemoteException {
-        network.startTimerSP(this);
-        PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+        PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices, this);
         network.updateSP(this);
     }
 
@@ -414,8 +472,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewUseToolCard2() throws RemoteException {
-        network.startTimerSP(this);
-        PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+        PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices, this);
         network.updateSP(this);
     }
 
@@ -424,8 +481,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewUseToolCard3() throws RemoteException {
-        network.startTimerSP(this);
-        PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
+        PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices, this);
         network.updateSP(this);
     }
 
@@ -468,5 +524,10 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     public void update(RemoteGameModel gameModel) throws RemoteException {
         this.gameModel = gameModel;
         this.run();
+    }
+
+    @Override
+    public boolean getSinglePlayer(){
+        return true;
     }
 }

@@ -118,7 +118,7 @@ public class TCLathekinTest {
 
         assertTrue(tc.useToolCard(gameModel, input));
         assertFalse(tc.useToolCard(gameModel, input));
-        assertFalse(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
+        assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
     }
 
     @Test

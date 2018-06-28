@@ -40,6 +40,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void addSocketConnection() throws IOException, ClassNotFoundException {
         while (true){
             Socket socket = serverSocket.accept();
+            //ObjectInputStream obj2 = new ObjectInputStream(socket.getInputStream());
+            //RemoteView view = (RemoteView) obj2.readObject();
             if(getMultiPlayerStarted()){
                 ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
                 ob.writeObject(this);
@@ -94,6 +96,39 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                         break;
                 }
 
+            }
+        }).start();
+    }
+
+    public void socketListenerSP(final Socket socket) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
+                        RemoteView view = (RemoteView) obj.readObject();
+                        if(view.getDeleteConnectionSocket()){
+                            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                            ob.writeObject(gameModel);
+                        }
+                        if(view.getStartTimerSocket())
+                            startTimer(view, socket);
+                        else {
+                            if(view.getReturnOnline())
+                                setPlayerOnline(view.getUser(), true);
+                            else
+                                update(view);
+                        }
+                    } catch (IOException e) {
+                        //
+                    }
+                    catch (ClassNotFoundException e) {
+                        //do nothing
+                    }
+                    if(gameEnded)
+                        break;
+                }
             }
         }).start();
     }
@@ -172,6 +207,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                                     endTurn(false);
                             }catch (IOException e1){
                                 try {
+                                    setPlayerOnline(view.getUser(), true);
                                     verifyObserver();
                                     if(gameModel.getState().equals(SELECTWINDOW))
                                         selectWindow(view, false);
@@ -189,8 +225,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     @Override
     public void startTimerSP(final RemoteView view){
-        t = new Timer();
-        t.schedule(
+        Timer tSP = new Timer();
+        tSP.schedule(
                 new TimerTask() {
                     @Override
                     public void run() {
@@ -205,7 +241,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             }
                         }
                     }
-                }, 5000
+                }, 3000
         );
     }
 
@@ -389,8 +425,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
             gameModel.playerSetWindow(choose);
 
-            actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
-            gameModel.setActualPlayer(actualPlayer);
+            do {
+                actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
+                gameModel.setActualPlayer(actualPlayer);
+            }while(!gameModel.getActualPlayer().getOnline());
 
             if (gameModel.getActualPlayer().getWindow() != null) {
                 gameModel.setState(SELECTMOVE1);
@@ -596,7 +634,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.removeObserver(gameModel.getObservers().get(i));
             }
             try{
-                if(gameModel.getObserverSocket().get(i)!= null){
+                if(gameModel.getObserverSocket().get(i)!= null &&
+                        (gameModel.getState().equals(LOBBY) || gameModel.getPlayers().get(i).getOnline())) {
                     ObjectOutputStream ob = new ObjectOutputStream(gameModel.getObserverSocket().get(i).getOutputStream());
                     ob.writeObject(gameModel);
                 }
@@ -629,6 +668,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
                 roundEnded = true;
         }while(!gameModel.getActualPlayer().getOnline());
+        System.out.println("AP: "+gameModel.getActualPlayer().getUsername());
         return roundEnded;
     }
 
@@ -694,8 +734,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if (check == 1) {
                 if(beforeError.equals(USETOOLCARD2) || beforeError.equals(USETOOLCARD3))
                     gameModel.setState(SELECTMOVE2);
-                else
+                else {
+                    t.cancel();
                     gameModel.setState(SELECTMOVE1);
+                }
             } else if(check == 2) {
                 if(beforeError.equals(USETOOLCARD2) || beforeError.equals(USETOOLCARD3))
                     endTurn(true);

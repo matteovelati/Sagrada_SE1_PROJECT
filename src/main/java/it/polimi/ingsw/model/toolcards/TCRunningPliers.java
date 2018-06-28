@@ -32,8 +32,14 @@ public class TCRunningPliers extends ToolCard {
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
         //arraylisy: in 0 indice dado draft; in 1,2 le i,j della nuova posizione
         //IN 0 (-1) PER ANNULLARE
-        if (input.get(0) != -1)
-            return placeDice(gameModel.getActualPlayer().getWindow(), input.get(1), input.get(2), gameModel.getField().getDraft(), input.get(0));
+        if (input.get(0) != -1) {
+            if (placeDice(gameModel.getActualPlayer().getWindow(), input.get(1), input.get(2), gameModel.getField().getDraft(), input.get(0))){
+                gameModel.getActualPlayer().setSkipNextTurn(true);
+                return true;
+            }
+            else
+                return false;
+        }
         else
             return false; //con questo false NON deve richiamare il metodo
     }

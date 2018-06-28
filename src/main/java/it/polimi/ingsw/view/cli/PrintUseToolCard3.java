@@ -2,8 +2,10 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.GameModel;
 import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.view.RemoteView;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +19,7 @@ public class PrintUseToolCard3 implements Serializable {
      * @param toolCard the list of 3 toolcards of the match
      * @param choices the list of integer that contains the client's inputs
      */
-    public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
+    public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices, RemoteView view) throws RemoteException {
         Scanner input;
         int tmp;
 
@@ -36,6 +38,8 @@ public class PrintUseToolCard3 implements Serializable {
                 while (!input.hasNextInt())
                     input = new Scanner(System.in);
                 tmp = input.nextInt();
+                if (!view.getOnline())
+                    return;
                 if (tmp == -1) {
                     choices.add(0, tmp);
                     return;
@@ -48,6 +52,8 @@ public class PrintUseToolCard3 implements Serializable {
                 while (!input.hasNextInt())
                     input = new Scanner(System.in);
                 tmp = input.nextInt();
+                if (!view.getOnline())
+                    return;
                 if (tmp == -1) {
                     choices.add(0, tmp);
                     return;

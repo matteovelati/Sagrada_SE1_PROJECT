@@ -56,7 +56,7 @@ public class PrivateObjective extends Card implements Serializable {
             for (int j = 0; j < 5; j++){
                 if (!player.getWindow().getWindow()[i][j].getIsEmpty()) {
                     if (player.getPrivateObjectives().get(0).getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
-                    score++;
+                    score += player.getWindow().getWindow()[i][j].getDice().getValue();
                 }
                 else
                     score--;
@@ -80,7 +80,7 @@ public class PrivateObjective extends Card implements Serializable {
             for (int j = 0; j < 5; j++){
                 if (!player.getWindow().getWindow()[i][j].getIsEmpty()) {
                     if (player.getPrivateObjectives().get(0).getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
-                        scoreA++;
+                        scoreA += player.getWindow().getWindow()[i][j].getDice().getValue();
                 }
                 else
                     scoreA -= 3;
@@ -90,7 +90,7 @@ public class PrivateObjective extends Card implements Serializable {
             for (int j = 0; j < 5; j++){
                 if (!player.getWindow().getWindow()[i][j].getIsEmpty()) {
                     if (player.getPrivateObjectives().get(1).getColor().equals(player.getWindow().getWindow()[i][j].getDice().getColor()))
-                        scoreB++;
+                        scoreB += player.getWindow().getWindow()[i][j].getDice().getValue();
                 }
                 else
                     scoreB -= 3;

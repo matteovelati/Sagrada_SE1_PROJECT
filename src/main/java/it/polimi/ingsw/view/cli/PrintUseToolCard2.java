@@ -2,8 +2,10 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.GameModel;
 import it.polimi.ingsw.model.ToolCard;
+import it.polimi.ingsw.view.RemoteView;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,7 +21,7 @@ public class PrintUseToolCard2 implements Serializable {
      * @param toolCard the list of 3 toolcards of the match
      * @param choices the list of integer that contains the client's inputs
      */
-    public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices){
+    public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices, RemoteView view) throws RemoteException {
         switch (toolCard.getNumber()){
             case 1: case 5: case 10:         //GROZING PLIERS & LENS CUTTER & GRINDING STONE
                 try {
@@ -33,6 +35,8 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println(STOP);
                 do {
                     tmp = askInput();
+                    //if (!view.getOnline())
+                      //  return;
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -44,6 +48,8 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
                 do {
                     tmp = askInput();
+                    //if (!view.getOnline())
+                      //  return;
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -63,9 +69,9 @@ public class PrintUseToolCard2 implements Serializable {
                     //DO NOTHING
                 }
                 System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
-                if (!selectPosition(gameModel, choices, true, true))
+                if (!selectPosition(gameModel, choices, true, true, view))
                     break;
-                if(!selectPosition(gameModel, choices, false, false))
+                if(!selectPosition(gameModel, choices, false, false, view))
                     break;
                 break;
             case 6:                 //FLUX BRUSH
@@ -78,7 +84,7 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println("YOU HAVE ROLLED THE DIE IN POSITION "+ (choices.get(0)+1));
                 PrintDraft.print(gameModel.getField().getDraft());
                 System.out.println("INSERT THIS DICE IN YOUR WINDOW");
-                if(!selectPosition(gameModel, choices, true, false))
+                if(!selectPosition(gameModel, choices, true, false, view))
                     break;
                 break;
             case 11:                //FLUX REMOVER
@@ -87,6 +93,8 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println(STOP);
                 do {
                     tmp = askInput();
+                    if (!view.getOnline())
+                        return;
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -109,6 +117,8 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println("DO YOU WANT TO MOVE ANOTHER DIE?\n1) YES\n2) NO");
                 do {
                     tmp = askInput();
+                    if (!view.getOnline())
+                        return;
                     if(tmp<1 || tmp>2)
                         System.out.println(INPUT_ERR);
                 }while(tmp<1 || tmp>2);
@@ -116,9 +126,9 @@ public class PrintUseToolCard2 implements Serializable {
                 if(tmp == 1){
                     System.out.println("SELECT FROM YOUR WINDOW THE DIE TO BE MOVED");
                     PrintWindow.print(gameModel.getActualPlayer().getWindow());
-                    if(!selectPosition(gameModel, choices, false, true))
+                    if(!selectPosition(gameModel, choices, false, true, view))
                         break;
-                    if(!selectPosition(gameModel, choices, false, false))
+                    if(!selectPosition(gameModel, choices, false, false, view))
                         break;
                 }
                 break;
@@ -145,9 +155,11 @@ public class PrintUseToolCard2 implements Serializable {
      * @param gameModel the gamemodel of the match
      * @return false if the input was -1, true otherwise
      */
-    private static boolean verifyInput(ArrayList<Integer> choices, int check, GameModel gameModel){
+    private static boolean verifyInput(ArrayList<Integer> choices, int check, GameModel gameModel, RemoteView view) throws RemoteException{
         do {
             tmp = askInput();
+            if (!view.getOnline())
+                return false;
             if (tmp == -1) {
                 choices.add(0, tmp);
                 return false;
@@ -165,7 +177,7 @@ public class PrintUseToolCard2 implements Serializable {
      * @param first a boolean to know what kind of message print to the client
      * @return false if (verify == true) and client's input was -1
      */
-    private static boolean selectPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify, boolean first){
+    private static boolean selectPosition(GameModel gameModel, ArrayList<Integer> choices, boolean verify, boolean first, RemoteView view) throws RemoteException{
 
         if (verify){
             System.out.println(STOP);
@@ -175,14 +187,14 @@ public class PrintUseToolCard2 implements Serializable {
             System.out.println("SELECT THE ROW OF THE DIE TO BE MOVED");
         else
             System.out.println("SELECT THE ROW TO INSERT THE DIE");
-        if (!verifyInput(choices, 2, gameModel))
+        if (!verifyInput(choices, 2, gameModel, view))
             return false;
 
         if (first)
             System.out.println("SELECT THE COLUMN OF THE DIE TO BE MOVED");
         else
             System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
-        return verifyInput(choices, 3, gameModel);
+        return verifyInput(choices, 3, gameModel, view);
     }
 
     /**

@@ -29,15 +29,14 @@ public class Client {
 
         System.out.println("Choose your UI:\n1) CLI\n2) GUI");
         UI = askInput();
-        System.out.println("Select the kind of match you wanna play:\n1) SINGLEPLAYER\n2) MULTIPLAYER");
-        match = askInput();
         /*System.out.println("1) RMI\n2) SOCKET");
         connection = askInput();*/
 
         if (UI == 1) {
+            System.out.println("Select the kind of match you wanna play:\n1) SINGLEPLAYER\n2) MULTIPLAYER");
+            match = askInput();
             if (match == 1)
-                System.out.println("da sistemare il costruttore");
-                //new ViewCLISinglePlayer(centralNetwork);
+                new ViewCLISinglePlayer();
             else if (match == 2) {
                 new ViewCLI();
             }

@@ -102,8 +102,7 @@ public class TCFluxBrushTest {
         input.add(4);
 
         assertTrue(tc.useToolCard(gameModel, input));
-        assertTrue(tc.useToolCard(gameModel, input));
-        assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice(), dice2);
+        assertNull(gameModel.getActualPlayer().getWindow().getWindow()[input.get(1)][input.get(2)].getDice());
     }
 
     @Test

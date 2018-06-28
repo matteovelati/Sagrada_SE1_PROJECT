@@ -22,8 +22,6 @@ import java.util.Scanner;
 
 public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializable {
 
-    private String ipAddress;
-
     private States state;
     private String user;
     private transient Scanner input;
@@ -34,15 +32,11 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     private boolean online;
     private RemoteGameModel gameModel;
     private RemoteGameController network;
-
+    private String ipAddress;
     private boolean returnOnline;
-
     private boolean socketConnection;
-
     private transient Socket socket;
-
     private boolean startTimerSocket;
-
     private boolean deleteConnectionSocket;
 
     /**
@@ -256,7 +250,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 else{
                     for(int i =0; i<gameModel.getObservers().size(); i++){
                         if((gameModel.getObservers()!=null && gameModel.getObservers().get(i)!=null && gameModel.getObservers().get(i).getUser().equals(s))
-                                || (gameModel.getObserverSocket()!=null && gameModel.getObserverSocket().get(i)!=null && gameModel.getObserverSocket().get(i).equals(s)))
+                                || (gameModel.getObserverSocket()!=null && gameModel.getObserverSocket().get(i)!=null && gameModel.getPlayers().get(i).getUsername().equals(s)))
                             return false;
                     }
                     return true;
@@ -508,6 +502,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectMove1() throws IOException {
+        System.out.println("user: "+user);
+        System.out.println("actual player: "+gameModel.getActualPlayer().getUsername());
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             if(socketConnection){
                 startTimerSocket = true;
@@ -757,10 +753,31 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * prints selection menu for toolcards
      * @throws RemoteException  if the reference could not be accessed
      */
-    private void viewUseToolCard() throws RemoteException {
+    private void viewUseToolCard() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
-            PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-            network.update(this);
+            if(socketConnection)
+                socketTimeOut();
+            PrintUseToolCard.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices, this);
+            if (getOnline()) {
+                if(socketConnection){
+                    setDeleteConnectionSocket(true);
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                }
+                else
+                    network.update(this);
+            } else {
+                if(socketConnection){
+                    returnOnline = true;
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                    this.setOnline(true);
+                }
+                else {
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
+            }
         }
     }
 
@@ -770,14 +787,29 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      */
     private void viewUseToolCard2() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
-            PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-            if(socketConnection){
-                setDeleteConnectionSocket(true);
-                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-                ob.writeObject(this);
+            if(socketConnection)
+                socketTimeOut();
+            PrintUseToolCard2.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices, this);
+            if (getOnline()) {
+                if(socketConnection){
+                    setDeleteConnectionSocket(true);
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                }
+                else
+                    network.update(this);
+            } else {
+                if(socketConnection){
+                    returnOnline = true;
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                    this.setOnline(true);
+                }
+                else {
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
             }
-            else
-                network.update(this);
         }
     }
 
@@ -787,14 +819,29 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      */
     private void viewUseToolCard3() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
-            PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices);
-            if(socketConnection){
-                setDeleteConnectionSocket(true);
-                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-                ob.writeObject(this);
+            if(socketConnection)
+                socketTimeOut();
+            PrintUseToolCard3.print((GameModel) gameModel, gameModel.getActualPlayer().getToolCardSelected(), choices, this);
+            if (getOnline()) {
+                if(socketConnection){
+                    setDeleteConnectionSocket(true);
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                }
+                else
+                    network.update(this);
+            } else {
+                if(socketConnection){
+                    returnOnline = true;
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                    this.setOnline(true);
+                }
+                else {
+                    network.setPlayerOnline(user, true);
+                    this.setOnline(true);
+                }
             }
-            else
-                network.update(this);
         }
     }
 
@@ -804,6 +851,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      */
     private void viewError() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
+            if(socketConnection)
+                socketTimeOut();
             System.out.println("PLEASE DO IT AGAIN CORRECTLY!");
             if(socketConnection){
                 setDeleteConnectionSocket(true);
@@ -853,7 +902,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     public void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
-            if(!getDeleteConnectionSocket()) {
+            if(!getDeleteConnectionSocket() && getOnline()) {
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
                 this.gameModel = (RemoteGameModel) ob.readObject();
                 ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
@@ -861,6 +910,11 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 this.run();
             }
         }
+    }
+
+    @Override
+    public boolean getSinglePlayer(){
+       return false;
     }
 
 }

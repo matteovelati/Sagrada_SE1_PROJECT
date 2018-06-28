@@ -44,10 +44,8 @@ public class TCLathekin extends ToolCard {
                     flag = 1;
                     return true;
                 }
-                else {
-                    replaceDice(gameModel.getActualPlayer().getWindow(), input.get(2), input.get(3), input.get(0), input.get(1));
+                else
                     return false;
-                }
             } else
                 return false;
         }
