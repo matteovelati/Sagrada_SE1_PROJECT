@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -22,13 +23,137 @@ public class StartController {
     @FXML
     private Button startButton;
     @FXML
-    private Label usernameTaken, lobby;
+    private Label error, message, lobby;
     @FXML
     private TextField username;
+    @FXML
+    private RadioButton radioButton1, radioButton2;
 
     private ViewGUI viewGUI;
+    private int state = 0;
+    private int connectionType = 0;     //1 RMI; 2 SOCKET
 
-    public void init() {
+    void init() {
+        error.managedProperty().bind(error.visibleProperty());
+        message.managedProperty().bind(message.visibleProperty());
+        lobby.managedProperty().bind(lobby.visibleProperty());
+        username.managedProperty().bind(username.visibleProperty());
+        radioButton1.managedProperty().bind(radioButton1.visibleProperty());
+        radioButton2.managedProperty().bind(radioButton2.visibleProperty());
+        chooseConnection();
+    }
+
+    public void startButtonClicked(ActionEvent event) throws IOException {
+        if(state == 0)
+            connectionSelected();
+        else if(state == 1)
+            ipInsertion();
+        else if(state == 2)
+            matchSelected();
+        else if(state == 3)
+            usernameInserted();
+    }
+
+    public void inputEnter(ActionEvent e) throws RemoteException {
+        if(state == 1)
+            ipInsertion();
+        else if(state == 3)
+            usernameInserted();
+    }
+
+    void setViewGUI(ViewGUI viewGUI){
+        this.viewGUI = viewGUI;
+    }
+
+    private void setUser(String s){
+        viewGUI.setUser(s);
+        container.getChildren().removeAll(startButton, username, error);
+        message.setVisible(true);
+        message.setText("YOU HAVE BEEN ADDED TO THIS GAME!\nIT WILL START IN A FEW MOMENTS");
+        lobby.setVisible(true);
+    }
+
+    private void gameStarted(){
+        container.getChildren().removeAll(error, lobby, startButton, username, radioButton1, radioButton2);
+        error.setVisible(true);
+        error.setText("OPS! THE GAME IS ALREADY STARTED!\nCOME BACK LATER!");
+    }
+
+    private void checkState() throws RemoteException {
+        if(!viewGUI.checkLobby()){
+            if(!viewGUI.reconnecting())
+                gameStarted();
+        }
+    }
+
+    void changeScene(Stage mainStage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/selectwindow.fxml"));
+        Parent selectWindow = loader.load();
+
+        SelectWindowController selectWindowController = loader.getController();
+        selectWindowController.setViewGUI(viewGUI);
+        viewGUI.setSelectWindowController(selectWindowController);
+        selectWindowController.init();
+        if(!viewGUI.actualPlayer())
+            selectWindowController.waitTurn();
+        else
+            viewGUI.playTimer();
+
+        Scene startScene;
+        startScene = new Scene(selectWindow, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+        mainStage.setScene(startScene);
+        mainStage.setMaximized(true);
+        mainStage.setFullScreen(true);
+        mainStage.show();
+        selectWindow.requestFocus();
+    }
+
+    void printLobby(){
+        lobby.setText("GAMERS IN THE LOBBY:\n");
+    }
+
+    void addPrint(String s){
+        lobby.setText(lobby.getText() + s + "\n");
+    }
+
+    void printError(String s){
+        container.getChildren().removeAll(startButton, message, lobby, username, radioButton1, radioButton2);
+        error.setVisible(true);
+        error.setText(s);
+    }
+
+    private void chooseConnection(){
+        error.setVisible(false);
+        lobby.setVisible(false);
+        username.setVisible(false);
+        message.setText("CHOOSE YOUR CONNECTION:");
+        radioButton1.setText("RMI");
+        radioButton2.setText("SOCKET");
+        startButton.setText("OK");
+    }
+
+    private void setIpIndex(){
+        radioButton1.setVisible(false);
+        radioButton2.setVisible(false);
+        username.setVisible(true);
+        username.setPromptText("IP address");
+        message.setText("INSERT THE IP ADDRESS");
+    }
+
+    private void chooseMatchType(){
+        username.setVisible(false);
+        radioButton1.setVisible(true);
+        radioButton2.setVisible(true);
+        message.setText("SELECT THE KIND OF MATCH YOU WANNA PLAY");
+        radioButton1.setText("SINGLEPLAYER");
+        radioButton2.setText("MULTIPLAYER");
+    }
+
+    private void insertUsername(){
+        container.getChildren().removeAll(radioButton1, radioButton2);
+        message.setVisible(false);
+        username.setVisible(true);
+        username.setPromptText("username");
         try {
             checkState();
         } catch (RemoteException e) {
@@ -36,9 +161,43 @@ public class StartController {
         }
     }
 
-    public void startButtonClicked(ActionEvent event) throws IOException {
+    private void connectionSelected(){
+        if(radioButton1.isSelected()){
+            connectionType = 1;             //RMI
+        }
+        else if(radioButton2.isSelected()){
+            connectionType = 2;             //SOCKET
+        }
 
-        usernameTaken.setText("");
+        state = 1;
+        setIpIndex();
+    }
+
+    private void ipInsertion(){
+        if(connectionType == 1)
+            viewGUI.setRMIConnection(username.getText());
+        else if(connectionType == 2)
+            viewGUI.setSocketConnection(username.getText());
+
+        state = 2;
+        username.clear();
+        chooseMatchType();
+    }
+
+    private void matchSelected() throws RemoteException {
+        if(radioButton1.isSelected()){          //SINGLEPLAYER
+            viewGUI.createSinglePlayerMatch();
+        }
+        else if(radioButton2.isSelected()){     //MULTIPLAYER
+            viewGUI.createMultiPlayerMatch();
+        }
+
+        state = 3;
+        insertUsername();
+    }
+
+    private void usernameInserted() throws RemoteException {
+        error.setVisible(false);
         String user = username.getText().trim().toUpperCase();
 
         if(!user.isEmpty()) {
@@ -46,78 +205,32 @@ public class StartController {
                 if(viewGUI.verifyUserCrashed(user)) {
                     setUser(user);
                     viewGUI.reAddPlayer();
-                    container.getChildren().removeAll(startButton, username);
-                    usernameTaken.setText("JOINING AGAIN THE MATCH");
+                    container.getChildren().removeAll(startButton, lobby, username, radioButton1, radioButton2);
+                    message.setVisible(true);
+                    message.setText("JOINING AGAIN THE MATCH");
                 }
-                else
-                    usernameTaken.setText("INSERT A VALID NAME");
+                else {
+                    error.setVisible(true);
+                    error.setText("INSERT A VALID NAME");
+                }
             }
             else {
                 if (viewGUI.verifyUsername(user)) {
                     setUser(user);
-                    viewGUI.getNetwork().addObserver(viewGUI);
+                    if(!viewGUI.getSocketConnection())
+                        viewGUI.getNetwork().addObserver(viewGUI);
                     viewGUI.notifyNetwork();
                 } else {
-                    usernameTaken.setText("THIS USERNAME ALREADY EXIST");
+                    error.setVisible(true);
+                    error.setText("THIS USERNAME ALREADY EXIST");
                     username.clear();
                 }
             }
         }
         else {
-            usernameTaken.setText("PLEASE INSER A VALID USERNAME");
+            error.setVisible(true);
+            error.setText("PLEASE INSER A VALID USERNAME");
             username.clear();
         }
     }
-
-    public void setViewGUI(ViewGUI viewGUI){
-        this.viewGUI = viewGUI;
-    }
-
-    public void setUser(String s) throws RemoteException {
-        viewGUI.setUser(s);
-        container.getChildren().removeAll(startButton, username);
-        usernameTaken.setText("YOU HAVE BEEN ADDED TO THIS GAME!\nIT WILL START IN A FEW MOMENTS");
-    }
-
-    public void gameStarted(){
-        container.getChildren().removeAll(startButton, username);
-        usernameTaken.setText("OPS! THE GAME IS ALREADY STARTED!\nCOME BACK LATER!");
-    }
-
-    public void checkState() throws RemoteException {
-        if(!viewGUI.checkLobby()){
-            if(!viewGUI.reconnecting())
-                gameStarted();
-        }
-    }
-
-    public void changeScene(Stage mainStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/selectwindow.fxml"));
-        Parent selectWindow = loader.load();
-
-        SelectWindowController selectWindowController = loader.getController();
-        selectWindowController.setViewGUI(viewGUI);
-        viewGUI.setSelectWindowController(selectWindowController);
-        selectWindowController.loadWindowPatterns();
-        if(!viewGUI.actualPlayer())
-            selectWindowController.waitTurn();
-
-        Scene startScene;
-        startScene = new Scene(selectWindow, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
-        Stage primaryStage = mainStage;
-        primaryStage.setScene(startScene);
-        primaryStage.setMaximized(true);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-        selectWindow.requestFocus();
-    }
-
-    public void print(String s){
-        lobby.setText(s);
-    }
-
-    public void addPrint(String s){
-        lobby.setText(lobby.getText() + s + "\n");
-    }
-
 }

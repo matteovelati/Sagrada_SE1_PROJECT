@@ -25,11 +25,11 @@ public class MatchController {
     @FXML
     private Label message, tokens, errorMessage, player2label, player3label, player4label;
     @FXML
-    private HBox buttons, draftArea, windowArea, roundtrackArea;
+    private HBox buttons, draftArea, windowArea, roundtrackArea, left;
     @FXML
     private VBox middle, right;
     @FXML
-    private Button pickDice, useToolcard, endTurn, showDices;
+    private Button pickDice, useToolcard, endTurn, showDices, rejoinButton;
     @FXML
     private ImageView privateObjective;
     @FXML
@@ -64,9 +64,14 @@ public class MatchController {
         region1.managedProperty().bind(region1.visibleProperty());
         region2.managedProperty().bind(region2.visibleProperty());
         buttons.managedProperty().bind(buttons.visibleProperty());
+        roundtrackArea.managedProperty().bind(roundtrackArea.visibleProperty());
+        rejoinButton.managedProperty().bind(rejoinButton.visibleProperty());
+        left.managedProperty().bind(left.visibleProperty());
+        right.managedProperty().bind(right.visibleProperty());
 
         errorMessage.setVisible(false);
         input.setVisible(false);
+        rejoinButton.setVisible(false);
     }
 
     private void setCards(GridPane type, String folder) throws RemoteException {
@@ -185,8 +190,20 @@ public class MatchController {
     }
 
     void selectMove1View() throws RemoteException {
+        buttons.setVisible(true);
+        tokens.setVisible(true);
+        windowArea.setVisible(true);
+        region2.setVisible(true);
+        draftArea.setVisible(true);
+        region1.setVisible(true);
+        roundtrackArea.setVisible(true);
+        left.setVisible(true);
+        right.setVisible(true);
+
         firstMove = 0;
         refreshTokens();
+        refresh();
+        refreshOtherPlayerWindow();
         enableAllButtons();
         setStandardTexts();
     }
@@ -488,7 +505,7 @@ public class MatchController {
         }
     }
 
-    public void draftClick(MouseEvent e) throws RemoteException {
+    private void draftClick(MouseEvent e) throws RemoteException {
         ImageView selected = (ImageView) e.getSource();
         errorMessage.setVisible(false);
 
@@ -662,7 +679,7 @@ public class MatchController {
         }
     }
 
-    public void refreshOtherPlayerWindow() throws RemoteException {
+    void refreshOtherPlayerWindow() throws RemoteException {
         for(int i=0; i < player2windowGrid.getRowConstraints().size(); i++){
             for(int j=0; j<player2windowGrid.getColumnConstraints().size(); j++){
                 if(!viewGUI.checkOtherPlayerWindowEmptyCell(player2label.getText(), i, j)){
@@ -705,4 +722,26 @@ public class MatchController {
         }
     }
 
+    void setInactive(){
+        buttons.setVisible(false);
+        tokens.setVisible(false);
+        windowArea.setVisible(false);
+        region2.setVisible(false);
+        draftArea.setVisible(false);
+        region1.setVisible(false);
+        roundtrackArea.setVisible(false);
+        input.setVisible(false);
+        errorMessage.setVisible(false);
+        left.setVisible(false);
+        right.setVisible(false);
+
+        message.setText("YOU ARE NOW INACTIVE!\nTO JOIN AGAIN THE MATCH, PRESS THE BUTTON");
+        rejoinButton.setVisible(true);
+    }
+
+    public void rejoinButtonClicked(ActionEvent e) throws IOException {
+        viewGUI.matchRejoined();
+        rejoinButton.setVisible(false);
+        message.setText("JOINING AGAIN THE MATCH...\nWAIT YOUR TURN");
+    }
 }

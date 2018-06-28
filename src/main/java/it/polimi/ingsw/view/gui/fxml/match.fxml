@@ -17,7 +17,7 @@
 
 <SplitPane dividerPositions="0.3, 0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="gamebg" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.MatchController">
     <items>
-        <HBox alignment="CENTER">
+        <HBox fx:id="left" alignment="CENTER">
             <children>
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                     <children>
@@ -250,6 +250,14 @@
                         <Insets top="10.0" />
                     </VBox.margin>
                 </HBox>
+            <Button fx:id="rejoinButton" mnemonicParsing="false" onAction="#rejoinButtonClicked" text="JOIN AGAIN">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
             </children>
             <padding>
                 <Insets bottom="30.0" />

@@ -83,4 +83,6 @@ public interface RemoteView extends Remote {
      * @throws RemoteException if the reference could not be accessed
      */
     void printError(String string) throws RemoteException;
+
+    boolean getSinglePlayer() throws RemoteException;
 }

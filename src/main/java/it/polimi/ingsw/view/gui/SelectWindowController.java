@@ -1,10 +1,11 @@
 package it.polimi.ingsw.view.gui;
 
-import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,11 +24,20 @@ public class SelectWindowController {
     private ImageView card1front, card1back, card2front, card2back;
     @FXML
     private GridPane allWindows;
+    @FXML
+    private Button rejoin;
 
     private ViewGUI viewGUI;
 
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
+    }
+
+    void init() throws RemoteException {
+        allWindows.managedProperty().bind(allWindows.visibleProperty());
+        rejoin.managedProperty().bind(rejoin.visibleProperty());
+        rejoin.setVisible(false);
+        loadWindowPatterns();
     }
 
     void loadWindowPatterns() throws RemoteException {
@@ -38,7 +48,6 @@ public class SelectWindowController {
     }
 
     void waitTurn(){
-        allWindows.managedProperty().bind(allWindows.visibleProperty());
         allWindows.setVisible(false);
         text.setText("WAIT YOUR TURN");
     }
@@ -71,8 +80,10 @@ public class SelectWindowController {
         viewGUI.setMatchController(matchController);
         matchController.init();
         matchController.waitTurn();
-        if(viewGUI.actualPlayer())
+        if(viewGUI.actualPlayer()) {
+            viewGUI.playTimer();
             matchController.selectMove1View();
+        }
 
         Scene startScene;
         startScene = new Scene(match, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
@@ -81,5 +92,17 @@ public class SelectWindowController {
         mainStage.setFullScreen(true);
         mainStage.show();
         match.requestFocus();
+    }
+
+    void setInactive(){
+        allWindows.setVisible(false);
+        text.setText("YOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PRESS THE BUTTON");
+        rejoin.setVisible(true);
+    }
+
+    public void rejoinButtonClicked(ActionEvent e) throws IOException {
+        viewGUI.matchRejoined();
+        rejoin.setVisible(false);
+        text.setText("JOINING AGAIN THE MATCH...\nWAIT YOUR TURN");
     }
 }
