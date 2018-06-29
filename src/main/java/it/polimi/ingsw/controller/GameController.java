@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Timer;
@@ -86,8 +87,21 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                             else
                                 update(view);
                         }
-                    } catch (IOException e) {
-                        //
+                    } catch (SocketTimeoutException e) {
+                        if (!gameModel.getState().equals(LOBBY)) {
+                            int tmp = gameModel.getObserverSocket().indexOf(socket);
+                            gameModel.getPlayers().get(tmp).setOnline(false);
+                            gameModel.removeObserverSocket(socket);
+                            try {
+                                if (gameModel.getPlayers().get(tmp).getUsername().equals(gameModel.getActualPlayer().getUsername()))
+                                    endTurn(true);
+                            } catch (RemoteException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                    catch (IOException e) {
+                        //do nothing
                     }
                     catch (ClassNotFoundException e) {
                         //do nothing
@@ -635,8 +649,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.removeObserver(gameModel.getObservers().get(i));
             }
             try{
-                if(gameModel.getObserverSocket().get(i)!= null &&
-                        (gameModel.getState().equals(LOBBY) || true/*gameModel.getPlayers().get(i).getOnline()*/)) {
+                if(gameModel.getObserverSocket().get(i)!= null) {
                     ObjectOutputStream ob = new ObjectOutputStream(gameModel.getObserverSocket().get(i).getOutputStream());
                     ob.writeObject(gameModel);
                 }
@@ -670,7 +683,6 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             if(gameModel.getRoundManager().getTurn()==1 && gameModel.getRoundManager().getCounter()==1)
                 roundEnded = true;
         }while(!gameModel.getActualPlayer().getOnline());
-        System.out.println("AP: "+gameModel.getActualPlayer().getUsername());
         return roundEnded;
     }
 

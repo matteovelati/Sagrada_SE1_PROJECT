@@ -12,8 +12,8 @@ public class Server {
 
         int i =0;
 
-        /*System.setProperty("java.security.policy", "stupid.policy");
-        System.setSecurityManager(new SecurityManager());*/
+        System.setProperty("java.security.policy", "stupid.policy");
+        System.setSecurityManager(new SecurityManager());
 
         ServerSocket serverSocket = new ServerSocket(1337);
 

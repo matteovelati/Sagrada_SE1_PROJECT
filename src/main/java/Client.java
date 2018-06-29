@@ -23,8 +23,8 @@ public class Client {
 
     public static void main(String[] args) throws NamingException, IOException, NotBoundException, ClassNotFoundException {
 
-        /*System.setProperty("java.security.policy", "stupid.policy");
-        System.setSecurityManager(new SecurityManager());*/
+        System.setProperty("java.security.policy", "stupid.policy");
+        System.setSecurityManager(new SecurityManager());
 
 
         System.out.println("Choose your UI:\n1) CLI\n2) GUI");

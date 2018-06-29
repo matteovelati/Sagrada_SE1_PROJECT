@@ -502,8 +502,6 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewSelectMove1() throws IOException {
-        System.out.println("user: "+user);
-        System.out.println("actual player: "+gameModel.getActualPlayer().getUsername());
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
             if(socketConnection){
                 startTimerSocket = true;
@@ -905,7 +903,6 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             if(!getDeleteConnectionSocket()) {
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
                 this.gameModel = (RemoteGameModel) ob.readObject();
-                //System.out.println("fatta verify observer socket");
                 if(getOnline() && this.gameModel.getUpdateSocket()) {
                     this.run();
                 }
