@@ -11,6 +11,10 @@ import java.util.List;
 
 public interface RemoteGameModel extends Remote {
 
+
+    public boolean getUpdateSocket();
+
+    public void setUpdateSocket(boolean updateSocket);
     /**
      * gets the list of SOCKET observers in game
      * @return the list of SOCKET observers in game

@@ -902,12 +902,13 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     public void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
-            if(!getDeleteConnectionSocket() && getOnline()) {
+            if(!getDeleteConnectionSocket()) {
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
                 this.gameModel = (RemoteGameModel) ob.readObject();
-                ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
-                this.gameModel = (RemoteGameModel) obj.readObject();
-                this.run();
+                //System.out.println("fatta verify observer socket");
+                if(getOnline() && this.gameModel.getUpdateSocket()) {
+                    this.run();
+                }
             }
         }
     }

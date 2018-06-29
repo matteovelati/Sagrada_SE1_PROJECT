@@ -26,8 +26,11 @@ public class GameModel implements RemoteGameModel, Serializable {
     private RoundManager roundManager;
     private static GameModel instance;
 
+    private boolean updateSocket;
+
 
     private GameModel(States state, int level){
+        updateSocket = true;
         this.players = new ArrayList<>(1);
         this.state = state;
         field = Field.getInstance(level);
@@ -40,6 +43,15 @@ public class GameModel implements RemoteGameModel, Serializable {
         if (instance == null)
             instance = new GameModel(state, level);
         return instance;
+    }
+
+    @Override
+    public boolean getUpdateSocket() {
+        return updateSocket;
+    }
+    @Override
+    public void setUpdateSocket(boolean updateSocket) {
+        this.updateSocket = updateSocket;
     }
 
     public static synchronized void reset() {    //TEST METHOD

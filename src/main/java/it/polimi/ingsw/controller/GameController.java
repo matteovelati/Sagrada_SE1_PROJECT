@@ -625,6 +625,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     }
 
     private void verifyObserver() throws RemoteException {
+        gameModel.setUpdateSocket(false);
         for(int i=0; i<gameModel.getObservers().size(); i++){
             try{
                 if(gameModel.getObservers().get(i) != null)
@@ -635,7 +636,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             }
             try{
                 if(gameModel.getObserverSocket().get(i)!= null &&
-                        (gameModel.getState().equals(LOBBY) || gameModel.getPlayers().get(i).getOnline())) {
+                        (gameModel.getState().equals(LOBBY) || true/*gameModel.getPlayers().get(i).getOnline()*/)) {
                     ObjectOutputStream ob = new ObjectOutputStream(gameModel.getObserverSocket().get(i).getOutputStream());
                     ob.writeObject(gameModel);
                 }
@@ -644,6 +645,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 gameModel.removeObserverSocket(gameModel.getObserverSocket().get(i));
             }
         }
+        gameModel.setUpdateSocket(true);
     }
 
     private void scoreCalculation(){
