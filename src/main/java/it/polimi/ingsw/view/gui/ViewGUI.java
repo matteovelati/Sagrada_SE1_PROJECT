@@ -50,6 +50,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private transient StartController startController;
     private transient SelectWindowController selectWindowController;
     private transient MatchController matchController;
+    private transient SPMatchController spMatchController;
 
     @Override
     public boolean getStartTimerSocket() {
@@ -73,7 +74,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         deleteConnectionSocket = false;
         setOnline(true);
         choices = new ArrayList<>();
-        choose1 = 1;
+        choices.add(-1);
         endGame = false;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/start.fxml"));
@@ -129,14 +130,16 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 viewSelectMove2();
                 break;
             case ERROR:
-                if(actualPlayer())
-                    network.update(this);
+                viewError();
                 break;
             case ENDROUND:
                 viewEndRound();
                 break;
             case SELECTCARD:
                 viewSelectCard();
+                break;
+            case SELECTDIE:
+                viewSelectDie();
                 break;
             case USETOOLCARD:
                 viewUseToolCard();
@@ -190,130 +193,207 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     private void viewSelectMove1(){
-        Platform.runLater(()-> {
-            try{
-                if(firstCallMatch){
-                    selectWindowScene = false;
-                    if(selectWindowController == null) {
-                        if(actualPlayer()) {
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if (firstCallMatch) {
+                        selectWindowScene = false;
+                        firstCallMatch = false;
+                        if(spMatchController == null)
+                            startSinglePlayerMatch();
+                        spMatchController.selectMove1View();
+                    }
+                    else {
+                        spMatchController.refresh();
+                        spMatchController.selectMove1View();
+                        }
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (firstCallMatch) {
+                        selectWindowScene = false;
+                        if (selectWindowController == null) {
+                            if (actualPlayer()) {
+                                firstCallMatch = false;
+                                showMatch();
+                            }
+                        } else {
                             firstCallMatch = false;
-                            showMatch();
+                            selectWindowController.changeScene(mainStage);
+                        }
+                    } else {
+                        matchController.refresh();
+                        matchController.refreshOtherPlayerWindow();
+                        if (actualPlayer()) {
+                            playTimer();
+                            matchController.selectMove1View();
+                        } else {
+                            matchController.waitTurn();
                         }
                     }
-                    else {
-                        firstCallMatch = false;
-                        selectWindowController.changeScene(mainStage);
-                    }
+                } catch (IOException e) {
+                    //do nothing
                 }
-                else{
-                    matchController.refresh();
-                    matchController.refreshOtherPlayerWindow();
-                    if(actualPlayer()) {
-                        playTimer();
-                        matchController.selectMove1View();
-                    }
-                    else {
-                        matchController.waitTurn();
-                    }
-                }
-            }catch (IOException e){
-                //do nothing
-            }
-        });
+            });
+        }
     }
 
     private void viewSelectDraft(){
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    if (actualPlayer())
-                        matchController.selectDraftView();
-                    else
-                        matchController.waitTurn();
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                if(spMatchController == null)
+                    startSinglePlayerMatch();
+                spMatchController.selectDraftView(false);
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        if (actualPlayer())
+                            matchController.selectDraftView();
+                        else
+                            matchController.waitTurn();
+                    }
+                } catch (RemoteException e) {
+                    //do nothing
                 }
-            } catch (RemoteException e) {
-                //do nothing
-            }
-        });
+            });
+        }
     }
 
     private void viewPutDiceInWindow(){
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    if (actualPlayer())
-                        matchController.putDiceInWindowView();
-                    else
-                        matchController.waitTurn();
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                if(spMatchController == null)
+                    startSinglePlayerMatch();
+                spMatchController.putDiceInWindowView();
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        if (actualPlayer())
+                            matchController.putDiceInWindowView();
+                        else
+                            matchController.waitTurn();
+                    }
+                } catch (RemoteException e) {
+                    //do nothing
                 }
-            } catch (RemoteException e) {
-                //do nothing
-            }
-        });
+            });
+        }
     }
 
     private void viewSelectMove2(){
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    matchController.refreshOtherPlayerWindow();
-                    matchController.refresh();
-                    if (actualPlayer())
-                        matchController.selectMove2View();
-                    else
-                        matchController.waitTurn();
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if(spMatchController == null)
+                        startSinglePlayerMatch();
+                    spMatchController.refresh();
+                    spMatchController.selectMove2View();
+                } catch (RemoteException e) {
+                    //do nothing
                 }
-            } catch (RemoteException e) {
-                //do nothing
-            }
-        });
-    }
-
-    private void viewEndRound(){
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    matchController.endRoundView();
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        matchController.refreshOtherPlayerWindow();
+                        matchController.refresh();
+                        if (actualPlayer())
+                            matchController.selectMove2View();
+                        else
+                            matchController.waitTurn();
+                    }
+                } catch (RemoteException e) {
+                    //do nothing
                 }
-                if (actualPlayer())
-                    notifyNetwork();
-            } catch (RemoteException e) {
-                //do nothing
-            }
-        });
+            });
+        }
     }
 
     private void viewSelectCard(){
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    if (actualPlayer())
-                        matchController.selectToolcardView();
-                    else
-                        matchController.waitTurn();
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                if(spMatchController == null)
+                    startSinglePlayerMatch();
+                spMatchController.selectToolcardView();
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        if (actualPlayer())
+                            matchController.selectToolcardView();
+                        else
+                            matchController.waitTurn();
+                    }
+                } catch (RemoteException e) {
+                    //do nothing
                 }
-            } catch (RemoteException e) {
-                //do nothing
-            }
+            });
+        }
+    }
+
+    private void viewSelectDie(){
+        Platform.runLater(() -> {
+            if(spMatchController == null)
+                startSinglePlayerMatch();
+            spMatchController.selectDraftView(true);
         });
     }
 
     private void viewUseToolCard(){
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    if (actualPlayer())
-                        matchController.useToolcardView();
-                    else
-                        matchController.waitTurn();
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if(spMatchController == null)
+                        startSinglePlayerMatch();
+                    spMatchController.useToolcardView();
+                } catch (RemoteException e) {
+                    //do nothing
                 }
-            } catch (RemoteException e) {
-                //do nothing
-            }
-        });
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        if (actualPlayer())
+                            matchController.useToolcardView();
+                        else
+                            matchController.waitTurn();
+                    }
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
     }
 
     private void viewUseToolCard2(){
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if(spMatchController == null)
+                        startSinglePlayerMatch();
+                    spMatchController.useToolcard2View();
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
         Platform.runLater(() -> {
             try {
                 if(matchController != null) {
@@ -330,6 +410,17 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     private void viewUseToolCard3(){
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if(spMatchController == null)
+                        startSinglePlayerMatch();
+                    spMatchController.useToolcard3View();
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
         Platform.runLater(() -> {
             try {
                 if(matchController != null) {
@@ -345,7 +436,46 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    private void viewEndRound(){
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if(spMatchController == null)
+                        startSinglePlayerMatch();
+                    spMatchController.endRoundView();
+                    notifyNetwork();
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        matchController.endRoundView();
+                    }
+                    if (actualPlayer())
+                        notifyNetwork();
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
+    }
+
     private void viewEndMatch(){
+        if(singlePlayer){
+            Platform.runLater(() -> {
+                try {
+                    if(spMatchController == null)
+                        startSinglePlayerMatch();
+                    spMatchController.endMatchView();
+                } catch (RemoteException e) {
+                    //do nothing
+                }
+            });
+        }
         Platform.runLater(() -> {
             try {
                 if(matchController != null) {
@@ -353,10 +483,19 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     matchController.endMatchView();
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
+                //do nothing
             }
         });
     }
+
+    private void viewError() throws RemoteException {
+        if(singlePlayer && spMatchController == null){
+            Platform.runLater(() -> startSinglePlayerMatch());
+        }
+        if(actualPlayer())
+            notifyNetwork();
+    }
+
     /**
      * sets if the client is online or not
      */
@@ -440,7 +579,15 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      */
     @Override
     public void printError(String error) throws RemoteException {
-        Platform.runLater(() -> matchController.error(error));
+        if(singlePlayer) {
+            Platform.runLater(() -> {
+                if(spMatchController == null)
+                    startSinglePlayerMatch();
+                spMatchController.error(error);
+            });
+        }
+        else
+            Platform.runLater(() -> matchController.error(error));
     }
 
 
@@ -630,7 +777,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             //
         }
         else {
-            network.update(this);
+            if(singlePlayer)
+                network.updateSP(this);
+            else
+                network.update(this);
         }
     }
 
@@ -692,14 +842,15 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
-    void createSinglePlayerMatch(){
+    void createSinglePlayerMatch(int level) throws RemoteException {
         singlePlayer=true;
 
         if(socketConnection) {
             //
         }
         else{
-
+            network.createGameModel(level);
+            this.gameModel = network.getGameModel();
         }
     }
 
@@ -782,5 +933,30 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 //do nothing
             }
         });
+    }
+
+    private void startSinglePlayerMatch(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/spmatch.fxml"));
+            Parent match = loader.load();
+
+            spMatchController = loader.getController();
+            spMatchController.setViewGUI(this);
+            spMatchController.init();
+
+            Scene startScene;
+            startScene = new Scene(match, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+            mainStage.setScene(startScene);
+            mainStage.setMaximized(true);
+            mainStage.setFullScreen(true);
+            mainStage.show();
+            match.requestFocus();
+        } catch (IOException e) {
+            //do nothing
+        }
+    }
+
+    RemoteGameModel getGameModel(){
+        return this.gameModel;
     }
 }

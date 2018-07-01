@@ -49,7 +49,11 @@ public class SelectWindowController {
 
     void waitTurn(){
         allWindows.setVisible(false);
-        text.setText("WAIT YOUR TURN");
+        if(viewGUI.getSinglePlayer()){
+            text.setText("STARTING THE GAME");
+        }else{
+            text.setText("WAIT YOUR TURN");
+        }
     }
 
     void showWindowPatterns(){

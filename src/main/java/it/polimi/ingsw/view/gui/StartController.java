@@ -27,7 +27,7 @@ public class StartController {
     @FXML
     private TextField username;
     @FXML
-    private RadioButton radioButton1, radioButton2;
+    private RadioButton radioButton1, radioButton2, radioButton3, radioButton4, radioButton5;
 
     private ViewGUI viewGUI;
     private int state = 0;
@@ -40,6 +40,12 @@ public class StartController {
         username.managedProperty().bind(username.visibleProperty());
         radioButton1.managedProperty().bind(radioButton1.visibleProperty());
         radioButton2.managedProperty().bind(radioButton2.visibleProperty());
+        radioButton3.managedProperty().bind(radioButton3.visibleProperty());
+        radioButton4.managedProperty().bind(radioButton4.visibleProperty());
+        radioButton5.managedProperty().bind(radioButton5.visibleProperty());
+        radioButton3.setVisible(false);
+        radioButton4.setVisible(false);
+        radioButton5.setVisible(false);
         chooseConnection();
     }
 
@@ -51,13 +57,15 @@ public class StartController {
         else if(state == 2)
             matchSelected();
         else if(state == 3)
+            singlePlayerSetup();
+        else if(state == 4)
             usernameInserted();
     }
 
     public void inputEnter(ActionEvent e) throws RemoteException {
         if(state == 1)
             ipInsertion();
-        else if(state == 3)
+        else if(state == 4)
             usernameInserted();
     }
 
@@ -70,7 +78,8 @@ public class StartController {
         container.getChildren().removeAll(startButton, username, error);
         message.setVisible(true);
         message.setText("YOU HAVE BEEN ADDED TO THIS GAME!\nIT WILL START IN A FEW MOMENTS");
-        lobby.setVisible(true);
+        if(!viewGUI.getSinglePlayer())
+            lobby.setVisible(true);
     }
 
     private void gameStarted(){
@@ -94,10 +103,15 @@ public class StartController {
         selectWindowController.setViewGUI(viewGUI);
         viewGUI.setSelectWindowController(selectWindowController);
         selectWindowController.init();
-        if(!viewGUI.actualPlayer())
-            selectWindowController.waitTurn();
-        else
-            viewGUI.playTimer();
+        viewGUI.setChoose1(1);
+        if(viewGUI.getSinglePlayer())
+            viewGUI.getNetwork().startTimerSP(viewGUI);
+        else {
+            if (viewGUI.actualPlayer())
+                viewGUI.playTimer();
+            else
+                selectWindowController.waitTurn();
+        }
 
         Scene startScene;
         startScene = new Scene(selectWindow, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
@@ -149,8 +163,17 @@ public class StartController {
         radioButton2.setText("MULTIPLAYER");
     }
 
+    private void chooseDifficulty(){
+        radioButton3.setVisible(true);
+        radioButton4.setVisible(true);
+        radioButton5.setVisible(true);
+        radioButton1.setText("BEGINNER");
+        radioButton2.setText("EASY");
+        message.setText("CHOOSE A LEVEL OF DIFFICULTY");
+    }
+
     private void insertUsername(){
-        container.getChildren().removeAll(radioButton1, radioButton2);
+        container.getChildren().removeAll(radioButton1, radioButton2, radioButton3, radioButton4, radioButton5);
         message.setVisible(false);
         username.setVisible(true);
         username.setPromptText("username");
@@ -186,13 +209,32 @@ public class StartController {
 
     private void matchSelected() throws RemoteException {
         if(radioButton1.isSelected()){          //SINGLEPLAYER
-            viewGUI.createSinglePlayerMatch();
+            state = 3;
+            chooseDifficulty();
         }
         else if(radioButton2.isSelected()){     //MULTIPLAYER
             viewGUI.createMultiPlayerMatch();
+            state = 4;
+            insertUsername();
         }
+    }
 
-        state = 3;
+    private void singlePlayerSetup() throws RemoteException {
+        int level = 0;
+
+        if(radioButton1.isSelected())
+            level = 1;
+        else if(radioButton2.isSelected())
+            level = 2;
+        else if(radioButton3.isSelected())
+            level = 3;
+        else if(radioButton4.isSelected())
+            level = 4;
+        else if(radioButton5.isSelected())
+            level = 5;
+
+        viewGUI.createSinglePlayerMatch(level);
+        state = 4;
         insertUsername();
     }
 
@@ -208,6 +250,10 @@ public class StartController {
                     container.getChildren().removeAll(startButton, lobby, username, radioButton1, radioButton2);
                     message.setVisible(true);
                     message.setText("JOINING AGAIN THE MATCH");
+                    if(viewGUI.getSinglePlayer()) {
+                        viewGUI.getNetwork().startTimerSP(viewGUI);
+                        viewGUI.notifyNetwork();
+                    }
                 }
                 else {
                     error.setVisible(true);

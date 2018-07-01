@@ -35,11 +35,11 @@ public class MatchController {
     @FXML
     private Region region1, region2, region3;
     @FXML
-    TextField input;
+    private TextField input;
 
     private ViewGUI viewGUI;
     private int firstMove = 0;
-    private boolean enableRountrack = false;
+    private boolean enableRoundtrack = false;
 
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
@@ -253,7 +253,7 @@ public class MatchController {
                 message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
                 break;
             case 12:                    //TAP WHEEL
-                enableRountrack = true;
+                enableRoundtrack = true;
                 showRoundtrackDices();
                 message.setText("SELECT A DICE FROM THE ROUNDTRACK");
                 break;
@@ -410,63 +410,66 @@ public class MatchController {
     }
 
     public void pickDiceButton(ActionEvent e) throws IOException {
-        if(pickDice.getText().equals("PICK A DICE")) {
-            viewGUI.setChoose1(1);
-            if (viewGUI.getGameState().equals(States.SELECTMOVE1))
-                firstMove = 1;
-            pickDice.setDisable(true);
-            useToolcard.setDisable(true);
-            viewGUI.notifyNetwork();
-        }
-        else if(pickDice.getText().equals("INCREASE")){
-            viewGUI.getChoices().add(1);
-            pickDice.setText("PICK A DICE");
-            pickDice.setDisable(true);
-            useToolcard.setText("USE A TOOLCARD");
-            useToolcard.setDisable(true);
-            viewGUI.notifyNetwork();
-        }
-        else if(pickDice.getText().equals("YES")){
-            errorMessage.setVisible(false);
-            endTurn.setDisable(false);
-            viewGUI.getChoices().add(1);
-            clientWindow.setDisable(false);
-            message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
-            pickDice.setText("PICK A DICE");
-            pickDice.setDisable(true);
-            useToolcard.setText("USE A TOOLCARD");
-            useToolcard.setDisable(true);
+        switch (pickDice.getText()) {
+            case "PICK A DICE":
+                viewGUI.setChoose1(1);
+                if (viewGUI.getGameState().equals(States.SELECTMOVE1))
+                    firstMove = 1;
+                pickDice.setDisable(true);
+                useToolcard.setDisable(true);
+                viewGUI.notifyNetwork();
+                break;
+            case "INCREASE":
+                viewGUI.getChoices().add(1);
+                pickDice.setText("PICK A DICE");
+                pickDice.setDisable(true);
+                useToolcard.setText("USE A TOOLCARD");
+                useToolcard.setDisable(true);
+                viewGUI.notifyNetwork();
+                break;
+            case "YES":
+                errorMessage.setVisible(false);
+                endTurn.setDisable(false);
+                viewGUI.getChoices().add(1);
+                clientWindow.setDisable(false);
+                message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
+                pickDice.setText("PICK A DICE");
+                pickDice.setDisable(true);
+                useToolcard.setText("USE A TOOLCARD");
+                useToolcard.setDisable(true);
+                break;
         }
     }
 
     public void useToolcardButton(ActionEvent e) throws IOException {
-        if(useToolcard.getText().equals("USE A TOOLCARD")) {
-            if (viewGUI.getGameState().equals(States.SELECTMOVE1)) {
-                viewGUI.setChoose1(2);
-                firstMove = 2;
-            }
-            else {
-                viewGUI.setChoose1(1);
-            }
-            pickDice.setDisable(true);
-            useToolcard.setDisable(true);
-            viewGUI.notifyNetwork();
-        }
-        else if(useToolcard.getText().equals("DECREASE")){
-            viewGUI.getChoices().add(-2);
-            useToolcard.setText("USE A TOOLCARD");
-            useToolcard.setDisable(true);
-            pickDice.setText("PICK A DICE");
-            pickDice.setDisable(true);
-            viewGUI.notifyNetwork();
-        }
-        else if(useToolcard.getText().equals("NO")){
-            errorMessage.setVisible(false);
-            endTurn.setDisable(false);
-            viewGUI.getChoices().add(2);
-            useToolcard.setText("USE A TOOLCARD");
-            pickDice.setText("PICK A DICE");
-            viewGUI.notifyNetwork();
+        switch (useToolcard.getText()) {
+            case "USE A TOOLCARD":
+                if (viewGUI.getGameState().equals(States.SELECTMOVE1)) {
+                    viewGUI.setChoose1(2);
+                    firstMove = 2;
+                } else {
+                    viewGUI.setChoose1(1);
+                }
+                pickDice.setDisable(true);
+                useToolcard.setDisable(true);
+                viewGUI.notifyNetwork();
+                break;
+            case "DECREASE":
+                viewGUI.getChoices().add(-2);
+                useToolcard.setText("USE A TOOLCARD");
+                useToolcard.setDisable(true);
+                pickDice.setText("PICK A DICE");
+                pickDice.setDisable(true);
+                viewGUI.notifyNetwork();
+                break;
+            case "NO":
+                errorMessage.setVisible(false);
+                endTurn.setDisable(false);
+                viewGUI.getChoices().add(2);
+                useToolcard.setText("USE A TOOLCARD");
+                pickDice.setText("PICK A DICE");
+                viewGUI.notifyNetwork();
+                break;
         }
     }
 
@@ -482,7 +485,7 @@ public class MatchController {
             input.setVisible(false);
             pickDice.setText("PICK A DICE");
             useToolcard.setText("USE A TOOLCARD");
-            enableRountrack = false;
+            enableRoundtrack = false;
             if(viewGUI.getGameState().equals(States.USETOOLCARD)||viewGUI.getGameState().equals(States.USETOOLCARD2)||viewGUI.getGameState().equals(States.USETOOLCARD3)){
                 viewGUI.getChoices().add(0, -1);
                 buttons.setDisable(false);
@@ -495,13 +498,13 @@ public class MatchController {
         }
     }
 
-    public void roundtrackButtonClick(ActionEvent e) throws RemoteException {
+    public void roundtrackButtonClick(ActionEvent e){
         errorMessage.setVisible(false);
         if(showDices.getText().equals("SHOW DICES")) {
             showRoundtrackDices();
         }
         else if(showDices.getText().equals("HIDE DICES")){
-            hideRountrackDices();
+            hideRoundtrackDices();
         }
     }
 
@@ -529,7 +532,7 @@ public class MatchController {
                 }
                 else if(viewGUI.getSelectedToolcardId() == 5){
                     message.setText("SELECT A DICE FROM THE ROUNDTRACK");
-                    enableRountrack = true;
+                    enableRoundtrack = true;
                     showRoundtrackDices();
                     break;
                 }
@@ -587,8 +590,8 @@ public class MatchController {
         ImageView selected = (ImageView) e.getSource();
         int index = findElementIndex(GridPane.getRowIndex(selected), GridPane.getColumnIndex(selected));
         viewGUI.getChoices().add(index);
-        enableRountrack = false;
-        hideRountrackDices();
+        enableRoundtrack = false;
+        hideRoundtrackDices();
         if(viewGUI.getSelectedToolcardId() == 12) {
             message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
             clientWindow.setDisable(false);
@@ -627,7 +630,7 @@ public class MatchController {
         setWindowGrid();
     }
 
-    private void showRoundtrackDices() throws RemoteException {
+    private void showRoundtrackDices(){
         showDices.setText("HIDE DICES");
         for (RowConstraints row : roundtrack.getRowConstraints())
             row.setPrefHeight(57);
@@ -639,12 +642,12 @@ public class MatchController {
         region1.setVisible(false);
         region2.setVisible(false);
         buttons.setVisible(false);
-        if(enableRountrack)
+        if(enableRoundtrack)
             roundtrack.setDisable(false);
         middle.setAlignment(Pos.TOP_CENTER);
     }
 
-    private void hideRountrackDices(){
+    private void hideRoundtrackDices(){
         showDices.setText("SHOW DICES");
         for (RowConstraints row : roundtrack.getRowConstraints())
             row.setPrefHeight(5);

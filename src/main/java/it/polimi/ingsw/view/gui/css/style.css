@@ -13,13 +13,9 @@
     -fx-background-size: 100% 100%
 }
 
-.bgexample{
-    -fx-background-image: url("../images/windows/1.png");
-    -fx-background-size: 100% 100%;
-}
-
 .messagelabel{
-    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-background-radius: 10px;
 }
 
 .lobbylabel{
@@ -34,5 +30,20 @@
 
 .radiobutton2{
     -fx-background-color: rgba(0, 0, 255, 0.7);
+    -fx-background-radius: 10px;
+}
+
+.radiobutton3{
+    -fx-background-color: rgba(0, 255, 0, 0.7);
+    -fx-background-radius: 10px;
+}
+
+.radiobutton4{
+    -fx-background-color: rgba(255, 255, 0, 0.7);
+    -fx-background-radius: 10px;
+}
+
+.radiobutton5{
+    -fx-background-color: rgba(255, 0, 255, 0.7);
     -fx-background-radius: 10px;
 }

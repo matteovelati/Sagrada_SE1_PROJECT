@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -18,7 +17,7 @@
 
 <SplitPane dividerPositions="0.2, 0.85" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="gamebg" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.SPMatchController">
     <items>
-        <HBox alignment="CENTER">
+        <HBox fx:id="left" alignment="CENTER">
             <children>
                 <VBox alignment="CENTER">
                     <children>
@@ -34,37 +33,10 @@
                         <GridPane fx:id="toolcards" hgap="10.0" vgap="20.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="162.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="162.0" />
                             </columnConstraints>
                             <rowConstraints>
                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
                             </rowConstraints>
-                            <children>
-                                <ImageView fx:id="toolcardOne" fitHeight="226.0" fitWidth="162.0" onMouseClicked="#toolcardClick" pickOnBounds="true" GridPane.rowIndex="0">
-                                    <image>
-                                        <Image url="@../images/toolcards/1.png" />
-                                    </image></ImageView>
-                                <ImageView fx:id="toolcardTwo" fitHeight="226.0" fitWidth="162.0" onMouseClicked="#toolcardClick" pickOnBounds="true" GridPane.rowIndex="1">
-                                    <image>
-                                        <Image url="@../images/toolcards/2.png" />
-                                    </image></ImageView>
-                                <ImageView fx:id="toolcardThree" fitHeight="226.0" fitWidth="162.0" onMouseClicked="#toolcardClick" pickOnBounds="true" GridPane.rowIndex="2">
-                                    <image>
-                                        <Image url="@../images/toolcards/4.png" />
-                                    </image></ImageView>
-                                <ImageView fx:id="toolcardThree1" fitHeight="226.0" fitWidth="162.0" layoutX="10.0" layoutY="502.0" onMouseClicked="#toolcardClick" pickOnBounds="true" GridPane.columnIndex="1">
-                                    <image>
-                                        <Image url="@../images/toolcards/11.png" />
-                                    </image>
-                                </ImageView>
-                                <ImageView fx:id="toolcardThree11" fitHeight="226.0" fitWidth="162.0" layoutX="10.0" layoutY="10.0" onMouseClicked="#toolcardClick" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                    <image>
-                                        <Image url="@../images/toolcards/11.png" />
-                                    </image>
-                                </ImageView>
-                            </children>
                         </GridPane>
                         <Region VBox.vgrow="ALWAYS" />
                     </children>
@@ -82,17 +54,20 @@
         </HBox>
         <VBox fx:id="middle" alignment="CENTER" maxHeight="-Infinity" prefHeight="800.0" prefWidth="388.0">
             <children>
-                <Label fx:id="message" alignment="CENTER" minHeight="-Infinity" prefWidth="678.0" styleClass="messagelabel" stylesheets="@../css/style.css" textAlignment="CENTER" textFill="WHITE">
+                <Label fx:id="message" alignment="CENTER" styleClass="messagelabel" stylesheets="@../css/style.css" textAlignment="CENTER" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="22.0" />
                     </font>
+               <padding>
+                  <Insets left="6.0" right="6.0" />
+               </padding>
                 </Label>
-                <Label fx:id="errorMessage" alignment="CENTER" layoutX="10.0" layoutY="11.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="678.0" styleClass="messagelabel" stylesheets="@../css/style.css" textAlignment="CENTER" textFill="WHITE">
+                <Label fx:id="errorMessage" alignment="CENTER" layoutX="10.0" layoutY="11.0" styleClass="messagelabel" stylesheets="@../css/style.css" textAlignment="CENTER" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="22.0" />
                     </font>
                     <padding>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="6.0" right="6.0" />
                     </padding>
                 </Label>
                 <TextField fx:id="input" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#inputEnter" prefHeight="25.0" prefWidth="23.0">
@@ -137,6 +112,18 @@
                             <rowConstraints>
                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
                             </rowConstraints>
+                     <columnConstraints>
+                        <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                        <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                        <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                        <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                     </columnConstraints>
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" onMouseClicked="#draftClick" pickOnBounds="true" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" onMouseClicked="#draftClick" pickOnBounds="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" onMouseClicked="#draftClick" pickOnBounds="true" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" onMouseClicked="#draftClick" pickOnBounds="true" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                     </children>
                         </GridPane>
                     </children>
                 </HBox>
@@ -147,14 +134,11 @@
                     </VBox.margin>
                     <children>
                         <ImageView fx:id="privateObjective1" fitHeight="241.0" fitWidth="173.0" layoutX="428.0" layoutY="22.0" pickOnBounds="true">
-                            <image>
-                                <Image url="@../images/private_obj/G.png" />
-                            </image>
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>
                         </ImageView>
-                        <AnchorPane fx:id="clientWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="300.0" styleClass="bgexample" stylesheets="@../css/style.css">
+                        <AnchorPane fx:id="clientWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="300.0">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>
@@ -198,39 +182,18 @@
                                 </GridPane>
                             </children>
                         </AnchorPane>
-                        <ImageView fx:id="privateObjective" fitHeight="241.0" fitWidth="173.0" pickOnBounds="true">
+                        <ImageView fx:id="privateObjective2" fitHeight="241.0" fitWidth="173.0" pickOnBounds="true">
                             <HBox.margin>
                                 <Insets left="10.0" />
                             </HBox.margin>
-                            <image>
-                                <Image url="@../images/private_obj/P.png" />
-                            </image>
                         </ImageView>
                     </children>
                 </HBox>
-                <HBox fx:id="labels" alignment="CENTER">
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                    <children>
-                        <Label fx:id="tokens" text="TOKENS: n" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                            <HBox.margin>
-                                <Insets right="10.0" />
-                            </HBox.margin>
-                        </Label>
-                        <Label fx:id="targetScore" text="TARGET SCORE: n" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="14.0" />
-                            </font>
-                            <HBox.margin>
-                                <Insets left="10.0" />
-                            </HBox.margin>
-                        </Label>
-                    </children>
-                </HBox>
+                  <Label fx:id="targetScore" text="TARGET SCORE: n" textFill="WHITE">
+                      <font>
+                          <Font name="System Bold" size="14.0" />
+                      </font>
+                  </Label>
                 <HBox fx:id="buttons" alignment="CENTER">
                     <children>
                         <Button fx:id="pickDice" mnemonicParsing="false" onAction="#pickDiceButton" text="PICK A DICE">
@@ -262,6 +225,14 @@
                         <Insets top="10.0" />
                     </VBox.margin>
                 </HBox>
+            <Button fx:id="rejoinButton" mnemonicParsing="false" text="PLAY AGAIN">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
             </children>
             <padding>
                 <Insets bottom="30.0" />
@@ -288,18 +259,6 @@
                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="226.0" vgrow="SOMETIMES" />
                             </rowConstraints>
-                            <children>
-                                <ImageView fx:id="publicObjOne" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="0">
-                                    <image>
-                                        <Image url="@../images/public_obj/2.png" />
-                                    </image>
-                                </ImageView>
-                                <ImageView fx:id="publicObjTwo" fitHeight="226.0" fitWidth="162.0" pickOnBounds="true" GridPane.rowIndex="1">
-                                    <image>
-                                        <Image url="@../images/public_obj/3.png" />
-                                    </image>
-                                </ImageView>
-                            </children>
                         </GridPane>
                         <Region VBox.vgrow="ALWAYS" />
                     </children>
@@ -320,4 +279,3 @@
         </HBox>
     </items>
 </SplitPane>
-
