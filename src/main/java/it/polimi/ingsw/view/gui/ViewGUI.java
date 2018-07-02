@@ -24,7 +24,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class ViewGUI extends Application implements RemoteView, Serializable {
-    private Stage mainStage;
+    private transient Stage mainStage;
     private boolean firstCallWindow = true, firstCallMatch = true;
     private boolean selectWindowScene = false;
 
@@ -44,6 +44,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private boolean startTimerSocket;
     private boolean deleteConnectionSocket;
     private boolean socketConnection;
+    private boolean blockSocketConnection;
     private transient Socket socket;
 
 
@@ -59,12 +60,24 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
 
     @Override
     public boolean getReturnOnline(){
-        return online;
+        return returnOnline;
+    }
+
+    public synchronized boolean getBlockSocketConnection() {
+        return blockSocketConnection;
+    }
+
+    public synchronized void setBlockSocketConnection(boolean blockSocketConnection) {
+        this.blockSocketConnection = blockSocketConnection;
     }
 
     @Override
-    public boolean getDeleteConnectionSocket() {
+    public synchronized boolean getDeleteConnectionSocket() {
         return deleteConnectionSocket;
+    }
+
+    public synchronized void setDeleteConnectionSocket(boolean x){
+        this.deleteConnectionSocket = x;
     }
 
     @Override
@@ -72,6 +85,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         returnOnline = false;
         startTimerSocket = false;
         deleteConnectionSocket = false;
+        blockSocketConnection = false;
         setOnline(true);
         choices = new ArrayList<>();
         choices.add(-1);
@@ -104,10 +118,30 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     @Override
     public void update(RemoteGameModel gameModel) throws RemoteException {
         this.gameModel = gameModel;
-        this.run();
+        try {
+            this.run();
+        } catch (IOException e) {
+            //
+        }
     }
 
-    private void run() throws RemoteException{
+    public void updateSocket() throws IOException, ClassNotFoundException {
+        while(!endGame) {
+            if(!getDeleteConnectionSocket() && !getBlockSocketConnection()) {
+                ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                this.gameModel = (RemoteGameModel) ob.readObject();
+                if(getOnline() && this.gameModel.getUpdateSocket()) {
+                    if(!gameModel.getState().equals(States.LOBBY))
+                        setBlockSocketConnection(true);
+                        //setDeleteConnectionSocket(true);*/
+                    this.run();
+                }
+            }
+        }
+    }
+
+    private void run() throws IOException {
+        returnOnline = false;
         state = gameModel.getState();
 
         switch (state){
@@ -185,6 +219,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         selectWindowController.loadWindowPatterns();
                         selectWindowController.showWindowPatterns();
                     }
+                    else
+                        selectWindowController.waitTurn();
                 }
             }catch (IOException e){
                 //do nothing
@@ -255,8 +291,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> {
                 try {
                     if (matchController != null) {
-                        if (actualPlayer())
+                        if (actualPlayer()) {
+                            if(socketConnection)
+                                socketTimeOut();
                             matchController.selectDraftView();
+                        }
                         else
                             matchController.waitTurn();
                     }
@@ -279,8 +318,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> {
                 try {
                     if (matchController != null) {
-                        if (actualPlayer())
+                        if (actualPlayer()) {
+                            if(socketConnection)
+                                socketTimeOut();
                             matchController.putDiceInWindowView();
+                        }
                         else
                             matchController.waitTurn();
                     }
@@ -310,8 +352,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     if (matchController != null) {
                         matchController.refreshOtherPlayerWindow();
                         matchController.refresh();
-                        if (actualPlayer())
+                        if (actualPlayer()) {
+                            if(socketConnection)
+                                socketTimeOut();
                             matchController.selectMove2View();
+                        }
                         else
                             matchController.waitTurn();
                     }
@@ -334,8 +379,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> {
                 try {
                     if (matchController != null) {
-                        if (actualPlayer())
+                        if (actualPlayer()) {
+                            if(socketConnection)
+                                socketTimeOut();
                             matchController.selectToolcardView();
+                        }
                         else
                             matchController.waitTurn();
                     }
@@ -361,7 +409,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     if(spMatchController == null)
                         startSinglePlayerMatch();
                     spMatchController.useToolcardView();
-                } catch (RemoteException e) {
+                } catch (IOException e) {
                     //do nothing
                 }
             });
@@ -370,12 +418,15 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> {
                 try {
                     if (matchController != null) {
-                        if (actualPlayer())
+                        if (actualPlayer()) {
+                            if(socketConnection)
+                                socketTimeOut();
                             matchController.useToolcardView();
+                        }
                         else
                             matchController.waitTurn();
                     }
-                } catch (RemoteException e) {
+                } catch (IOException e) {
                     //do nothing
                 }
             });
@@ -398,8 +449,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             try {
                 if(matchController != null) {
                     matchController.refreshOtherPlayerWindow();
-                    if (actualPlayer())
+                    if (actualPlayer()) {
+                        if(socketConnection)
+                            socketTimeOut();
                         matchController.useToolcard2View();
+                    }
                     else
                         matchController.waitTurn();
                 }
@@ -425,8 +479,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             try {
                 if(matchController != null) {
                     matchController.refreshOtherPlayerWindow();
-                    if (actualPlayer())
+                    if (actualPlayer()) {
+                        if(socketConnection)
+                            socketTimeOut();
                         matchController.useToolcard3View();
+                    }
                     else
                         matchController.waitTurn();
                 }
@@ -444,7 +501,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         startSinglePlayerMatch();
                     spMatchController.endRoundView();
                     notifyNetwork();
-                } catch (RemoteException e) {
+                } catch (IOException e) {
                     //do nothing
                 }
             });
@@ -455,9 +512,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     if (matchController != null) {
                         matchController.endRoundView();
                     }
-                    if (actualPlayer())
+                    setBlockSocketConnection(false);
+                    if (actualPlayer()) {
                         notifyNetwork();
-                } catch (RemoteException e) {
+                    }
+                } catch (IOException e) {
                     //do nothing
                 }
             });
@@ -488,12 +547,15 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
-    private void viewError() throws RemoteException {
+    private void viewError() throws IOException {
         if(singlePlayer && spMatchController == null){
             Platform.runLater(() -> startSinglePlayerMatch());
         }
-        if(actualPlayer())
+        if(actualPlayer()) {
+            if(socketConnection)
+                socketTimeOut();
             notifyNetwork();
+        }
     }
 
     /**
@@ -762,9 +824,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return false;
     }
 
-    void reAddPlayer() throws RemoteException {
+    void reAddPlayer() throws IOException {
         if(socketConnection){
-            //
+            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+            ob.writeObject(user);
         }
         else {
             network.reAddObserver(this);
@@ -772,9 +835,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
-    void notifyNetwork() throws RemoteException {
+    void notifyNetwork() throws IOException {
         if(socketConnection){
-            //
+            if(!gameModel.getState().equals(States.LOBBY) && !gameModel.getState().equals(States.ENDROUND))
+                setDeleteConnectionSocket(true);
+            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+            ob.writeObject(this);
         }
         else {
             if(singlePlayer)
@@ -849,8 +915,13 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             //
         }
         else{
-            network.createGameModel(level);
-            this.gameModel = network.getGameModel();
+            if(network.getSinglePlayerStarted()){
+                gameModel = network.getGameModel();
+            }
+            else {
+                network.createGameModel(level);
+                this.gameModel = network.getGameModel();
+            }
         }
     }
 
@@ -858,7 +929,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         singlePlayer=false;
 
         if(socketConnection) {
-            //
+            if(network.getMultiPlayerStarted()){
+                gameModel = network.getGameModel();
+            }
+            else if(!network.getSinglePlayerStarted()){
+                //
+            }
         }
         else{
             if(network.getMultiPlayerStarted()){
@@ -890,6 +966,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
             ob.writeObject(this);
             this.setOnline(true);
+            setBlockSocketConnection(false);
         }
         else {
             network.setPlayerOnline(user, true);
@@ -897,9 +974,14 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
-    void playTimer() throws RemoteException {
+    void playTimer() throws IOException {
         if(socketConnection){
-            //
+            startTimerSocket = true;
+            //setDeleteConnectionSocket(false);
+            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+            ob.writeObject(this);
+            //setDeleteConnectionSocket(true);
+            socketTimeOut();
         }
         else{
             network.startTimer(this, null);
@@ -959,4 +1041,28 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     RemoteGameModel getGameModel(){
         return this.gameModel;
     }
+
+    public void socketTimeOut(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                    gameModel = (RemoteGameModel) ob.readObject();
+                    setDeleteConnectionSocket(false);
+                    for(Player x : gameModel.getPlayers()){
+                        if(x.getUsername().equals(user) && !x.getOnline()) {
+                            setOnline(false);
+                        }
+                    }
+                    setBlockSocketConnection(false);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }catch (ClassNotFoundException e1){
+                    //
+                }
+            }
+        }).start();
+    }
+
 }

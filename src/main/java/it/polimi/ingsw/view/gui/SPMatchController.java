@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class SPMatchController {
@@ -102,7 +103,7 @@ public class SPMatchController {
         card.setOnMouseClicked(e -> {
             try {
                 toolcardClick(e);
-            } catch (RemoteException e1) {
+            } catch (IOException e1) {
                 //do nothing
             }
         });
@@ -216,7 +217,7 @@ public class SPMatchController {
         message.setText("SELECT A TOOLCARD");
     }
 
-    void useToolcardView() throws RemoteException {
+    void useToolcardView() throws IOException {
         viewGUI.getChoices().clear();
         refreshDraft();
 
@@ -345,7 +346,7 @@ public class SPMatchController {
             message.setText(message.getText() + "\nYOU LOST...    :'(");
     }
 
-    public void pickDiceButton(ActionEvent e) throws RemoteException {
+    public void pickDiceButton(ActionEvent e) throws IOException {
         switch (pickDice.getText()) {
             case "PICK A DICE":
                 viewGUI.setChoose1(1);
@@ -375,7 +376,7 @@ public class SPMatchController {
         }
     }
 
-    public void useToolcardButton(ActionEvent e) throws RemoteException {
+    public void useToolcardButton(ActionEvent e) throws IOException {
         switch (useToolcard.getText()) {
             case "USE A TOOLCARD":
                 if (viewGUI.getGameState().equals(States.SELECTMOVE1)) {
@@ -405,7 +406,7 @@ public class SPMatchController {
         }
     }
 
-    public void endTurnButton(ActionEvent e) throws RemoteException {
+    public void endTurnButton(ActionEvent e) throws IOException {
         if(endTurn.getText().equals("END TURN")) {
             firstMove = 0;
             viewGUI.setChoose1(0);
@@ -440,7 +441,7 @@ public class SPMatchController {
         }
     }
 
-    public void draftClick(MouseEvent e) throws RemoteException {
+    public void draftClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         errorMessage.setVisible(false);
 
@@ -485,7 +486,7 @@ public class SPMatchController {
         }
     }
 
-    public void windowClick(MouseEvent e) throws RemoteException {
+    public void windowClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
 
@@ -510,7 +511,7 @@ public class SPMatchController {
         }
     }
 
-    public void toolcardClick(MouseEvent e) throws RemoteException {
+    public void toolcardClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
         viewGUI.setChoose1((GridPane.getRowIndex(selected) + GridPane.getColumnIndex(selected)*3)+1);
@@ -518,7 +519,7 @@ public class SPMatchController {
         viewGUI.notifyNetwork();
     }
 
-    public void roundtrackClick(MouseEvent e) throws RemoteException{
+    public void roundtrackClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         int index = findElementIndex(GridPane.getRowIndex(selected), GridPane.getColumnIndex(selected));
         viewGUI.getChoices().add(index);
@@ -536,7 +537,7 @@ public class SPMatchController {
         }
     }
 
-    public void inputEnter(ActionEvent e) throws RemoteException {
+    public void inputEnter(ActionEvent e) throws IOException {
         int value = isInt(input);
         if(value != 0){
             if(value>=1 && value<=6){
@@ -628,7 +629,7 @@ public class SPMatchController {
         dice.setOnMouseClicked(e -> {
             try {
                 roundtrackClick(e);
-            } catch (RemoteException e1) {
+            } catch (IOException e1) {
                 //do nothing
             }
         });

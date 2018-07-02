@@ -53,6 +53,7 @@ public class SelectWindowController {
             text.setText("STARTING THE GAME");
         }else{
             text.setText("WAIT YOUR TURN");
+            viewGUI.setBlockSocketConnection(false);
         }
     }
 
@@ -67,10 +68,10 @@ public class SelectWindowController {
         window.setImage(image);
     }
 
-    public void windowClick(MouseEvent e) throws RemoteException {
+    public void windowClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         int selection = GridPane.getRowIndex(selected)*2 + GridPane.getColumnIndex(selected) + 1;
-        waitTurn();
+        //waitTurn();
         viewGUI.setChoose1(selection);
         viewGUI.notifyNetwork();
     }

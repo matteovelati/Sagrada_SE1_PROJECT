@@ -92,7 +92,7 @@ public class MatchController {
         space.setOnMouseClicked(e -> {
             try {
                 draftClick(e);
-            } catch (RemoteException e1) {
+            } catch (IOException e1) {
                 //do nothing
             }
         });
@@ -187,6 +187,8 @@ public class MatchController {
         publicObjectives.setDisable(true);
         roundtrack.setDisable(true);
         message.setText("WAIT YOUR TURN");
+        if(!viewGUI.actualPlayer())
+            viewGUI.setBlockSocketConnection(false);
     }
 
     void selectMove1View() throws RemoteException {
@@ -240,7 +242,7 @@ public class MatchController {
         message.setText("SELECT A TOOLCARD");
     }
 
-    void useToolcardView() throws RemoteException {
+    void useToolcardView() throws IOException {
         viewGUI.getChoices().clear();
 
         switch (viewGUI.getSelectedToolcardId()){
@@ -388,7 +390,7 @@ public class MatchController {
         dice.setOnMouseClicked(e -> {
             try {
                 roundtrackClick(e);
-            } catch (RemoteException e1) {
+            } catch (IOException e1) {
                 //do nothing
             }
         });
@@ -473,7 +475,7 @@ public class MatchController {
         }
     }
 
-    public void endTurnButton(ActionEvent e) throws RemoteException {
+    public void endTurnButton(ActionEvent e) throws IOException {
         if(endTurn.getText().equals("END TURN")) {
             firstMove = 0;
             viewGUI.setChoose1(0);
@@ -508,7 +510,7 @@ public class MatchController {
         }
     }
 
-    private void draftClick(MouseEvent e) throws RemoteException {
+    private void draftClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         errorMessage.setVisible(false);
 
@@ -553,7 +555,7 @@ public class MatchController {
         }
     }
 
-    public void windowClick(MouseEvent e) throws RemoteException {
+    public void windowClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
 
@@ -578,7 +580,7 @@ public class MatchController {
         }
     }
 
-    public void toolcardClick(MouseEvent e) throws RemoteException{
+    public void toolcardClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
         viewGUI.setChoose1(GridPane.getRowIndex(selected)+1);
@@ -586,7 +588,7 @@ public class MatchController {
         viewGUI.notifyNetwork();
     }
 
-    public void roundtrackClick(MouseEvent e) throws RemoteException {
+    public void roundtrackClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         int index = findElementIndex(GridPane.getRowIndex(selected), GridPane.getColumnIndex(selected));
         viewGUI.getChoices().add(index);
@@ -604,7 +606,7 @@ public class MatchController {
         }
     }
 
-    public void inputEnter(ActionEvent e) throws RemoteException {
+    public void inputEnter(ActionEvent e) throws IOException {
         if(isInt(input)){
             int value = Integer.parseInt(input.getText());
             if(value>=1 && value<=6){

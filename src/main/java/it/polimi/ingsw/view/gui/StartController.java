@@ -14,6 +14,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 
 public class StartController {
@@ -62,7 +63,7 @@ public class StartController {
             usernameInserted();
     }
 
-    public void inputEnter(ActionEvent e) throws RemoteException {
+    public void inputEnter(ActionEvent e) throws IOException {
         if(state == 1)
             ipInsertion();
         else if(state == 4)
@@ -209,8 +210,15 @@ public class StartController {
 
     private void matchSelected() throws RemoteException {
         if(radioButton1.isSelected()){          //SINGLEPLAYER
-            state = 3;
-            chooseDifficulty();
+            if(viewGUI.getNetwork().getSinglePlayerStarted()){
+                viewGUI.createSinglePlayerMatch(1);
+                state = 4;
+                insertUsername();
+            }
+            else {
+                state = 3;
+                chooseDifficulty();
+            }
         }
         else if(radioButton2.isSelected()){     //MULTIPLAYER
             viewGUI.createMultiPlayerMatch();
@@ -238,26 +246,42 @@ public class StartController {
         insertUsername();
     }
 
-    private void usernameInserted() throws RemoteException {
+    private void usernameInserted() throws IOException {
         error.setVisible(false);
         String user = username.getText().trim().toUpperCase();
 
         if(!user.isEmpty()) {
-            if(viewGUI.reconnecting()){
-                if(viewGUI.verifyUserCrashed(user)) {
-                    setUser(user);
-                    viewGUI.reAddPlayer();
-                    container.getChildren().removeAll(startButton, lobby, username, radioButton1, radioButton2);
-                    message.setVisible(true);
-                    message.setText("JOINING AGAIN THE MATCH");
-                    if(viewGUI.getSinglePlayer()) {
-                        viewGUI.getNetwork().startTimerSP(viewGUI);
-                        viewGUI.notifyNetwork();
+            if(!viewGUI.checkLobby()) {
+                if (viewGUI.reconnecting()) {
+                    if (viewGUI.verifyUserCrashed(user)) {
+                        setUser(user);
+                        viewGUI.reAddPlayer();
+                        container.getChildren().removeAll(startButton, lobby, username, radioButton1, radioButton2);
+                        message.setVisible(true);
+                        message.setText("JOINING AGAIN THE MATCH");
+                        if (viewGUI.getSinglePlayer()) {
+                            viewGUI.getNetwork().startTimerSP(viewGUI);
+                            viewGUI.notifyNetwork();
+                        } else {
+                            if (viewGUI.getSocketConnection()) {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                viewGUI.updateSocket();
+                                            } catch (IOException e) {
+                                                //
+                                            } catch (ClassNotFoundException e) {
+                                                //
+                                            }
+                                        }
+                                    }).start();
+                            }
+                        }
+                    } else {
+                        error.setVisible(true);
+                        error.setText("INSERT A VALID NAME");
                     }
-                }
-                else {
-                    error.setVisible(true);
-                    error.setText("INSERT A VALID NAME");
                 }
             }
             else {
@@ -266,6 +290,20 @@ public class StartController {
                     if(!viewGUI.getSocketConnection())
                         viewGUI.getNetwork().addObserver(viewGUI);
                     viewGUI.notifyNetwork();
+                    if(viewGUI.getSocketConnection()) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    viewGUI.updateSocket();
+                                } catch (IOException e) {
+                                    //
+                                } catch (ClassNotFoundException e) {
+                                    //
+                                }
+                            }
+                        }).start();
+                    }
                 } else {
                     error.setVisible(true);
                     error.setText("THIS USERNAME ALREADY EXIST");
