@@ -112,8 +112,8 @@ public class PrintUseToolCard implements Serializable {
             while (!input.hasNextInt())
                 input = new Scanner(System.in);
             tmp = input.nextInt();
-           // if (!view.getOnline())
-             //   return false;
+            if (!view.getOnline()) //
+                return false; //
             if (tmp == -1) {
                 choices.add(0, tmp);
                 return false;

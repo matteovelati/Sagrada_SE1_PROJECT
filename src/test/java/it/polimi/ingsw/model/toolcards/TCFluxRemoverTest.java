@@ -26,7 +26,7 @@ public class TCFluxRemoverTest {
         RoundManager.reset();
         Field.reset();
         GameModel.reset();
-        gameModel = GameModel.getInstance(States.LOBBY, 0);
+        gameModel = GameModel.getInstance(0);
         player1 = new Player("matteo", Colors.G);
         try {
             gameModel.setPlayers(player1);

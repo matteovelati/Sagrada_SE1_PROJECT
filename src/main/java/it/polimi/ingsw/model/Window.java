@@ -633,7 +633,6 @@ public class Window implements Serializable {
      * @return true if the die can be placed, false if the color is not the same or the space isn't empty
      */
     public boolean spaceColorRestriction(Dice dice, int i, int j){
-        //return true se puoi inserire
         return !(!window[i][j].getIsEmpty() || (!window[i][j].getColor().equals(dice.getColor()) && !window[i][j].getColor().equals(Colors.W)));
 
     }
@@ -646,7 +645,6 @@ public class Window implements Serializable {
      * @return true if the die can be placed, false if the value is not the same or the space isn't empty
      */
     public boolean spaceNumberRestriction(Dice dice, int i, int j){
-        //return true se puoi inserire
         return !(!window[i][j].getIsEmpty() || (window[i][j].getValue() != dice.getValue() && window[i][j].getValue() != 0));
 
     }
@@ -659,7 +657,6 @@ public class Window implements Serializable {
      * @return true if the die can be placed, false otherwise
      */
     public boolean verifyFirstDiceRestriction(Dice dice, int i, int j){
-        //return true se puoi inserire
         return ( (((i == 0 || i == 3) && (j >= 0 && j <= 4)) || ((j == 0 || j == 4) && (i >= 0 && i <= 3))) && this.spaceColorRestriction(dice, i , j) && this.spaceNumberRestriction(dice, i, j));
     }
 
@@ -671,7 +668,6 @@ public class Window implements Serializable {
      * @return true if the die can be placed, false otherwise
      */
     public boolean verifyAllRestrictions(Dice dice, int i, int j){
-        //return true se puoi inserire
         return (this.neighboursColorRestriction(dice, i, j) && this.neighboursNumberRestriction(dice, i, j) && this.neighboursPositionRestriction(i, j) && this.spaceColorRestriction(dice, i, j) && this.spaceNumberRestriction(dice, i, j));
     }
 

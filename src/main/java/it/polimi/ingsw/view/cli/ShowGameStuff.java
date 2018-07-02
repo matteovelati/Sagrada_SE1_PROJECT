@@ -12,7 +12,7 @@ public class ShowGameStuff {
      */
     public static int print(GameModel gameModel, boolean SP) {
 
-        System.out.println("WHAT DO YOU WANT TO DO?");
+        System.out.println("\nWHAT DO YOU WANT TO DO?");
         System.out.println("1) SEE YOUR WINDOW");
         System.out.println("2) SEE THE DRAFT");
         System.out.println("3) SEE THE TOOLCARDS");

@@ -30,7 +30,10 @@ public class RoundTrack implements Serializable {
         return instance;
     }
 
-    public static synchronized void reset (){   //TEST METHODz
+    /**
+     * deletes the instance of this class to restart the game
+     */
+    public static synchronized void reset (){   //TEST METHOD + RESTART GAME
         instance = null;
     }
 
@@ -83,7 +86,7 @@ public class RoundTrack implements Serializable {
      * @param dice the die to be exchanged
      * @return the substituted roundtrack's die
      */
-    public Dice changeDice(int i, Dice dice){       //metodo toolcard
+    public Dice changeDice(int i, Dice dice){
         Dice dicetmp = grid.get(i);
         grid.set(i, dice);
         return dicetmp;

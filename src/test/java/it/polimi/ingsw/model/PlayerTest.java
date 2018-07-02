@@ -27,7 +27,7 @@ public class PlayerTest {
         RoundManager.reset();
         Field.reset();
         GameModel.reset();
-        gameModel = GameModel.getInstance(States.LOBBY, 0);
+        gameModel = GameModel.getInstance(0);
         sc1 = new SchemeCard(1);
         sc2 = new SchemeCard(2);
         player1 = new Player("P1", Colors.R);

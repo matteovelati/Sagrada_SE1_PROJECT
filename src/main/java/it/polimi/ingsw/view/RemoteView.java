@@ -15,10 +15,25 @@ public interface RemoteView extends Remote {
      */
     void setOnline(boolean online) throws RemoteException;
 
+    /**
+     * gets if it's needed to start the timer
+     * @return true if the timer has to be started
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean getStartTimerSocket() throws RemoteException;
 
+    /**
+     * gets if a player has to be set online
+     * @return true if the player has to be set online
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean getReturnOnline() throws RemoteException;
 
+    /**
+     * gets if the socket timeout connection needs be deleted or not
+     * @return true if the socket connection needs to be deleted, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean getDeleteConnectionSocket() throws RemoteException;
 
     /**
@@ -84,5 +99,18 @@ public interface RemoteView extends Remote {
      */
     void printError(String string) throws RemoteException;
 
+    /**
+     /**
+     * gets if has started a singleplayer match
+     * @return true if the game is in singleplayer mode
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean getSinglePlayer() throws RemoteException;
+
+    /**
+     * gets if the client is connected with socket
+     * @return true if the client is connected with socket
+     * @throws RemoteException if the reference could not be accessed
+     */
+    boolean getSocketConnection() throws RemoteException;
 }

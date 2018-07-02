@@ -38,6 +38,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     private transient Socket socket;
     private boolean startTimerSocket;
     private boolean deleteConnectionSocket;
+    private boolean restart;
 
     /**
      * creates a ViewCLISinglePlayer object checking if the username is correct and if the game is already started
@@ -49,10 +50,11 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         connectionRequest();
 
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
-        System.out.println("When playing Sagrada by yourself, you're trying to beat a Target Score. " +
+        System.out.println(" When playing Sagrada by yourself, you're trying to beat a Target Score. " +
         "The Target Score is the sum of the values from all the dice on the RoundTrack at the end of the game. \n");
         choices = new ArrayList<>();
         choices.add(-1);
+        restart = false;
         endGame = false;
         if (network.getSinglePlayerStarted()){
             gameModel = network.getGameModel();
@@ -66,8 +68,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
                 }while(!verifyUserCrashed(user));
                 network.reAddObserver(this);
                 network.setPlayerOnline(user, true);
-                System.out.
-                        println("\n\nJOINING AGAIN THE MATCH...");
+                System.out.println("\n\nJOINING AGAIN THE MATCH...");
                 network.startTimerSP(this);
                 network.updateSP(this);
             }
@@ -76,13 +77,13 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
             input = new Scanner(System.in);
             System.out.println("ENTER YOUR USERNAME:");
             this.user = input.next().toUpperCase();
-            System.out.println("CHOOSE A LEVEL OF DIFFICULTY FROM 1 (VERY EASY) TO 5 (EXTREME)");
+            System.out.println("CHOOSE A LEVEL OF DIFFICULTY FROM 1 (BEGINNER) TO 5 (EXTREME)");
             input = new Scanner(System.in);
             do {
                 while (!input.hasNextInt())
                     input = new Scanner(System.in);
                 level = input.nextInt();
-            } while (level < 0 || level > 6);
+            } while (level < 1 || level > 5);
             network.createGameModel(level);
             gameModel = network.getGameModel();
             network.addObserver(this);
@@ -101,16 +102,26 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      * request.
      */
     private void connectionRequest() {
-
-        System.out.println("IP ADDRES: ");
+        int tmp;
+        System.out.println("IP ADDRESS: ");
         input = new Scanner(System.in);
         ipAddress = input.next();
 
-        System.out.println("WHICH CONNECTION DO YOU WANT TO USE?\n1) RMI\n2)SOCKET");
-        input = new Scanner(System.in);
-        while(!input.hasNextInt())
+        System.out.println("WHICH CONNECTION DO YOU WANT TO USE?\n1) RMI\n2) SOCKET");
+        while (true) {
             input = new Scanner(System.in);
-        if(input.nextInt() == 1){       //RMI CONNECTION
+            while (!input.hasNextInt()) {
+                System.out.println("Please insert a number.");
+                input = new Scanner(System.in);
+            }
+            tmp = input.nextInt();
+            if (tmp == 1 || tmp == 2)
+                break;
+            else
+                System.out.println("Please select 1 or 2");
+        }
+
+        if(tmp == 1){       //RMI CONNECTION
             socketConnection = false;
             socket = null;
             try {
@@ -177,16 +188,28 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         return false;
     }
 
+    /**
+     * gets if it's needed to start the timer
+     * @return true if the timer has to be started
+     */
     @Override
     public boolean getStartTimerSocket() {
         return false;
     }
 
+    /**
+     * gets if a player has to be set online
+     * @return true if the player has to be set online
+     */
     @Override
     public boolean getReturnOnline(){
         return false;
     }
 
+    /**
+     * gets if the socket connection has to be deleted or not
+     * @return
+     */
     @Override
     public boolean getDeleteConnectionSocket() {
         return false;
@@ -275,7 +298,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     }
 
     /**
-     * chooses the next state according to the actual one
+     * modifies the view based on the current state
      * @throws RemoteException if the reference could not be accessed
      */
     private void run() throws RemoteException {
@@ -283,6 +306,12 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         state = gameModel.getState();
 
         switch (state){
+            case RESTART:
+                if (restart)
+                    new ViewCLISinglePlayer();
+                else
+                    System.exit(0);
+                break;
             case LOBBY:
                 System.out.println("THE GAME IS STARTING...");
                 break;
@@ -336,13 +365,13 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
      */
     private void viewEndRound() throws RemoteException{
         System.out.println("\n\nEND OF ROUND " + gameModel.getField().getRoundTrack().getRound() +"\n\n");
-        if(user.equals(gameModel.getActualPlayer().getUsername())){
+        if(user.equals(gameModel.getActualPlayer().getUsername()))
             network.updateSP(this);
-        }
     }
 
     /**
      * prints the final score for each player
+     * asks to start another match
      * @throws RemoteException if the reference could not be accessed
      */
     private void viewEndMatch() throws RemoteException {
@@ -356,6 +385,24 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
             System.out.println("\nIT'S A DRAW !!");
         else
             System.out.println("\nYOU LOST...    :'(");
+        System.out.println("\n\nDO YOU WANT TO PLAY AGAIN ?\n[0] NO\n[1] YES");
+        while (true) {
+            input = new Scanner(System.in);
+            while (!input.hasNextInt())
+                input = new Scanner(System.in);
+            int tmp = input.nextInt();
+            if (tmp == 1) {
+                restart = true;
+                network.updateSP(this);
+                break;
+            }
+            else if (tmp == 0) {
+                restart = false;
+                network.updateSP(this);
+                break;
+            }
+        }
+
     }
 
     /**
@@ -455,7 +502,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         while(!input.hasNextInt())
             input = new Scanner(System.in);
         setChoose1(input.nextInt());
-            network.updateSP(this);
+        network.updateSP(this);
     }
 
     /**
@@ -516,7 +563,7 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
     }
 
     /**
-     *
+     * modifies the view based on the current state
      * @param gameModel the gamemodel of the match
      * @throws RemoteException if the reference could not be accessed
      */
@@ -526,8 +573,21 @@ public class ViewCLISinglePlayer extends UnicastRemoteObject implements RemoteVi
         this.run();
     }
 
+    /**
+     * gets if has started a singleplayer match
+     * @return always true
+     */
     @Override
     public boolean getSinglePlayer(){
         return true;
+    }
+
+    /**
+     * gets if the client is connected with socket
+     * @return true if the client is connected with socket
+     */
+    @Override
+    public boolean getSocketConnection(){
+        return socketConnection;
     }
 }

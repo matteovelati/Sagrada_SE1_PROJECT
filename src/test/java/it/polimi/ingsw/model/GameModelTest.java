@@ -12,19 +12,6 @@ import static org.junit.Assert.*;
 
 public class GameModelTest {
 
-    /*
-     *
-     *
-     *
-     *
-     * VA COMMENTATA LA LINEA 61 DEL GAMEMODEL METODO SETPLAYERS AFFINCHE' FUNZIONI:
-     * list.get(list.size()-1).print("YOU HAVE BEEN ADDED TO THIS GAME!");
-     *
-     *
-     *
-     *
-     */
-
     private GameModel gameModel;
     private Player player1, player2;
 
@@ -36,7 +23,7 @@ public class GameModelTest {
         RoundManager.reset();
         Field.reset();
         GameModel.reset();
-        gameModel = GameModel.getInstance(States.LOBBY, 0);
+        gameModel = GameModel.getInstance(0);
         player1 = new Player("sara", Colors.R);
         player2 = new Player("matteo", Colors.G);
         try {
@@ -51,7 +38,7 @@ public class GameModelTest {
     @Test
     public void getInstance() {
         setUp();
-        assertEquals(gameModel, GameModel.getInstance(States.LOBBY, 0));
+        assertEquals(gameModel, GameModel.getInstance(0));
     }
 
     @Test

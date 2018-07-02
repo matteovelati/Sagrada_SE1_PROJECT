@@ -55,7 +55,7 @@ public class  TCFluxBrush extends ToolCard {
         }
         else {
             flag = 1;
-            return false; //questo false NON deve richiamare il metodo
+            return false; 
         }
     }
 

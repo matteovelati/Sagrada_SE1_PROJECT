@@ -952,7 +952,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return singlePlayer;
     }
 
-    boolean getSocketConnection(){
+    @Override
+    public boolean getSocketConnection(){
         return socketConnection;
     }
 

@@ -28,7 +28,10 @@ public class Draft implements Serializable {
         return instance;
     }
 
-    public static synchronized void reset(){    //TEST METHOD
+    /**
+     * deletes the instance of this class to restart the game
+     */
+    public static synchronized void reset(){    //TEST METHOD + RESTART GAME
         instance = null;
     }
 

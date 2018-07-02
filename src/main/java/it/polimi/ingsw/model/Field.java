@@ -36,7 +36,7 @@ public class Field implements Serializable {
     }
 
     /**
-     * if the field already exists, the method returns the Field object for singleplayer match,
+     * if the field already exists, the method returns the Field object,
      * otherwise it creates a new Field.
      * @return the instance of the Field class
      */
@@ -46,7 +46,10 @@ public class Field implements Serializable {
         return instance;
     }
 
-    public static synchronized void reset (){   //TEST METHOD
+    /**
+     * deletes the instance of this class to restart the game
+     */
+    public static synchronized void reset (){   //TEST METHOD + RESTART GAME
         instance = null;
     }
 
@@ -126,9 +129,9 @@ public class Field implements Serializable {
     /**
      * creates an arraylist which contains 10 PublicObjectives (one each)
      * randomly extract 3 and put them in the list
-     * @param SP a boolean to know if is playing a in single player mode or not
+     * @param sP a boolean to know if is playing a in single player mode or not
      */
-    private void setPublicObjectives(boolean SP){
+    private void setPublicObjectives(boolean sP){
         Random r = new Random();
         ArrayList<PublicObjective> allPublicObjectives = new ArrayList<>(10);
         allPublicObjectives.add(new POColorDiagonals());
@@ -141,7 +144,7 @@ public class Field implements Serializable {
         allPublicObjectives.add(new PORowColorVariety());
         allPublicObjectives.add(new PORowShadeVariety());
         allPublicObjectives.add(new POShadeVariety());
-        for (int i = 0; i < ((SP)?2:3); i++){
+        for (int i = 0; i < ((sP)?2:3); i++){
             publicObjectives.add(allPublicObjectives.remove(r.nextInt(allPublicObjectives.size())));
         }
     }

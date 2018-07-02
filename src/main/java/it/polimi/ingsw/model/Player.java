@@ -157,7 +157,12 @@ public class Player implements Serializable {
     }
 
     public boolean getSkipNextTurn() {
-        return skipNextTurn;
+        if (skipNextTurn){
+            setSkipNextTurn(false);
+            return true;
+        }
+        else
+            return false;
     }
 
     public void setSkipNextTurn(boolean skipNextTurn) {

@@ -35,8 +35,8 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println(STOP);
                 do {
                     tmp = askInput();
-                    //if (!view.getOnline())
-                      //  return;
+                    if (!view.getOnline()) //
+                        return; //
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;
@@ -48,8 +48,8 @@ public class PrintUseToolCard2 implements Serializable {
                 System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
                 do {
                     tmp = askInput();
-                    //if (!view.getOnline())
-                      //  return;
+                    if (!view.getOnline()) //
+                        return; //
                     if (tmp == -1) {
                         choices.add(0, tmp);
                         break;

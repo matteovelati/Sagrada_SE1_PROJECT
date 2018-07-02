@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.view.RemoteView;
 
-import java.awt.*;
 import java.net.Socket;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -11,18 +10,27 @@ import java.util.List;
 
 public interface RemoteGameModel extends Remote {
 
+    /**
+     * gets if socket needs to be updated or not
+     * @return true if socket needs to be updated, false otherwise
+     */
+    boolean getUpdateSocket();
 
-    public boolean getUpdateSocket();
+    /**
+     * sets if socket needs to be updated
+     * @param updateSocket the boolean to be set
+     */
+    void setUpdateSocket(boolean updateSocket);
 
-    public void setUpdateSocket(boolean updateSocket);
     /**
      * gets the list of SOCKET observers in game
      * @return the list of SOCKET observers in game
      * @throws RemoteException if the reference could not be accessed
      */
     ArrayList<Socket> getObserverSocket() throws RemoteException;
+
     /**
-     * adds again an observer after he has lost connection
+     * adds again an RMI observer after he has lost connection
      * @param observer the observer to be added
      * @throws RemoteException if the reference could not be accessed
      */
@@ -36,14 +44,14 @@ public interface RemoteGameModel extends Remote {
     List<RemoteView> getObservers() throws RemoteException;
 
     /**
-     * adds an observer at the beginning
-     * @param observer the observer to be addded
+     * adds an RMI observer at the beginning
+     * @param observer the observer to be added
      * @throws RemoteException if the reference could not be accessed
      */
     void addObserver(RemoteView observer) throws RemoteException;
 
     /**
-     * removes an observer from the observers's list (setting him as 'null')
+     * removes an RMI observer from the observers's list (setting him as 'null')
      * @param observer the observer to be removed
      * @throws RemoteException if the reference could not be accessed
      */
@@ -72,14 +80,14 @@ public interface RemoteGameModel extends Remote {
 
     /**
      * gets the bag of the match
-     * @return the bag od the match
+     * @return the bag of the match
      * @throws RemoteException if the reference could not be accessed
      */
     Bag getBag() throws RemoteException;
 
     /**
      * gets the schemecards of the match
-     * @return a list of 3 schemecars
+     * @return a list of schemecards
      * @throws RemoteException if the reference could not be accessed
      */
     ArrayList<SchemeCard> getSchemeCards() throws RemoteException;

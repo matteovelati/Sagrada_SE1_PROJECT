@@ -20,9 +20,6 @@ public class PrintUseToolCard3 implements Serializable {
      * @param choices the list of integer that contains the client's inputs
      */
     public static void print(GameModel gameModel, ToolCard toolCard, ArrayList<Integer> choices, RemoteView view) throws RemoteException {
-        Scanner input;
-        int tmp;
-
         if (toolCard.getNumber() == 11){    //FLUX REMOVER
             try {
                 choices.remove(2);
@@ -33,34 +30,30 @@ public class PrintUseToolCard3 implements Serializable {
             PrintWindow.print(gameModel.getActualPlayer().getWindow());
             System.out.println("SELECT THE ROW TO INSERT THE DIE");
             System.out.println(STOP);
-            do {
-                input = new Scanner(System.in);
-                while (!input.hasNextInt())
-                    input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (!view.getOnline())
-                    return;
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    return;
-                }
-            }while(!correctInput(tmp, 2));
-            choices.add(tmp-1);
+            if (!askInput(2, choices, view))
+                return;
             System.out.println("SELECT THE COLUMN TO INSERT THE DIE");
-            do {
-                input = new Scanner(System.in);
-                while (!input.hasNextInt())
-                    input = new Scanner(System.in);
-                tmp = input.nextInt();
-                if (!view.getOnline())
-                    return;
-                if (tmp == -1) {
-                    choices.add(0, tmp);
-                    return;
-                }
-            }while(!correctInput(tmp, 3));
-            choices.add(tmp-1);
+            askInput(3, choices, view);
         }
+    }
+
+    private static boolean askInput(int i, ArrayList<Integer> choices, RemoteView view) throws RemoteException{
+        Scanner input;
+        int tmp;
+        do {
+            input = new Scanner(System.in);
+            while (!input.hasNextInt())
+                input = new Scanner(System.in);
+            tmp = input.nextInt();
+            if (!view.getOnline())
+                return false;
+            if (tmp == -1) {
+                choices.add(0, tmp);
+                return false;
+            }
+        }while(!correctInput(tmp, i));
+        choices.add(tmp-1);
+        return true;
     }
 
     /**
@@ -70,7 +63,7 @@ public class PrintUseToolCard3 implements Serializable {
      * @return true if the input is correct, false otherwise
      */
     private static boolean correctInput(int i, int check){
-        if (check == 2){       //check row
+        if (check == 2){            //check row
             return checkInput(i, 5);
         }
         else if (check == 3){       //check column
