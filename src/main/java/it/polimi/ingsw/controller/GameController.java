@@ -40,8 +40,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     public void addSocketConnection() throws IOException, ClassNotFoundException {
         while (true){
             Socket socket = serverSocket.accept();
-            //ObjectInputStream obj2 = new ObjectInputStream(socket.getInputStream());
-            //RemoteView view = (RemoteView) obj2.readObject();
+            ObjectInputStream obj2 = new ObjectInputStream(socket.getInputStream());
+            RemoteView view = (RemoteView) obj2.readObject();
             if(getMultiPlayerStarted()){
                 ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
                 ob.writeObject(this);
@@ -53,14 +53,30 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                     gameModel.reAddObserverSocket(socket, user);
                     setPlayerOnline(user, true);
                 }
+                socketListener(socket);
             }
             else if(!getSinglePlayerStarted()){
-                createGameModel( 0);
+                if (view.getSinglePlayer())
+                    createGameModel(view.getLevel());
+                else
+                    createGameModel(0);
                 gameModel.addObserverSocket(socket);
                 ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
                 ob.writeObject(this);
+                socketListener(socket);
+                if(view.getSinglePlayer())
+                    startTimerSP(view);
             }
-            socketListener(socket);
+            else{
+                ObjectOutputStream obj3 = new ObjectOutputStream(socket.getOutputStream());
+                obj3.writeObject(this);
+                ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
+                String user = (String) obj.readObject();
+                gameModel.reAddObserverSocket(socket, user);
+                setPlayerOnline(user, true);
+                socketListener(socket);
+                updateSP(view);
+            }
             if(gameEnded)
                 break;
         }
@@ -81,8 +97,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                     else {
                         if(view.getReturnOnline())
                             setPlayerOnline(view.getUser(), true);
-                        else
-                            update(view);
+                        else {
+                            if(view.getSinglePlayer()){
+                                updateSP(view);
+                            }
+                            else
+                                update(view);
+                        }
                     }
                 } catch (SocketTimeoutException e) {
                     if (!gameModel.getState().equals(LOBBY)) {

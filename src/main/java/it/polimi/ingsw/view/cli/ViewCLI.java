@@ -7,10 +7,7 @@ import it.polimi.ingsw.model.RemoteGameModel;
 import it.polimi.ingsw.model.States;
 import it.polimi.ingsw.view.RemoteView;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.rmi.RemoteException;
@@ -46,11 +43,11 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * @throws RemoteException if the reference could not be accessed
      */
     public ViewCLI() throws IOException {
+        choices = new ArrayList<>(1);
+        setChoose1(1);
         connectionRequest();
 
         System.out.println("WELCOME TO SAGRADA! \n\n\n");
-        choices = new ArrayList<>(1);
-        setChoose1(1);
         endGame = false;
         restart = false;
         if (network.getMultiPlayerStarted()) {
@@ -159,6 +156,8 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             socketConnection = true;
             try {
                 socket = new Socket(ipAddress, 1337);
+                ObjectOutputStream obj = new ObjectOutputStream(socket.getOutputStream());
+                obj.writeObject(this);
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
                 network = (RemoteGameController) ob.readObject();
             } catch (IOException e) {
@@ -218,6 +217,11 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         input = new Scanner(System.in);
         System.out.println("ENTER YOUR USERNAME:");
         this.user = input.next().toUpperCase();
+    }
+
+    @Override
+    public int getLevel(){
+        return 0;
     }
 
     /**
@@ -384,8 +388,6 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     private void run() throws IOException {
         returnOnline = false;
         state = gameModel.getState();
-        if (!state.equals(States.LOBBY))
-            printPlayerOnline();
         switch (state){
             case RESTART:
                 viewRestart();
@@ -403,6 +405,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
                 viewSelectWindow();
                 break;
             case SELECTMOVE1:
+                printPlayersOnline();
                 viewSelectMove1();
                 break;
             case SELECTMOVE2:
@@ -438,7 +441,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * prints the name of each player and if he's online or not
      * @throws RemoteException if the reference could not be accessed
      */
-    private void printPlayerOnline() throws RemoteException{
+    private void printPlayersOnline() throws RemoteException{
         for (Player p: gameModel.getPlayers()){
             System.out.println(p.getUsername() + " IS "+ ((p.getOnline())?"ONLINE":"OFFLINE"));
         }
@@ -506,7 +509,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
      * prints the final score for each player
      * @throws RemoteException if the reference could not be accessed
      */
-    private void viewEndMatch() throws RemoteException {
+    private void viewEndMatch() throws IOException {
         boolean win = true;
         int myScore = 0;
         for(Player x : gameModel.getPlayers()){
@@ -526,8 +529,14 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
             System.out.println("\nYOU WON!!!");
         else
             System.out.println("\nYOU LOST...    :'(");
-        if (!socketConnection && user.equals(network.getGameModel().getActualPlayer().getUsername()))
-            network.update(this);
+        if (user.equals(network.getGameModel().getActualPlayer().getUsername())){
+            if (socketConnection){
+                ObjectOutputStream obj = new ObjectOutputStream(socket.getOutputStream());
+                obj.writeObject(this);
+            }
+            else
+                network.update(this);
+        }
     }
 
     /**
