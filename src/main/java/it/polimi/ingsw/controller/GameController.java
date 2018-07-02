@@ -704,7 +704,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
         gameModel.endRound();
 
-        if(gameModel.getField().getRoundTrack().getRound() == /*11*/2) {
+        if(gameModel.getField().getRoundTrack().getRound() == 11) {
             scoreCalculation();
             gameModel.setState(ENDMATCH);
         }
