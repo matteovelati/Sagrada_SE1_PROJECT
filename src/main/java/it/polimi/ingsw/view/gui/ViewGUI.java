@@ -258,6 +258,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                                 firstCallMatch = false;
                                 showMatch();
                             }
+                            else
+                                setBlockSocketConnection(false);
                         } else {
                             firstCallMatch = false;
                             selectWindowController.changeScene(mainStage);
@@ -299,6 +301,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         else
                             matchController.waitTurn();
                     }
+                    else
+                        setBlockSocketConnection(false);
                 } catch (RemoteException e) {
                     //do nothing
                 }
@@ -326,6 +330,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         else
                             matchController.waitTurn();
                     }
+                    else
+                        setBlockSocketConnection(false);
                 } catch (RemoteException e) {
                     //do nothing
                 }
@@ -360,6 +366,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         else
                             matchController.waitTurn();
                     }
+                    else
+                        setBlockSocketConnection(false);
                 } catch (RemoteException e) {
                     //do nothing
                 }
@@ -387,6 +395,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         else
                             matchController.waitTurn();
                     }
+                    else
+                        setBlockSocketConnection(false);
                 } catch (RemoteException e) {
                     //do nothing
                 }
@@ -426,6 +436,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                         else
                             matchController.waitTurn();
                     }
+                    else
+                        setBlockSocketConnection(false);
                 } catch (IOException e) {
                     //do nothing
                 }
@@ -457,6 +469,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     else
                         matchController.waitTurn();
                 }
+                else
+                    setBlockSocketConnection(false);
             } catch (RemoteException e) {
                 //do nothing
             }
@@ -487,6 +501,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     else
                         matchController.waitTurn();
                 }
+                else
+                    setBlockSocketConnection(false);
             } catch (RemoteException e) {
                 //do nothing
             }

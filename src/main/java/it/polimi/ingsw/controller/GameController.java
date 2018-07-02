@@ -87,13 +87,15 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 } catch (SocketTimeoutException e) {
                     if (!gameModel.getState().equals(LOBBY)) {
                         int tmp = gameModel.getObserverSocket().indexOf(socket);
-                        gameModel.getPlayers().get(tmp).setOnline(false);
-                        gameModel.removeObserverSocket(socket);
-                        try {
-                            if (gameModel.getPlayers().get(tmp).getUsername().equals(gameModel.getActualPlayer().getUsername()))
-                                endTurn(true);
-                        } catch (RemoteException e1) {
-                            //do nothing
+                        if(tmp != -1) {
+                            gameModel.getPlayers().get(tmp).setOnline(false);
+                            gameModel.removeObserverSocket(socket);
+                            try {
+                                if (gameModel.getPlayers().get(tmp).getUsername().equals(gameModel.getActualPlayer().getUsername()))
+                                    endTurn(true);
+                            } catch (RemoteException e1) {
+                                //do nothing
+                            }
                         }
                     }
                 }
