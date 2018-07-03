@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -29,7 +30,7 @@ public class SPMatchController {
     @FXML
     private VBox middle;
     @FXML
-    private Button pickDice, useToolcard, endTurn, showDices, rejoinButton;
+    private Button pickDice, useToolcard, endTurn, showDices, restartButton;
     @FXML
     private ImageView privateObjective1, privateObjective2;
     @FXML
@@ -66,13 +67,13 @@ public class SPMatchController {
         buttons.managedProperty().bind(buttons.visibleProperty());
         roundtrackArea.managedProperty().bind(roundtrackArea.visibleProperty());
         targetScore.managedProperty().bind(targetScore.visibleProperty());
-        rejoinButton.managedProperty().bind(rejoinButton.visibleProperty());
+        restartButton.managedProperty().bind(restartButton.visibleProperty());
         left.managedProperty().bind(left.visibleProperty());
         right.managedProperty().bind(right.visibleProperty());
 
         errorMessage.setVisible(false);
         input.setVisible(false);
-        rejoinButton.setVisible(false);
+        restartButton.setVisible(false);
     }
 
     private void loadToolcards() throws RemoteException {
@@ -161,16 +162,6 @@ public class SPMatchController {
     }
 
     void selectMove1View() throws RemoteException {
-        /*buttons.setVisible(true);
-        windowArea.setVisible(true);
-        region2.setVisible(true);
-        draftArea.setVisible(true);
-        region1.setVisible(true);
-        roundtrackArea.setVisible(true);
-        left.setVisible(true);
-        right.setVisible(true);
-        targetScore.setVisible(true);*/
-
         firstMove = 0;
         refreshTargetScore();
         refresh();
@@ -332,9 +323,8 @@ public class SPMatchController {
         }
     }
 
-    void endMatchView() throws RemoteException {
+    void endMatchView() throws IOException {
         middle.getChildren().removeAll(buttons, targetScore, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
-        rejoinButton.setVisible(true);
         int myscore = viewGUI.getGameModel().getPlayers().get(0).getFinalScore();
         int rtscore = viewGUI.getGameModel().getField().getRoundTrack().calculateRoundTrack();
         message.setText("YOUR FINAL SCORE IS: " + myscore + "\nTHE TARGET SCORE IS: " + rtscore);
@@ -344,6 +334,11 @@ public class SPMatchController {
             message.setText(message.getText() + "\nIT'S A DRAW!");
         else
             message.setText(message.getText() + "\nYOU LOST...    :'(");
+        viewGUI.notifyNetwork();
+    }
+
+    void restartView(){
+        restartButton.setVisible(true);
     }
 
     public void pickDiceButton(ActionEvent e) throws IOException {
@@ -664,6 +659,12 @@ public class SPMatchController {
         pickDice.setDisable(true);
         useToolcard.setDisable(true);
         endTurn.setText("ABORT");
+    }
+
+    public void restartButtonClicked(ActionEvent e) throws Exception {
+        Stage stage = (Stage) restartButton.getScene().getWindow();
+        stage.close();
+        new ViewGUI().start(new Stage());
     }
 
     /*private void updateRoundtrack() throws RemoteException {

@@ -225,7 +225,7 @@
                         <Insets top="10.0" />
                     </VBox.margin>
                 </HBox>
-            <Button fx:id="rejoinButton" mnemonicParsing="false" text="PLAY AGAIN">
+            <Button fx:id="restartButton" mnemonicParsing="false" onAction="#restartButtonClicked" text="PLAY AGAIN">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

@@ -261,6 +261,14 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
+            <Button fx:id="restartButton" mnemonicParsing="false" onAction="#restartButtonClicked" text="PLAY AGAIN">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
             </children>
             <padding>
                 <Insets bottom="30.0" />

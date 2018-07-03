@@ -42,67 +42,67 @@ public class PrintWindow implements Serializable {
                 switch (colortmp){
                     case R:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONRED + FORMAT + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONRED + FORMAT + ANSI_RESET);
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" " + ANSI_RED + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]" + ANSI_BOLD + " ");
+                            System.out.print(" " + ANSI_RED + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]" + ANSI_RESET + " ");
                             System.out.print("|");
                         }
                         break;
                     case G:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONGREEN + FORMAT + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONGREEN + FORMAT + ANSI_RESET);
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" " + ANSI_GREEN  + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
+                            System.out.print(" " + ANSI_GREEN  + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_RESET + " ");
                             System.out.print("|");
                         }
                         break;
                     case P:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONPURPLE + FORMAT + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONPURPLE + FORMAT + ANSI_RESET);
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" " +ANSI_PURPLE + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
+                            System.out.print(" " +ANSI_PURPLE + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_RESET + " ");
                             System.out.print("|");
                         }
                         break;
                     case B:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONBLUE + FORMAT + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONBLUE + FORMAT + ANSI_RESET);
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" "+ANSI_BLUE + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
+                            System.out.print(" "+ANSI_BLUE + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_RESET + " ");
                             System.out.print("|");
                         }
                         break;
                     case Y:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print(ANSI_WHITEONYELLOW + FORMAT + ANSI_BOLD);
+                            System.out.print(ANSI_WHITEONYELLOW + FORMAT + ANSI_RESET);
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" " + ANSI_YELLOW + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
+                            System.out.print(" " + ANSI_YELLOW + ANSI_REVERSE + "[" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_RESET + " ");
                             System.out.print("|");
                         }
                         break;
                     default:
                         if(window.getWindow()[i][j].getIsEmpty()){
-                            System.out.print("   " + ((window.getWindow()[i][j].getValue() == 0) ? " " : window.getWindow()[i][j].getValue())  +"   "+ ANSI_BOLD);
+                            System.out.print("   " + ((window.getWindow()[i][j].getValue() == 0) ? " " : window.getWindow()[i][j].getValue())  +"   "+ ANSI_RESET);
                             System.out.print("|");
                         }
                         else {
-                            System.out.print(" [" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_BOLD + " ");
+                            System.out.print(" [" + window.getWindow()[i][j].getDice().getValue() + ":" + window.getWindow()[i][j].getDice().getColor() + "]"+ ANSI_RESET + " ");
                             System.out.print("|");
                         }
                         break;
                 }
             }
         }
-        System.out.println("\n| - - - | - - - | - - - | - - - | - - - |\n" + ANSI_RESET);
+        System.out.println("\n| - - - | - - - | - - - | - - - | - - - |\n");
     }
 }

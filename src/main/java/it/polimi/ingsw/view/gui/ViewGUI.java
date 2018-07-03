@@ -11,11 +11,9 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -37,6 +35,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private int choose2;
     private boolean endGame;
     private ArrayList<Integer> choices;
+    private boolean restart;
+    private int level;
 
     private RemoteGameController network;
     private RemoteGameModel gameModel;
@@ -90,6 +90,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         choices = new ArrayList<>();
         choices.add(-1);
         endGame = false;
+        restart = false;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/start.fxml"));
         Parent root = loader.load();
@@ -140,6 +141,31 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    public void updateSocketSP() throws IOException, ClassNotFoundException{
+        while(!endGame) {
+            try {
+                try {
+                    ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                    this.gameModel = (RemoteGameModel) ob.readObject();
+                }catch(StreamCorruptedException e){
+                }
+                if (this.gameModel.getUpdateSocket()) {
+                    new Thread(() -> {
+                        try {
+                            run();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+            }
+            catch (SocketException e){
+                System.out.println("SEEMS LIKE THE SERVER HAS BEEN DISCONNECTED");
+                System.exit(0);
+            }
+        }
+    }
+
     private void run() throws IOException {
         returnOnline = false;
         state = gameModel.getState();
@@ -186,6 +212,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 break;
             case ENDMATCH:
                 viewEndMatch();
+                break;
+            case RESTART:
+                viewRestart();
                 break;
             default:
                 assert false;
@@ -546,33 +575,48 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     if(spMatchController == null)
                         startSinglePlayerMatch();
                     spMatchController.endMatchView();
-                } catch (RemoteException e) {
+                } catch (IOException e) {
                     //do nothing
                 }
             });
         }
-        Platform.runLater(() -> {
-            try {
-                if(matchController != null) {
-                    matchController.refreshOtherPlayerWindow();
-                    matchController.endMatchView();
+        else {
+            Platform.runLater(() -> {
+                try {
+                    if (matchController != null) {
+                        setBlockSocketConnection(false);
+                        matchController.refreshOtherPlayerWindow();
+                        matchController.endMatchView();
+                    }
+                } catch (IOException e) {
+                    //do nothing
                 }
-            } catch (RemoteException e) {
-                //do nothing
-            }
-        });
+            });
+        }
+    }
+
+    private void viewRestart(){
+        if(singlePlayer)
+            Platform.runLater(() -> spMatchController.restartView());
+        else
+            Platform.runLater(() -> matchController.restartView());
     }
 
     private void viewError() throws IOException {
         if(singlePlayer && spMatchController == null){
             Platform.runLater(() -> startSinglePlayerMatch());
         }
-        if(socketConnection)
+        if(socketConnection) {
             setBlockSocketConnection(false);
-        if(actualPlayer()) {
-            Platform.runLater(() -> matchController.error("ERROR"));
-            notifyNetwork();
+            if (actualPlayer()) {
+                if (singlePlayer)
+                    Platform.runLater(() -> spMatchController.error("ERROR"));
+                else
+                    Platform.runLater(() -> matchController.error("ERROR"));
+            }
         }
+        if(actualPlayer())
+            notifyNetwork();
     }
 
     /**
@@ -687,12 +731,17 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     boolean reconnecting() throws RemoteException {
-        for(int i=0; i<gameModel.getObservers().size(); i++){
-            if((gameModel.getObservers() == null ||gameModel.getObservers().get(i) == null) &&
-                    (gameModel.getObserverSocket() == null ||gameModel.getObserverSocket().get(i)==null))
-                return true;
+        if(singlePlayer){
+            return !((!gameModel.getObservers().contains(null)) || (gameModel.getObserverSocket() != null));
         }
-        return false;
+        else {
+            for (int i = 0; i < gameModel.getObservers().size(); i++) {
+                if ((gameModel.getObservers() == null || gameModel.getObservers().get(i) == null) &&
+                        (gameModel.getObserverSocket() == null || gameModel.getObserverSocket().get(i) == null))
+                    return true;
+            }
+            return false;
+        }
     }
 
     void setSelectWindowController(SelectWindowController selectWindowController){
@@ -829,12 +878,21 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 if(x.getOnline())
                     return false;
                 else{
-                    for(int i =0; i<gameModel.getObservers().size(); i++){
-                        if((gameModel.getObservers()!=null && gameModel.getObservers().get(i)!=null && gameModel.getObservers().get(i).getUser().equals(s))
-                                || (gameModel.getObserverSocket()!=null && gameModel.getObserverSocket().get(i)!=null && gameModel.getObserverSocket().get(i).equals(s)))
-                            return false;
+                    if(singlePlayer){
+                        for(RemoteView y : gameModel.getObservers()){
+                            if(y!=null && y.getUser().equals(s))
+                                return false;
+                        }
+                        return true;
                     }
-                    return true;
+                    else {
+                        for (int i = 0; i < gameModel.getObservers().size(); i++) {
+                            if ((gameModel.getObservers() != null && gameModel.getObservers().get(i) != null && gameModel.getObservers().get(i).getUser().equals(s))
+                                    || (gameModel.getObserverSocket() != null && gameModel.getObserverSocket().get(i) != null && gameModel.getPlayers().get(i).getUsername().equals(s)))
+                                return false;
+                        }
+                        return true;
+                    }
                 }
             }
         }
@@ -853,11 +911,16 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     void notifyNetwork() throws IOException {
-        if(socketConnection){
-            if(!gameModel.getState().equals(States.LOBBY) && !gameModel.getState().equals(States.ENDROUND) && !gameModel.getState().equals(States.ERROR))
-                setDeleteConnectionSocket(true);
-            ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-            ob.writeObject(this);
+        if(socketConnection) {
+            if (singlePlayer) {
+                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                ob.writeObject(this);
+            } else {
+                if (!gameModel.getState().equals(States.LOBBY) && !gameModel.getState().equals(States.ENDROUND) && !gameModel.getState().equals(States.ERROR) && !gameModel.getState().equals(States.ENDMATCH))
+                    setDeleteConnectionSocket(true);
+                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                ob.writeObject(this);
+            }
         }
         else {
             if(singlePlayer)
@@ -916,8 +979,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         socketConnection = true;
         try {
             socket = new Socket(ipAddress, 1337);
+            ObjectOutputStream obj = new ObjectOutputStream(socket.getOutputStream());
+            obj.writeObject(this);
             ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
             network = (RemoteGameController) ob.readObject();
+            gameModel = network.getGameModel();
         } catch (IOException e) {
             startController.printError("THIS IP ADDRESS DOES NOT EXIST");
         } catch (ClassNotFoundException e) {
@@ -925,48 +991,33 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
-    void createSinglePlayerMatch(int level) throws RemoteException {
-        singlePlayer=true;
-
-        if(socketConnection) {
-            //
+    void createSinglePlayerMatch() throws RemoteException {
+        if(network.getSinglePlayerStarted()){
+            gameModel = network.getGameModel();
         }
-        else{
-            if(network.getSinglePlayerStarted()){
-                gameModel = network.getGameModel();
-            }
-            else {
-                network.createGameModel(level);
-                this.gameModel = network.getGameModel();
-            }
+        else {
+            network.createGameModel(level);
+            this.gameModel = network.getGameModel();
         }
     }
 
     void createMultiPlayerMatch() throws RemoteException {
-        singlePlayer=false;
-
-        if(socketConnection) {
-            if(network.getMultiPlayerStarted()){
-                gameModel = network.getGameModel();
-            }
-            else if(!network.getSinglePlayerStarted()){
-                //
-            }
+        if(network.getMultiPlayerStarted()){
+            gameModel = network.getGameModel();
         }
-        else{
-            if(network.getMultiPlayerStarted()){
-                gameModel = network.getGameModel();
-            }
-            else if(!network.getSinglePlayerStarted()) {
-                network.createGameModel( 0);
-                this.gameModel = network.getGameModel();
-            }
+        else if(!network.getSinglePlayerStarted()) {
+            network.createGameModel( 0);
+            this.gameModel = network.getGameModel();
         }
     }
 
     @Override
     public boolean getSinglePlayer(){
         return singlePlayer;
+    }
+
+    public void setSinglePlayer(boolean singlePlayer){
+        this.singlePlayer = singlePlayer;
     }
 
     @Override
@@ -995,10 +1046,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     void playTimer() throws IOException {
         if(socketConnection){
             startTimerSocket = true;
-            //setDeleteConnectionSocket(false);
             ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
             ob.writeObject(this);
-            //setDeleteConnectionSocket(true);
             socketTimeOut();
         }
         else{
@@ -1083,4 +1132,20 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }).start();
     }
 
+    public boolean getRestart() {
+        return restart;
+    }
+
+    public void setRestart(boolean restart) {
+        this.restart = restart;
+    }
+
+   @Override
+    public int getLevel(){
+        return level;
+    }
+
+    public void setLevel(int level){
+        this.level = level;
+    }
 }

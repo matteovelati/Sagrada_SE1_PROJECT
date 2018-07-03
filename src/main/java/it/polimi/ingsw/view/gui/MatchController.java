@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.model.States;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -29,7 +31,7 @@ public class MatchController {
     @FXML
     private VBox middle, right;
     @FXML
-    private Button pickDice, useToolcard, endTurn, showDices, rejoinButton;
+    private Button pickDice, useToolcard, endTurn, showDices, rejoinButton, restartButton;
     @FXML
     private ImageView privateObjective;
     @FXML
@@ -68,10 +70,12 @@ public class MatchController {
         rejoinButton.managedProperty().bind(rejoinButton.visibleProperty());
         left.managedProperty().bind(left.visibleProperty());
         right.managedProperty().bind(right.visibleProperty());
+        restartButton.managedProperty().bind(restartButton.visibleProperty());
 
         errorMessage.setVisible(false);
         input.setVisible(false);
         rejoinButton.setVisible(false);
+        restartButton.setVisible(false);
     }
 
     private void setCards(GridPane type, String folder) throws RemoteException {
@@ -357,7 +361,7 @@ public class MatchController {
         }
     }
 
-    void endMatchView() throws RemoteException {
+    void endMatchView() throws IOException {
         middle.getChildren().removeAll(buttons, tokens, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
         message.setText("YOUR FINAL SCORE IS: " + viewGUI.getPlayerScore(viewGUI.getUser()) + "\n" + player2label.getText() + "'S FINAL SCORE IS: " + viewGUI.getPlayerScore(player2label.getText()));
         if(viewGUI.getNumberOfPlayers() > 2){
@@ -365,6 +369,12 @@ public class MatchController {
             if(viewGUI.getNumberOfPlayers() == 4)
                 message.setText(message.getText() + "\n" + player4label.getText() + "'S FINAL SCORE IS: " + viewGUI.getPlayerScore(player4label.getText()));
         }
+        if(viewGUI.actualPlayer())
+            viewGUI.notifyNetwork();
+    }
+
+    void restartView(){
+        restartButton.setVisible(true);
     }
 
     private void showErrorMessage(String s){
@@ -748,5 +758,11 @@ public class MatchController {
         viewGUI.matchRejoined();
         rejoinButton.setVisible(false);
         message.setText("JOINING AGAIN THE MATCH...\nWAIT YOUR TURN");
+    }
+
+    public void restartButtonClicked(ActionEvent e) throws Exception {
+        Stage stage = (Stage) restartButton.getScene().getWindow();
+        stage.close();
+        new ViewGUI().start(new Stage());
     }
 }

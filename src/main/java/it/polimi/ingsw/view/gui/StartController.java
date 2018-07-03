@@ -33,6 +33,7 @@ public class StartController {
     private ViewGUI viewGUI;
     private int state = 0;
     private int connectionType = 0;     //1 RMI; 2 SOCKET
+    private String ipAddress;
 
     void init() {
         error.managedProperty().bind(error.visibleProperty());
@@ -47,16 +48,16 @@ public class StartController {
         radioButton3.setVisible(false);
         radioButton4.setVisible(false);
         radioButton5.setVisible(false);
-        chooseConnection();
+        chooseMatchType();
     }
 
     public void startButtonClicked(ActionEvent event) throws IOException {
         if(state == 0)
-            connectionSelected();
-        else if(state == 1)
-            ipInsertion();
-        else if(state == 2)
             matchSelected();
+        else if(state == 1)
+            connectionSelected();
+        else if(state == 2)
+            ipInsertion();
         else if(state == 3)
             singlePlayerSetup();
         else if(state == 4)
@@ -64,7 +65,7 @@ public class StartController {
     }
 
     public void inputEnter(ActionEvent e) throws IOException {
-        if(state == 1)
+        if(state == 2)
             ipInsertion();
         else if(state == 4)
             usernameInserted();
@@ -84,16 +85,23 @@ public class StartController {
     }
 
     private void gameStarted(){
-        container.getChildren().removeAll(error, lobby, startButton, username, radioButton1, radioButton2);
+        container.getChildren().removeAll(message, lobby, startButton, username, radioButton1, radioButton2, radioButton3, radioButton4, radioButton5);
         error.setVisible(true);
         error.setText("OPS! THE GAME IS ALREADY STARTED!\nCOME BACK LATER!");
     }
 
-    private void checkState() throws RemoteException {
-        if(!viewGUI.checkLobby()){
-            if(!viewGUI.reconnecting())
-                gameStarted();
+    private boolean checkState() throws RemoteException {
+        if((viewGUI.getSinglePlayer() && viewGUI.getNetwork().getMultiPlayerStarted()) || (!viewGUI.getSinglePlayer() && viewGUI.getNetwork().getSinglePlayerStarted())) {
+            gameStarted();
+            return false;
         }
+        if(!viewGUI.checkLobby()){
+            if(!viewGUI.reconnecting()) {
+                gameStarted();
+                return false;
+            }
+        }
+        return true;
     }
 
     void changeScene(Stage mainStage) throws IOException {
@@ -105,8 +113,10 @@ public class StartController {
         viewGUI.setSelectWindowController(selectWindowController);
         selectWindowController.init();
         viewGUI.setChoose1(1);
-        if(viewGUI.getSinglePlayer())
-            viewGUI.getNetwork().startTimerSP(viewGUI);
+        if(viewGUI.getSinglePlayer()) {
+            if(connectionType==1)
+                viewGUI.getNetwork().startTimerSP(viewGUI);
+        }
         else {
             if (viewGUI.actualPlayer())
                 viewGUI.playTimer();
@@ -137,14 +147,20 @@ public class StartController {
         error.setText(s);
     }
 
-    private void chooseConnection(){
+    private void chooseMatchType(){
         error.setVisible(false);
         lobby.setVisible(false);
         username.setVisible(false);
+        message.setText("SELECT THE KIND OF MATCH YOU WANNA PLAY");
+        radioButton1.setText("SINGLEPLAYER");
+        radioButton2.setText("MULTIPLAYER");
+        startButton.setText("OK");
+    }
+
+    private void chooseConnection(){
         message.setText("CHOOSE YOUR CONNECTION:");
         radioButton1.setText("RMI");
         radioButton2.setText("SOCKET");
-        startButton.setText("OK");
     }
 
     private void setIpIndex(){
@@ -155,16 +171,10 @@ public class StartController {
         message.setText("INSERT THE IP ADDRESS");
     }
 
-    private void chooseMatchType(){
+    private void chooseDifficulty(){
         username.setVisible(false);
         radioButton1.setVisible(true);
         radioButton2.setVisible(true);
-        message.setText("SELECT THE KIND OF MATCH YOU WANNA PLAY");
-        radioButton1.setText("SINGLEPLAYER");
-        radioButton2.setText("MULTIPLAYER");
-    }
-
-    private void chooseDifficulty(){
         radioButton3.setVisible(true);
         radioButton4.setVisible(true);
         radioButton5.setVisible(true);
@@ -174,15 +184,26 @@ public class StartController {
     }
 
     private void insertUsername(){
-        container.getChildren().removeAll(radioButton1, radioButton2, radioButton3, radioButton4, radioButton5);
+        radioButton1.setVisible(false);
+        radioButton2.setVisible(false);
+        radioButton3.setVisible(false);
+        radioButton4.setVisible(false);
+        radioButton5.setVisible(false);
         message.setVisible(false);
+        username.clear();
         username.setVisible(true);
         username.setPromptText("username");
-        try {
-            checkState();
-        } catch (RemoteException e) {
-            //do nothing
+    }
+
+    private void matchSelected(){
+        if(radioButton1.isSelected()){          //SINGLEPLAYER
+            viewGUI.setSinglePlayer(true);
         }
+        else if(radioButton2.isSelected()){     //MULTIPLAYER
+            viewGUI.setSinglePlayer(false);
+        }
+        state = 1;
+        chooseConnection();
     }
 
     private void connectionSelected(){
@@ -193,57 +214,82 @@ public class StartController {
             connectionType = 2;             //SOCKET
         }
 
-        state = 1;
+        state = 2;
         setIpIndex();
     }
 
-    private void ipInsertion(){
+    private void ipInsertion() throws RemoteException {
         if(connectionType == 1)
             viewGUI.setRMIConnection(username.getText());
-        else if(connectionType == 2)
-            viewGUI.setSocketConnection(username.getText());
-
-        state = 2;
-        username.clear();
-        chooseMatchType();
-    }
-
-    private void matchSelected() throws RemoteException {
-        if(radioButton1.isSelected()){          //SINGLEPLAYER
-            if(viewGUI.getNetwork().getSinglePlayerStarted()){
-                viewGUI.createSinglePlayerMatch(1);
-                state = 4;
-                insertUsername();
-            }
-            else {
-                state = 3;
-                chooseDifficulty();
-            }
+        else if(connectionType == 2) {
+            ipAddress = username.getText();
         }
-        else if(radioButton2.isSelected()){     //MULTIPLAYER
-            viewGUI.createMultiPlayerMatch();
-            state = 4;
-            insertUsername();
+
+        if(viewGUI.getSinglePlayer()){
+            if(connectionType==1){
+                if(viewGUI.getNetwork().getMultiPlayerStarted())
+                    gameStarted();
+            }
+            state = 3;
+            chooseDifficulty();
+        }
+        else{
+            if(connectionType==1) {
+                if (viewGUI.getNetwork().getSinglePlayerStarted())
+                    gameStarted();
+                else {
+                    viewGUI.createMultiPlayerMatch();
+                    state = 4;
+                    try {
+                        if(checkState()) {
+                            insertUsername();
+                        }
+                    } catch (RemoteException e) {
+                        //do nothing
+                    }
+                }
+            }
+            else{
+                viewGUI.setSocketConnection(ipAddress);
+                if (viewGUI.getNetwork().getSinglePlayerStarted())
+                    gameStarted();
+                else{
+                    state = 4;
+                    try {
+                        if(checkState())
+                            insertUsername();
+                    } catch (RemoteException e) {
+                        //do nothing
+                    }
+                }
+            }
         }
     }
 
     private void singlePlayerSetup() throws RemoteException {
-        int level = 0;
-
         if(radioButton1.isSelected())
-            level = 1;
+            viewGUI.setLevel(1);
         else if(radioButton2.isSelected())
-            level = 2;
+            viewGUI.setLevel(2);
         else if(radioButton3.isSelected())
-            level = 3;
+            viewGUI.setLevel(3);
         else if(radioButton4.isSelected())
-            level = 4;
+            viewGUI.setLevel(4);
         else if(radioButton5.isSelected())
-            level = 5;
+            viewGUI.setLevel(5);
 
-        viewGUI.createSinglePlayerMatch(level);
+        if(connectionType == 2)
+            viewGUI.setSocketConnection(ipAddress);
+        else
+            viewGUI.createSinglePlayerMatch();
+
         state = 4;
-        insertUsername();
+        try {
+            if(checkState())
+                insertUsername();
+        } catch (RemoteException e) {
+            //do nothing
+        }
     }
 
     private void usernameInserted() throws IOException {
@@ -260,22 +306,32 @@ public class StartController {
                         message.setVisible(true);
                         message.setText("JOINING AGAIN THE MATCH");
                         if (viewGUI.getSinglePlayer()) {
-                            viewGUI.getNetwork().startTimerSP(viewGUI);
-                            viewGUI.notifyNetwork();
+                            if(connectionType == 1) {
+                                viewGUI.getNetwork().startTimerSP(viewGUI);
+                                viewGUI.notifyNetwork();
+                            }else {
+                                new Thread(()-> {
+                                    try {
+                                        viewGUI.updateSocketSP();
+                                    } catch (IOException e1){
+                                        System.out.println("OPS, AN ERROR OCCURRED. PLEASE RESTART THE GAME");
+                                    }
+                                    catch (ClassNotFoundException e) {
+                                        //
+                                    }
+                                }).start();
+                            }
                         } else {
                             if (viewGUI.getSocketConnection()) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                viewGUI.updateSocket();
-                                            } catch (IOException e) {
-                                                //
-                                            } catch (ClassNotFoundException e) {
-                                                //
-                                            }
-                                        }
-                                    }).start();
+                                new Thread(() -> {
+                                    try {
+                                        viewGUI.updateSocket();
+                                    } catch (IOException e) {
+                                        //
+                                    } catch (ClassNotFoundException e) {
+                                        //
+                                    }
+                                }).start();
                             }
                         }
                     } else {
@@ -295,7 +351,10 @@ public class StartController {
                             @Override
                             public void run() {
                                 try {
-                                    viewGUI.updateSocket();
+                                    if(viewGUI.getSinglePlayer())
+                                        viewGUI.updateSocketSP();
+                                    else
+                                        viewGUI.updateSocket();
                                 } catch (IOException e) {
                                     //
                                 } catch (ClassNotFoundException e) {
