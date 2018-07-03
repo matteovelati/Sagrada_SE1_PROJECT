@@ -9,8 +9,6 @@ import java.rmi.registry.Registry;
 public class Server {
     public static void main(String[] args) throws IOException, AlreadyBoundException, ClassNotFoundException {
 
-        int i = 0;
-
         //System.setProperty("java.security.policy", "stupid.policy");
         //System.setSecurityManager(new SecurityManager());
 
@@ -25,9 +23,5 @@ public class Server {
 
         System.out.println("Hi! I'm the Sagrada server!\n\nI'm waiting for players...");
         network.addSocketConnection();
-        while(i == 0){
-            //
-        }
-        serverSocket.close();
     }
 }
