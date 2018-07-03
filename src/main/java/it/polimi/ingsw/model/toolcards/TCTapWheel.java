@@ -29,12 +29,17 @@ public class TCTapWheel extends ToolCard {
      * moves up to two dice in player's window that match the color of a die on the roundtrack
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0] the index of the die in the roundtrack
+     *              in [1],[2] the i,j the position of the first die to be moved
+     *              in [3],[4] the i,j the position of the new position of the first die
+     *              in [5] the will to make a second move ('1' means YES)
+     *              in [6],[7] the i,j the position of the second die to be moved
+     *              in [8],[9] the i,j the position of the new position of the second die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist: in 0 indice dado roundtrack; in 1,2 le i,j del dado1 da muovere; in 3,4 le i,j della new pos dado1; in 5 la volontà della seconda mossa ('1' = YES); in 6,7 le i,j del dado1 da muovere; in 8,9 le i,j della new pos dado1
-        //IN 0 (-1) PER ANNULLARE
         boolean check;
         if (input.get(0) != -1) {
             if (flag == 1) {
@@ -62,7 +67,7 @@ public class TCTapWheel extends ToolCard {
         }
         else {
             flag = 1;
-            return false;   //questo false NON deve richiamare il metodo
+            return false;
         }
 
     }
@@ -90,7 +95,7 @@ public class TCTapWheel extends ToolCard {
      * @param k the index of the die in the roundtrack
      * @return true if the die has been placed, false otherwise
      */
-    private boolean moveDice(Window window, int i, int j, int x, int y, RoundTrack grid, int k){ //i,j dado da muovere - x,y nuova casella - k dado roundtrack
+    private boolean moveDice(Window window, int i, int j, int x, int y, RoundTrack grid, int k){
         Dice dicetmp = window.getWindow()[i][j].getDice();
         if (dicetmp == null)
             return false;

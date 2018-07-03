@@ -28,12 +28,14 @@ public class TCGrindingStone extends ToolCard {
      * flips a die of the draft to his opposite side, changing the value from x to (7-x), and puts the die in player's window
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0] the index of the die in the draft
+     *              in [1] nothing relevant
+     *              in [2],[3] the i,j of the new position of the die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist in 0 la posizione del dado nella draft; in 1 niente; in 2,3 le i,j della new pos
-        //IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
             if (flag == 1) {
                 flag = 2;
@@ -50,7 +52,7 @@ public class TCGrindingStone extends ToolCard {
         }
         else {
             flag = 1;
-            return false; //questo false NON deve richiamare il metodo
+            return false;
         }
     }
 

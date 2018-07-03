@@ -25,12 +25,14 @@ public class TCFluxRemover extends ToolCard {
      * extracts a new die from the bag choosing the value and puts the die in the window
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0] the index of the die in the draft
+     *              in [1] the new value to be set
+     *              in [2],[3] the i,j of the new position of the die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist in 0 indice i del dado nella draft, in 1 il nuovo valore, in 2,3 le i,j della new pos
-        // IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
             if (flag == 1) {
                 flag = 2;
@@ -53,7 +55,7 @@ public class TCFluxRemover extends ToolCard {
         }
         else {
             flag = 1;
-            return false; //con questo false NON deve richiamare il metodo
+            return false;
         }
     }
 
@@ -64,7 +66,7 @@ public class TCFluxRemover extends ToolCard {
      * @param draft the draft of the match
      * @param i the index of the die to be extracted from the draft
      */
-    private void mixDie(Bag bag, Draft draft, int i){   //i posizione del dado nella draft
+    private void mixDie(Bag bag, Draft draft, int i){
         Random r = new Random();
         Dice dicetmp = draft.getDraft().remove(i);
         bag.getBag().add(dicetmp);

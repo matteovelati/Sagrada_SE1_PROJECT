@@ -25,12 +25,14 @@ public class TCLensCutter extends ToolCard {
      * switches a draft's die with one from the roundtrack
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0] the index of the die in the draft
+     *              in [1] the index of the die in the roundtrack
+     *              in [2],[3] the i,j of the new position of the die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist in 0 indice dado draft, in 1 indice dado roundtrack, in 2,3 le i,j della new pos
-        //IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
             if (flag == 1) {
                 flag = 2;
@@ -47,7 +49,7 @@ public class TCLensCutter extends ToolCard {
         }
         else {
             flag = 1;
-            return false; //questo false NON deve richiamare il metodo
+            return false;
         }
     }
 
@@ -68,7 +70,7 @@ public class TCLensCutter extends ToolCard {
      * @param draft the draft of the match
      * @param j the index of the die in the draft
      */
-    private void swapDice(RoundTrack grid, int i, Draft draft, int j){  //i indice roundtrack, j indice draft
+    private void swapDice(RoundTrack grid, int i, Draft draft, int j){
         Dice dicetmp = grid.changeDice(i, draft.getDraft().get(j));
         draft.getDraft().set(j, dicetmp);
     }

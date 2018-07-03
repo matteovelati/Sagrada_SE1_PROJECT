@@ -24,12 +24,15 @@ public class TCLathekin extends ToolCard {
      * moves exactly two dice of player's window
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0],[1] the i,j the position of the first die to be moved
+     *              in [2],[3] the i,j the position of the new position of the first die
+     *              in [4],[5] the i,j the position of the second die to be moved
+     *              in [6],[7] the i,j the position of the new position of the second die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist: in 0,1 le i,j del dado1; in 2,3 le i,j della new pos dado1; in 4,5 le i,j del dado2; in 6,7 le i,j della new pos dado2
-        //IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
             if (flag == 1) {
                 if (moveDice(gameModel.getActualPlayer().getWindow(), input.get(0), input.get(1), input.get(2), input.get(3))){
@@ -53,7 +56,7 @@ public class TCLathekin extends ToolCard {
             replaceDice(gameModel.getActualPlayer().getWindow(), input.get(3), input.get(4), input.get(1), input.get(2));
         }
         flag = 1;
-        return false; //questo false NON deve richiamare il metodo
+        return false;
     }
 
     /**
@@ -86,7 +89,7 @@ public class TCLathekin extends ToolCard {
      * @param y the next column
      * @return true if the die has been moved, false otherwise
      */
-    private boolean moveDice(Window window, int i, int j, int x, int y){ //i,j dado da muovere - x,y nuova casella
+    private boolean moveDice(Window window, int i, int j, int x, int y){
         Dice dicetmp = window.getWindow()[i][j].getDice();
         if (dicetmp == null)
             return false;

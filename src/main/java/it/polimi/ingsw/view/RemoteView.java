@@ -114,5 +114,10 @@ public interface RemoteView extends Remote {
      */
     boolean getSocketConnection() throws RemoteException;
 
+    /**
+     * gets the level of difficulty in a singleplayer match
+     * @return the level of difficulty chosen
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getLevel() throws RemoteException;
 }

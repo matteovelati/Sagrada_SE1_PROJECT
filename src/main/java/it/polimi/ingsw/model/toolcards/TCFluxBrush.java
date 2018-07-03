@@ -30,12 +30,13 @@ public class  TCFluxBrush extends ToolCard {
      * roll again a die of the draft, setting a new random value, and puts the die in the window
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0] the index of the die in the draft
+     *              in [1],[2] the i,j of the new position of the die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylist in 0 indice dado draft; 1,2 le i,j della new pos
-        //IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
             if (flag == 1) {
                 flag = 2;

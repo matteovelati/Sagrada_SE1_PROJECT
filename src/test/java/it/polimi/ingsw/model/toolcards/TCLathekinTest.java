@@ -154,4 +154,26 @@ public class TCLathekinTest {
         assertFalse(tc.useToolCard(gameModel, input));
         assertFalse(tc.useToolCard(gameModel, input));
     }
+
+    @Test
+    public void useToolCard5() {
+
+        before();
+        ArrayList<Integer> input = new ArrayList<>();
+
+        input.add(0);
+        input.add(1);
+        input.add(1);
+        input.add(4);
+        input.add(0);
+        input.add(0);
+        input.add(2);
+        input.add(4);
+
+        assertTrue(tc.useToolCard(gameModel, input));
+        assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice(), dice2);
+        assertTrue(gameModel.getActualPlayer().getWindow().getWindow()[input.get(0)][input.get(1)].getIsEmpty());
+        input.add(0, -1);
+        assertFalse(tc.useToolCard(gameModel, input));
+    }
 }

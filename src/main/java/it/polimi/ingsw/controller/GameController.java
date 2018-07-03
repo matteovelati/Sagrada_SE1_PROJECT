@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -30,6 +31,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
     private boolean gameEnded;
     private transient ServerSocket serverSocket;
 
+    /**
+     * creates a GameController object which sets some booleans to the default value
+     * @param serverSocket a new server socket
+     * @throws RemoteException if the reference could not be accessed
+     */
     public GameController(ServerSocket serverSocket) throws RemoteException{
         gameEnded = false;
         singlePlayerStarted = false;
@@ -37,6 +43,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         this.serverSocket = serverSocket;
     }
 
+    /**
+     * creates a new socket conncetion and adds the client to the match
+     * if he's the first to join the game, it also creates the model of the match
+     * @throws IOException if an I/O error occurs while reading stream header
+     * @throws ClassNotFoundException if class of a serialized object cannot be found
+     */
     public void addSocketConnection() throws IOException, ClassNotFoundException {
         while (true){
             Socket socket = serverSocket.accept();
@@ -70,18 +82,26 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             else{
                 ObjectOutputStream obj3 = new ObjectOutputStream(socket.getOutputStream());
                 obj3.writeObject(this);
-                ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
-                String user = (String) obj.readObject();
-                gameModel.reAddObserverSocket(socket, user);
-                setPlayerOnline(user, true);
-                socketListener(socket);
-                updateSP(view);
+                try {
+                    ObjectInputStream obj = new ObjectInputStream(socket.getInputStream());
+                    String user = (String) obj.readObject();
+                    gameModel.reAddObserverSocket(socket, user);
+                    setPlayerOnline(user, true);
+                    socketListener(socket);
+                    updateSP(view);
+                }catch (SocketException e){
+                    System.out.println("A NEW PLAYER TRIED TO JOIN THE GAME WITH SOCKET CONNECTION");
+                }
             }
             if(gameEnded)
                 break;
         }
     }
 
+    /**
+     * keeps open a thread to communicate with the client
+     * @param socket client's connection
+     */
     public void socketListener(final Socket socket){
         new Thread(() -> {
             while(true){
@@ -111,12 +131,8 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                         if(tmp != -1) {
                             gameModel.getPlayers().get(tmp).setOnline(false);
                             gameModel.removeObserverSocket(socket);
-                            try {
-                                if (gameModel.getPlayers().get(tmp).getUsername().equals(gameModel.getActualPlayer().getUsername()))
-                                    endTurn(true);
-                            } catch (RemoteException e1) {
-                                //do nothing
-                            }
+                            if (gameModel.getPlayers().get(tmp).getUsername().equals(gameModel.getActualPlayer().getUsername()))
+                                endTurn(true);
                         }
                     }
                 }
@@ -133,16 +149,29 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }).start();
     }
 
+    /**
+     * gets if has been started a singleplayer match
+     * @return true if a singleplayer match has been started, false otherwise
+     */
     @Override
     public boolean getSinglePlayerStarted(){
         return singlePlayerStarted;
     }
 
+    /**
+     * gets if has been started a multiplayer match
+     * @return true if a multiplayer match has been started, false otherwise
+     */
     @Override
     public boolean getMultiPlayerStarted(){
         return multiPlayerStarted;
     }
 
+    /**
+     * finds and changes the status of the player passed
+     * @param user the player who needs to change status
+     * @param online the boolean to be set, true means online, false means offline
+     */
     @Override
     public void setPlayerOnline(String user, boolean online){
         for(Player x : gameModel.getPlayers()){
@@ -152,21 +181,41 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * adds again an RMI observer after he has lost connection
+     * @param view the observer to be added
+     * @throws RemoteException if the reference could not be accessed
+     */
     @Override
     public void reAddObserver(RemoteView view) throws RemoteException{
         gameModel.reAddObserver(view);
     }
 
+    /**
+     * adds an RMI observer at the beginning
+     * @param view the observer to be added
+     * @throws RemoteException if the reference could not be accessed
+     */
     @Override
-    public void addObserver(RemoteView view) throws RemoteException{
+    public void addObserver(RemoteView view) {
         gameModel.addObserver(view);
     }
 
+    /**
+     * gets the gamemodel of the match
+     * @return the gamemodel of the match
+     */
     @Override
-    public GameModel getGameModel() throws RemoteException {
+    public GameModel getGameModel(){
         return gameModel;
     }
 
+    /**
+     * starts the timer for the entire turn of a player
+     * when expired, it checks if he has lost connection or if he's only inactive anyway setting him as offline
+     * @param view the remoteview of the client who is the actualplayer
+     * @param socket if not equal to null, means the client is connected with socket, otherwise in RMI
+     */
     @Override
     public void startTimer(final RemoteView view, final Socket socket){
         t = new Timer();
@@ -223,6 +272,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         );
     }
 
+    /**
+     * starts the timer for singleplayer match
+     * every 8 seconds it tries to send a ping to each client and remove them from the game if no answer is returned
+     * @param view the remoteview of the client
+     */
     @Override
     public void startTimerSP(final RemoteView view){
         tSP = new Timer();
@@ -230,22 +284,22 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 new TimerTask() {
                     @Override
                     public void run() {
-                        try {
-                            verifyObserver();
-                            if (!singlePlayerStarted)
-                                tSP.cancel();
-                            else
-                                startTimerSP(view);
-                        } catch (RemoteException e) {
-                            //
-                        }
+                        verifyObserver();
+                        if (!singlePlayerStarted)
+                            tSP.cancel();
+                        else
+                            startTimerSP(view);
                     }
-                }, 3000
+                }, 8000
         );
     }
 
+    /**
+     * creates a gamemodel of the match
+     * @param level if equal to 0 creates a multiplayer gamemodel, otherwise a singleplayer gamemodel
+     */
     @Override
-    public void createGameModel(int level) throws RemoteException{
+    public void createGameModel(int level){
         gameModel = GameModel.getInstance(level);
         if (level == 0)
             multiPlayerStarted = true;
@@ -253,6 +307,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             singlePlayerStarted = true;
     }
 
+    /**
+     * tries to send a ping to each client and remove them from the game if no answer is returned
+     * modifies the gamemodel and finally changes it's state based on the current state and client's actions
+     * @param view the view of the actual player
+     * @throws RemoteException if the reference could not be accessed
+     */
     @Override
     public void update(RemoteView view) throws RemoteException {
 
@@ -320,6 +380,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * modifies the gamemodel and finally changes it's state based on the current state and client's actions
+     * @param view the view of the actual player
+     * @throws RemoteException if the reference could not be accessed
+     */
     @Override
     public void updateSP(RemoteView view) throws RemoteException{
 
@@ -369,11 +434,15 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 break;
 
             case USETOOLCARD3:
+                tSP.cancel();
                 useToolCard3(view);
+                startTimerSP(view);
                 break;
 
             case ENDROUND:
+                tSP.cancel();
                 endRound();
+                startTimerSP(view);
                 break;
 
             case ENDMATCH:
@@ -381,7 +450,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
                 break;
 
             case ERROR:
+                tSP.cancel();
                 gameModel.setState(beforeError);
+                startTimerSP(view);
                 break;
 
             default:
@@ -389,6 +460,9 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * reset every singleton class and some booleans to default values so that a new game can be started
+     */
     private void endMatch(){
         Bag.reset();
         RoundTrack.reset();
@@ -403,6 +477,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         gameModel.setState(RESTART);
     }
 
+    /**
+     * initial state in which the connection of at least two players is expected
+     * when it happens, a timer is started which, once it has expired, or when 4 players have joined,
+     * will start the game changing the state in SELECTWINDOW
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void lobby(RemoteView view) throws RemoteException {
 
         if (singlePlayerStarted){
@@ -428,6 +509,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * asks the players to select their window pattern for the match
+     * then changes the state to SELECTMOVE1 if the client has chose properly
+     * @param view the remoteview of the client
+     * @param stopTimer a boolean to know if the timer has to be stopped or not
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void selectWindow(RemoteView view, boolean stopTimer) throws RemoteException {
 
         if(stopTimer)
@@ -439,9 +527,7 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             //do nothing
         }
         if(choose > 0 && choose < 5) {
-
             gameModel.playerSetWindow(choose);
-
             do {
                 actualPlayer = ChangePlayer.clockwise(actualPlayer, gameModel.getPlayers().size());
                 gameModel.setActualPlayer(actualPlayer);
@@ -464,6 +550,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * asks the client if he wants to pick a dice, use a toolcard or end his turn
+     * changing the state to SELECTDRAFT, SELECTCARD, or calculating next player
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void selectMove1(RemoteView view) throws RemoteException{
 
         gameModel.getRoundManager().setFirstMove(view.getChoose1());
@@ -471,20 +563,22 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
         if(gameModel.getRoundManager().getFirstMove() == 1)
             gameModel.setState(SELECTDRAFT);
-
         else if(gameModel.getRoundManager().getFirstMove() == 2)
             gameModel.setState(SELECTCARD);
-
         else if(gameModel.getRoundManager().getFirstMove() == 0)
             endTurn(true);
-
         else
             checkError(view, view.getChoose1());
 
     }
 
+    /**
+     * asks the client to pick a dice from the draft
+     * then change the state to PUTDICEINWINDOW if he has chose properly
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void selectDraft(RemoteView view) throws RemoteException{
-
 
         if(view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()) {
             gameModel.playerPickDice(view.getChoose1() - 1);
@@ -495,21 +589,21 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
+    /**
+     * ask the client the row and column to put the selected die
+     * then change the state to SELECTMOVE2 or calculates the next player
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void putDiceInWindow(RemoteView view) throws RemoteException{
 
-
         if(view.getChoose1() > 0 && view.getChoose1() < 5) {
-
             if(view.getChoose2() > 0 && view.getChoose2() < 6) {
-
                 if (gameModel.playerPutDice(view.getChoose1() - 1, view.getChoose2() - 1)) {
-
                    if (gameModel.getRoundManager().getFirstMove() == 1)
                         gameModel.setState(SELECTMOVE2);
-
                     else if (gameModel.getRoundManager().getFirstMove() == 2)
                         endTurn(true);
-
                 } else {
                     beforeError = gameModel.getState();
                     if (!view.getSocketConnection())
@@ -525,28 +619,37 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
+    /**
+     * asks the client if he wants to pick a dice or use a toolcard or end his turn
+     * changing the state to SELECTDRAFT, SELECTCARD, or calculating next player
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void selectMove2(RemoteView view) throws RemoteException{
-
 
         check = 2;
 
         if(view.getChoose1() == 1){
-
             if(gameModel.getRoundManager().getFirstMove() == 1)
                 gameModel.setState(SELECTCARD);
 
             else if(gameModel.getRoundManager().getFirstMove() == 2)
                 gameModel.setState(SELECTDRAFT);
-
         }
         else if(view.getChoose1() == 0)
             endTurn(true);
-
         else
             checkError(view, view.getChoose1());
 
     }
 
+    /**
+     * ask the client to select a toolcard
+     * verifies if he can use that card in this specific status or not
+     * if he can, change the state to USETOOLCARD for multiplayer, to SELECTDIE for singleplayer
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void selectCard(RemoteView view) throws RemoteException{
 
         if (view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getToolCards().size()){
@@ -589,6 +692,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
+    /**
+     * (only singleplayer)
+     * asks the client to remove a die of the same color as the card
+     * then change the state to USETOOLCARD
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void selectDie(RemoteView view) throws RemoteException{
 
         if (view.getChoose1() > 0 && view.getChoose1() <= gameModel.getField().getDraft().getDraft().size()){
@@ -605,8 +715,14 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             checkError(view, view.getChoose1());
     }
 
+    /**
+     * asks the client some inputs to use the selected toolcard
+     * verifies if it's necessary to asks other inputs and changes to USETOOLCARD2
+     * otherwise changes the state to SELECTMOVE2 or calculates the next player
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void useToolCard(RemoteView view) throws RemoteException{
-
 
         if(gameModel.playerUseToolCard(view.getChoices())) {
             if (singlePlayerStarted)
@@ -622,21 +738,32 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             checkError(view, view.getChoices().get(0));
     }
 
+    /**
+     * asks the client some inputs to use the selected toolcard
+     * verifies if it's necessary to asks other inputs and changes to USETOOLCARD3
+     * otherwise changes the state to SELECTMOVE2 or calculates the next player
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void useToolCard2(RemoteView view) throws RemoteException{
 
         if(gameModel.playerUseToolCard(view.getChoices())) {
-
             if(gameModel.getActualPlayer().getToolCardSelected().getCalls() == 2)
                 setNextState();
             else
                 gameModel.setState(USETOOLCARD3);
-
         }
         else
             checkError(view, view.getChoices().get(0));
 
     }
 
+    /**
+     * asks the client some inputs to use the selected toolcard
+     * changes the state to SELECTMOVE2 or calculates the next player
+     * @param view the remoteview of the client
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void useToolCard3(RemoteView view) throws RemoteException{
 
         if(gameModel.playerUseToolCard(view.getChoices()))
@@ -646,8 +773,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
-    private void verifyObserver() throws RemoteException {
-        gameModel.setUpdateSocket(false);
+    /**
+     * tries to ping each client connected to the server
+     * if it does not go well, sets the player offline and removes the observer (setting him as null)
+     */
+    private void verifyObserver() {
+
         for(int i=0; i<gameModel.getObservers().size(); i++){
             try{
                 if(gameModel.getObservers().get(i) != null)
@@ -655,11 +786,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
             } catch(RemoteException e){
                 gameModel.getPlayers().get(i).setOnline(false);
                 gameModel.removeObserver(gameModel.getObservers().get(i));
-                if (singlePlayerStarted)
-                    tSP.cancel();
             }
             try{
                 if(gameModel.getObserverSocket().get(i)!= null) {
+                    gameModel.setUpdateSocket(false);
                     ObjectOutputStream ob = new ObjectOutputStream(gameModel.getObserverSocket().get(i).getOutputStream());
                     ob.writeObject(gameModel);
                 }
@@ -671,6 +801,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         gameModel.setUpdateSocket(true);
     }
 
+    /**
+     * calculates the final score for each player
+     * sums the private objective score with the public objectives scores
+     */
     private void scoreCalculation(){
 
         int score;
@@ -686,6 +820,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * calculates the next player based on the actual state, the turn and the round
+     * @return true if the round is ended, false otherwise
+     */
     private boolean nextPlayer(){
         do {
             actualPlayer = gameModel.nextPlayer(actualPlayer);
@@ -696,7 +834,13 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         return roundEnded;
     }
 
-    private void endTurn(boolean stopTimer) throws RemoteException {
+    /**
+     * checks if there are at least 2 player online: if not, changes the state to ENDMATCH
+     * if the round is ended, sets the state ENDROUND,
+     * otherwise calculates the next player change the state to SELECTMOVE1
+     * @param stopTimer a boolean to know if it's needed to stop the timer or not
+     */
+    private void endTurn(boolean stopTimer) {
         if(stopTimer && multiPlayerStarted)
             t.cancel();
         if (multiPlayerStarted) {
@@ -723,7 +867,11 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
-    private void endRound() throws RemoteException {
+    /**
+     * if the actual round is equal to 11, calculates the score of each player and change the state to ENDMATCH
+     * otherwise change the state to SELECTMOVE1
+     */
+    private void endRound() {
 
         gameModel.endRound();
 
@@ -738,7 +886,10 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
-    private void setNextState() throws RemoteException {
+    /**
+     * calculates and change the state based on the current one
+     */
+    private void setNextState() {
 
         if (gameModel.getRoundManager().getFirstMove() == 1 || gameModel.getActualPlayer().getToolCardSelected().getForceTurn())
             endTurn(true);
@@ -747,6 +898,12 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
 
     }
 
+    /**
+     * calculates and change the next state based on the current one (beforeError)
+     * @param view the remoteview of the client
+     * @param i if equal to -1 means the client decided to stop using a toolcard
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void checkError(RemoteView view, int i) throws RemoteException {
 
         beforeError = gameModel.getState();
@@ -773,26 +930,32 @@ public class GameController extends UnicastRemoteObject implements RemoteGameCon
         }
     }
 
+    /**
+     * if an error occurred, adds the picked die of the player to the draft
+     * @param view the remoteview of the client
+     * @param i if equal to -1 means the client decided to stop
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void checkErrorPutDice(RemoteView view, int i) throws RemoteException {
         if(i == -1)
             gameModel.putDiceInDraft();
         checkError(view, i);
     }
 
+    /**
+     * starts a timer when the state is LOBBY
+     * when expired, set the new state to SELECTWINDOW
+     */
     private void startTimerLobby(){
         t = new Timer();
             t.schedule(
                     new TimerTask() {
                         @Override
                         public void run() {
-                            try {
-                                verifyObserver();
-                                gameModel.setDraft();
-                                gameModel.setSchemeCards();
-                                gameModel.setState(SELECTWINDOW);
-                            } catch (RemoteException e) {
-                                //DO NOTHING
-                            }
+                            verifyObserver();
+                            gameModel.setDraft();
+                            gameModel.setSchemeCards();
+                            gameModel.setState(SELECTWINDOW);
                         }
                     }, 20000
             );

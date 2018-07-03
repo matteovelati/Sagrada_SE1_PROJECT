@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class TCRunningPliers extends ToolCard {
 
     /**
-     * createsa toolcard setting idnumber, color, name and description
+     * creates a toolcard setting idnumber, color, name and description
      */
     public TCRunningPliers(){
         super.setIdNumber(8);
@@ -26,12 +26,13 @@ public class TCRunningPliers extends ToolCard {
      * allows the player to draft a second die in it's first turn, skipping the second one
      * @param gameModel the gamemodel of the match
      * @param input a list of integer that represents the client's inputs
+     *              in [0] the index of the die in the draft
+     *              in [1],[2] the i,j of the new position of the die
+     *              IN [0] '-1' TO UNDO
      * @return true if the toolcard has been used correctly, false otherwise
      */
     @Override
     public boolean useToolCard(GameModel gameModel, ArrayList<Integer> input) {
-        //arraylisy: in 0 indice dado draft; in 1,2 le i,j della nuova posizione
-        //IN 0 (-1) PER ANNULLARE
         if (input.get(0) != -1) {
             if (placeDice(gameModel.getActualPlayer().getWindow(), input.get(1), input.get(2), gameModel.getField().getDraft(), input.get(0))){
                 gameModel.getActualPlayer().setSkipNextTurn(true);
@@ -41,7 +42,7 @@ public class TCRunningPliers extends ToolCard {
                 return false;
         }
         else
-            return false; //con questo false NON deve richiamare il metodo
+            return false;
     }
 
     /**
@@ -64,7 +65,7 @@ public class TCRunningPliers extends ToolCard {
      * @param i the index of the die in the draft
      * @return true if the die has been placed, false otherwise
      */
-    private boolean placeDice(Window window, int x, int y, Draft draft, int i){ //x,y indice del piazzamento, i indice draft
+    private boolean placeDice(Window window, int x, int y, Draft draft, int i){
         Dice dicetmp = draft.getDraft().get(i);
         if ((window.verifyAllRestrictions(dicetmp, x, y)) || (window.getIsEmpty() && window.verifyFirstDiceRestriction(dicetmp, x, y))){
             draft.extract(i);

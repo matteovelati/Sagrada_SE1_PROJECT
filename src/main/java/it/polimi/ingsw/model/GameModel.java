@@ -405,17 +405,16 @@ public class GameModel implements RemoteGameModel, Serializable {
      * @throws RemoteException if the reference could not be accessed
      */
     @Override
-    public List<RemoteView> getObservers() throws RemoteException {
+    public List<RemoteView> getObservers(){
         return list;
     }
 
     /**
      * adds an RMI observer at the beginning
      * @param observer the observer to be added
-     * @throws RemoteException if the reference could not be accessed
      */
     @Override
-    public void addObserver(RemoteView observer) throws RemoteException {
+    public void addObserver(RemoteView observer){
         list.add(observer);
         listSocket.add(null);
     }
@@ -423,10 +422,9 @@ public class GameModel implements RemoteGameModel, Serializable {
     /**
      * removes an RMI observer from the observers's list (setting him as 'null')
      * @param observer the observer to be removed
-     * @throws RemoteException if the reference could not be accessed
      */
     @Override
-    public void removeObserver(RemoteView observer) throws RemoteException {
+    public void removeObserver(RemoteView observer){
         list.set(getObservers().indexOf(observer), null);
     }
 

@@ -40,7 +40,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     /**
      * creates a ViewCLI object checking if the username is correct and if the game is already started
      * initializes an arraylist of integer which will contains client's inputs
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     public ViewCLI() throws IOException {
         choices = new ArrayList<>(1);
@@ -219,6 +219,10 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
         this.user = input.next().toUpperCase();
     }
 
+    /**
+     * gets the level of difficulty of a singleplayer match
+     * @return always 0, meaning multiplayer
+     */
     @Override
     public int getLevel(){
         return 0;
@@ -383,7 +387,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * modifies the view based on the current state
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void run() throws IOException {
         returnOnline = false;
@@ -461,7 +465,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints a message for each player to notify them the end of a round
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewEndRound() throws IOException {
         System.out.println("\n\nEND OF ROUND " + gameModel.getField().getRoundTrack().getRound() +"\n\n");
@@ -507,7 +511,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints the final score for each player
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewEndMatch() throws IOException {
         boolean win = true;
@@ -541,7 +545,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints the 2 schemecards (4 window)
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewSelectWindow() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -587,7 +591,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints client's input possible choices
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewSelectMove1() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -651,7 +655,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints client's input possible choices
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewSelectMove2() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -705,7 +709,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints the player's window and asks him the i,j position to insert it
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewPutDiceInWindow() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -763,7 +767,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints the list of dice in the draft
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewSelectDraft() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -800,7 +804,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints toolcards available
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewSelectCard() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -837,7 +841,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints selection menu for toolcards
-     * @throws RemoteException  if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewUseToolCard() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -869,7 +873,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints selection menu for toolcards
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewUseToolCard2() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -901,7 +905,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * prints selection menu for toolcards
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewUseToolCard3() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -933,7 +937,7 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
 
     /**
      * print error message
-     * @throws RemoteException if the reference could not be accessed
+     * @throws IOException any exception thrown by the underlying OutputStream
      */
     private void viewError() throws IOException {
         if(user.equals(gameModel.getActualPlayer().getUsername())) {
@@ -974,15 +978,15 @@ public class ViewCLI extends UnicastRemoteObject implements RemoteView, Serializ
     /**
      * modifies the view based on the current state
      * @param gameModel the gamemodel of the match
-     * @throws RemoteException if the reference could not be accessed
      */
    @Override
-   public void update(RemoteGameModel gameModel) throws RemoteException {
+   public void update(RemoteGameModel gameModel){
        this.gameModel = gameModel;
        try {
            this.run();
        } catch (IOException e) {
-           //do nothing
+           System.out.println("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
+           System.exit(0);
        }
    }
 
