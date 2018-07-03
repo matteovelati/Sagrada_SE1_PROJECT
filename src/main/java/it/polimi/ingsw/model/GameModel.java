@@ -346,13 +346,9 @@ public class GameModel implements RemoteGameModel, Serializable {
                 }
                 else
                     getObservers().get(tmp).update(gameModel);
-            }catch (RemoteException e){
+            }catch (Exception e){
                 //DO NOTHING
             }
-            catch (IOException e) {
-                //do nothing
-            }
-
         }).start();
 
     }

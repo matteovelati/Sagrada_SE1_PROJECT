@@ -1,36 +1,24 @@
-import it.polimi.ingsw.controller.RemoteGameController;
 import it.polimi.ingsw.view.cli.ViewCLI;
 import it.polimi.ingsw.view.cli.ViewCLISinglePlayer;
 import it.polimi.ingsw.view.gui.ViewGUI;
 import javafx.application.Application;
 
-import javax.naming.NamingException;
 import java.io.IOException;
-import java.net.Socket;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class Client {
 
-    private static int UI, match, connection;
+    private static int UI;
+    private static int match;
     private static boolean check = false;
 
-    private static boolean socketConnection;
-    private static Socket socket;
+    public static void main(String[] args) throws IOException {
 
-    public static void main(String[] args) throws NamingException, IOException, NotBoundException, ClassNotFoundException {
-
-        System.setProperty("java.security.policy", "stupid.policy");
-        System.setSecurityManager(new SecurityManager());
-
+        //System.setProperty("java.security.policy", "stupid.policy");
+        //System.setSecurityManager(new SecurityManager());
 
         System.out.println("Choose your UI:\n1) CLI\n2) GUI");
         UI = askInput();
-        /*System.out.println("1) RMI\n2) SOCKET");
-        connection = askInput();*/
 
         if (UI == 1) {
             System.out.println("Select the kind of match you wanna play:\n1) SINGLEPLAYER\n2) MULTIPLAYER");
