@@ -17,7 +17,7 @@ public interface RemoteGameController extends Remote {
     GameModel getGameModel() throws  RemoteException;
 
     /**
-     * tries to send a ping to each client and remove them from the game if no answer is returned
+     * tries to send a ping to each client and remove them from the game if no answer is returned (only multiplayer)
      * modifies the gamemodel and finally changes it's state based on the current state and client's actions
      * @param view the view of the actual player
      * @throws RemoteException if the reference could not be accessed
@@ -69,13 +69,6 @@ public interface RemoteGameController extends Remote {
      * @throws RemoteException if the reference could not be accessed
      */
     void createGameModel(int level) throws RemoteException;
-
-    /**
-     * modifies the gamemodel and finally changes it's state based on the current state and client's actions
-     * @param view the view of the actual player
-     * @throws RemoteException if the reference could not be accessed
-     */
-    void updateSP(RemoteView view) throws RemoteException;
 
     /**
      * gets if has been started a singleplayer match

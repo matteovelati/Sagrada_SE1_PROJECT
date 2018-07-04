@@ -82,6 +82,12 @@ public class MatchController {
         restartButton.setVisible(false);
     }
 
+    void serverDown(){
+        setInactive();
+        rejoinButton.setVisible(false);
+        message.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
+    }
+
     private void setCards(GridPane type, String folder) throws RemoteException {
         for(Node card : type.getChildren()){
             loadCardImage(folder, viewGUI.getCardId(folder, GridPane.getRowIndex(card)), (ImageView)card, 162, 226);

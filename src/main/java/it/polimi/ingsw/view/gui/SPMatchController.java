@@ -55,7 +55,7 @@ public class SPMatchController {
         refreshDraft();
         loadPrivateObjectives();
         refreshTargetScore();
-        if(viewGUI.getGameModel().getField().getRoundTrack().getGrid().size()!=0)
+        if(!viewGUI.getGameModel().getField().getRoundTrack().getGrid().isEmpty())
             recreateRoundtrack();
 
         errorMessage.managedProperty().bind(errorMessage.visibleProperty());
@@ -74,6 +74,11 @@ public class SPMatchController {
         errorMessage.setVisible(false);
         input.setVisible(false);
         restartButton.setVisible(false);
+    }
+
+    void serverDown() {
+        middle.getChildren().removeAll(buttons, targetScore, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
+        message.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
     }
 
     private void loadToolcards() throws RemoteException {

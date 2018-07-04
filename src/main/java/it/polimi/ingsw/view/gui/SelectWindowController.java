@@ -29,6 +29,7 @@ public class SelectWindowController {
 
     private ViewGUI viewGUI;
 
+
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
     }
@@ -38,6 +39,12 @@ public class SelectWindowController {
         rejoin.managedProperty().bind(rejoin.visibleProperty());
         rejoin.setVisible(false);
         loadWindowPatterns();
+    }
+
+    void serverDown(){
+        allWindows.setVisible(false);
+        rejoin.setVisible(false);
+        text.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
     }
 
     void loadWindowPatterns() throws RemoteException {

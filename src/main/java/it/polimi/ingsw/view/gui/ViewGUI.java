@@ -20,6 +20,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ViewGUI extends Application implements RemoteView, Serializable {
     private transient Stage mainStage;
@@ -129,13 +131,21 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     public void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
             if(!getDeleteConnectionSocket() && !getBlockSocketConnection()) {
-                ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
-                this.gameModel = (RemoteGameModel) ob.readObject();
-                if(getOnline() && this.gameModel.getUpdateSocket()) {
-                    if(!gameModel.getState().equals(States.LOBBY))
-                        setBlockSocketConnection(true);
-                        //setDeleteConnectionSocket(true);*/
-                    this.run();
+                try {
+                    ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                    this.gameModel = (RemoteGameModel) ob.readObject();
+                    if (getOnline() && this.gameModel.getUpdateSocket()) {
+                        if (!gameModel.getState().equals(States.LOBBY))
+                            setBlockSocketConnection(true);
+                        this.run();
+                    }
+                }catch (SocketException e){
+                    Platform.runLater(()->{
+                        if(selectWindowScene)
+                            selectWindowController.serverDown();
+                        else
+                            matchController.serverDown();
+                    });
                 }
             }
         }
@@ -148,20 +158,25 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
                     this.gameModel = (RemoteGameModel) ob.readObject();
                 }catch(StreamCorruptedException e){
+                    //do nothing
                 }
                 if (this.gameModel.getUpdateSocket()) {
                     new Thread(() -> {
                         try {
                             run();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            //do nothing
                         }
                     }).start();
                 }
             }
             catch (SocketException e){
-                System.out.println("SEEMS LIKE THE SERVER HAS BEEN DISCONNECTED");
-                System.exit(0);
+                Platform.runLater(()->{
+                    if(selectWindowScene)
+                        selectWindowController.serverDown();
+                    else
+                        spMatchController.serverDown();
+                });
             }
         }
     }
@@ -922,13 +937,22 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             } else {
                 if (!gameModel.getState().equals(States.LOBBY) && !gameModel.getState().equals(States.ENDROUND) && !gameModel.getState().equals(States.ERROR) && !gameModel.getState().equals(States.ENDMATCH))
                     setDeleteConnectionSocket(true);
-                ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
-                ob.writeObject(this);
+                try {
+                    ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
+                    ob.writeObject(this);
+                }catch (SocketException e){
+                    Platform.runLater(()->{
+                        if(selectWindowScene)
+                            selectWindowController.serverDown();
+                        else
+                            matchController.serverDown();
+                    });
+                }
             }
         }
         else {
             if(singlePlayer)
-                network.updateSP(this);
+                network.update(this);
             else
                 network.update(this);
         }
@@ -972,11 +996,38 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Registry registry = LocateRegistry.getRegistry(ipAddress);
             network = (RemoteGameController) registry.lookup("network");
             UnicastRemoteObject.exportObject(this, 0);
+            verifyServerConnection();
         } catch (RemoteException e) {
             startController.printError("THIS IP ADDRESS DOES NOT EXIST");
         } catch (NotBoundException e){
             startController.printError("OPS... AN ERROR OCCURRED. PLEASE RESTART THE GAME.");
         }
+    }
+    /**
+     * Only for RMI clients.
+     * Every 2 seconds verifies if the Server is up.
+     * If not, shuts down the client.
+     */
+    private void verifyServerConnection(){
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    network.getMultiPlayerStarted();
+                    verifyServerConnection();
+                }catch (RemoteException e){
+                    Platform.runLater(()->{
+                        if(selectWindowScene)
+                            selectWindowController.serverDown();
+                        else if(singlePlayer)
+                            spMatchController.serverDown();
+                        else
+                            matchController.serverDown();
+                    });
+                }
+            }
+        },2000);
     }
 
     void setSocketConnection(String ipAddress){
@@ -1128,7 +1179,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                     }
                     setBlockSocketConnection(false);
                 }catch (IOException e){
-                    e.printStackTrace();
+                    //do nothing
                 }catch (ClassNotFoundException e1){
                     //
                 }

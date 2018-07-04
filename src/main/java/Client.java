@@ -1,4 +1,4 @@
-import it.polimi.ingsw.view.cli.ViewCLI;
+import it.polimi.ingsw.view.cli.ViewCLIMultiPlayer;
 import it.polimi.ingsw.view.cli.ViewCLISinglePlayer;
 import it.polimi.ingsw.view.gui.ViewGUI;
 import javafx.application.Application;
@@ -26,7 +26,7 @@ public class Client {
             if (match == 1)
                 new ViewCLISinglePlayer();
             else if (match == 2) {
-                new ViewCLI();
+                new ViewCLIMultiPlayer();
             }
         }
         else if (UI == 2) {
