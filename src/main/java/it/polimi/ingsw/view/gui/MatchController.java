@@ -42,6 +42,7 @@ public class MatchController {
     private ViewGUI viewGUI;
     private int firstMove = 0;
     private boolean enableRoundtrack = false;
+    private boolean rejoined;
 
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
@@ -57,6 +58,9 @@ public class MatchController {
         refreshTokens();
         setOtherPlayerNumber();
         loadOtherPlayerWindowImages();
+        if(viewGUI.getGameModel().getField().getRoundTrack().getGrid().size()!=0)
+            recreateRoundtrack();
+        rejoined = false;
 
         errorMessage.managedProperty().bind(errorMessage.visibleProperty());
         input.managedProperty().bind(input.visibleProperty());
@@ -196,6 +200,12 @@ public class MatchController {
     }
 
     void selectMove1View() throws RemoteException {
+        if(rejoined) {
+            if (!roundtrack.getChildren().isEmpty())
+                roundtrack.getChildren().clear();
+            recreateRoundtrack();
+            rejoined = false;
+        }
         buttons.setVisible(true);
         tokens.setVisible(true);
         windowArea.setVisible(true);
@@ -758,6 +768,7 @@ public class MatchController {
         viewGUI.matchRejoined();
         rejoinButton.setVisible(false);
         message.setText("JOINING AGAIN THE MATCH...\nWAIT YOUR TURN");
+        rejoined = true;
     }
 
     public void restartButtonClicked(ActionEvent e) throws Exception {
@@ -765,4 +776,50 @@ public class MatchController {
         stage.close();
         new ViewGUI().start(new Stage());
     }
+
+    private void recreateRoundtrack() throws RemoteException {
+        int roundtrackSize = viewGUI.getGameModel().getField().getRoundTrack().getGrid().size();
+        int necessaryColumn = viewGUI.getGameModel().getField().getRoundTrack().getRound()-1;
+        int necessaryRow;
+        int row = 0;
+        int column = 0;
+        String diceName;
+
+        if(roundtrackSize % necessaryColumn == 0)
+            necessaryRow = roundtrackSize/necessaryColumn - 1;
+        else
+            necessaryRow = roundtrackSize/necessaryColumn;
+
+        for(int i=0; i<viewGUI.getGameModel().getField().getRoundTrack().getGrid().size(); i++){
+            diceName = viewGUI.getRoundtrackDice(i);
+            reAddDice(row, column, diceName);
+            if(row == necessaryRow){
+                row = 0;
+                column++;
+            }
+            else if(row == roundtrack.getRowConstraints().size()-1) {
+                roundtrack.getRowConstraints().add(new RowConstraints(5));
+                row++;
+            }
+            else
+                row++;
+        }
+    }
+
+    private void reAddDice(int row, int column, String diceName) {
+        ImageView dice = new ImageView();
+        dice.setFitHeight(57);
+        dice.setFitWidth(57);
+        String path = "images/dices/" + diceName + ".png";
+        loadImage(path, 57, 57, dice, 0);
+        dice.setOnMouseClicked(e -> {
+            try {
+                roundtrackClick(e);
+            } catch (IOException e1) {
+                //do nothing
+            }
+        });
+        roundtrack.add(dice, column, row);
+    }
+
 }

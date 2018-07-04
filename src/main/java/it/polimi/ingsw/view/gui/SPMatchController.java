@@ -55,8 +55,8 @@ public class SPMatchController {
         refreshDraft();
         loadPrivateObjectives();
         refreshTargetScore();
-        /*if(viewGUI.getGameModel().getField().getRoundTrack().getGrid().size()!=0)
-            updateRoundtrack();*/
+        if(viewGUI.getGameModel().getField().getRoundTrack().getGrid().size()!=0)
+            recreateRoundtrack();
 
         errorMessage.managedProperty().bind(errorMessage.visibleProperty());
         input.managedProperty().bind(input.visibleProperty());
@@ -667,12 +667,48 @@ public class SPMatchController {
         new ViewGUI().start(new Stage());
     }
 
-    /*private void updateRoundtrack() throws RemoteException {
-        int index = 0;
-        for(Node child : roundtrack.getChildren()){
-            path = "images/dices/" + viewGUI.getGameModel().getField().getRoundTrack().getGrid().get(index) + ".png";
-            loadImage(path, 57, 57, dice, 0);
-            ((ImageView)child).setImage();
+    private void recreateRoundtrack() throws RemoteException {
+        int roundtrackSize = viewGUI.getGameModel().getField().getRoundTrack().getGrid().size();
+        int necessaryColumn = viewGUI.getGameModel().getField().getRoundTrack().getRound()-1;
+        int necessaryRow;
+        int row = 0;
+        int column = 0;
+        String diceName;
+
+        if(roundtrackSize % necessaryColumn == 0)
+            necessaryRow = roundtrackSize/necessaryColumn - 1;
+        else
+            necessaryRow = roundtrackSize/necessaryColumn;
+
+        for(int i=0; i<viewGUI.getGameModel().getField().getRoundTrack().getGrid().size(); i++){
+            diceName = viewGUI.getRoundtrackDice(i);
+            reAddDice(row, column, diceName);
+            if(row == necessaryRow){
+                row = 0;
+                column++;
+            }
+            else if(row == roundtrack.getRowConstraints().size()-1) {
+                roundtrack.getRowConstraints().add(new RowConstraints(5));
+                row++;
+            }
+            else
+                row++;
         }
-    }*/
+    }
+
+    private void reAddDice(int row, int column, String diceName) throws RemoteException {
+        ImageView dice = new ImageView();
+        dice.setFitHeight(57);
+        dice.setFitWidth(57);
+        path = "images/dices/" + diceName + ".png";
+        loadImage(path, 57, 57, dice, 0);
+        dice.setOnMouseClicked(e -> {
+            try {
+                roundtrackClick(e);
+            } catch (IOException e1) {
+                //do nothing
+            }
+        });
+        roundtrack.add(dice, column, row);
+    }
 }

@@ -775,6 +775,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return gameModel.getField().getDraft().getDraft().get(index).getColor().toString() + gameModel.getField().getDraft().getDraft().get(index).getValue();
     }
 
+    String getRoundtrackDice(int index) throws RemoteException{
+        return gameModel.getField().getRoundTrack().getGrid().get(index).getColor().toString() + gameModel.getField().getRoundTrack().getGrid().get(index).getValue();
+    }
+
     int getPlayerWindow(String username) throws RemoteException {
         Player player = findPlayer(username);
         int i = player.getWindow().getIdNumber();
