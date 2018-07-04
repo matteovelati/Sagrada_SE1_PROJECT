@@ -55,33 +55,72 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     private transient MatchController matchController;
     private transient SPMatchController spMatchController;
 
+    /**
+     * gets if it's needed to start the timer
+     * @return true if the timer has to be started
+     */
     @Override
     public boolean getStartTimerSocket() {
         return startTimerSocket;
     }
 
+    /**
+     * gets if a player has to be set online
+     * @return true if the player has to be set online
+     */
     @Override
     public boolean getReturnOnline(){
         return returnOnline;
     }
 
+    /**
+     * gets if the socket connection has to be blocked or not
+     * @return true if the socket conncetion has to be blocked
+     */
     public synchronized boolean getBlockSocketConnection() {
         return blockSocketConnection;
     }
 
+    /**
+     * sets if the socket connection has to be blocked or not
+     * @param blockSocketConnection the boolean to be set
+     */
     public synchronized void setBlockSocketConnection(boolean blockSocketConnection) {
         this.blockSocketConnection = blockSocketConnection;
     }
 
+    /**
+     * gets if the socket timeout connection needs be deleted or not
+     * @return true if the socket connection needs to be deleted, false otherwise
+     */
     @Override
     public synchronized boolean getDeleteConnectionSocket() {
         return deleteConnectionSocket;
     }
 
+    /**
+     * sets if the socket timeout connection needs be deleted or not
+     * @param x the boolean to be set
+     */
     public synchronized void setDeleteConnectionSocket(boolean x){
         this.deleteConnectionSocket = x;
     }
 
+    /**
+     * The main entry point for all JavaFX applications.
+     * The start method is called after the init method has returned,
+     * and after the system is ready for the application to begin running.
+     *
+     * <p>
+     * NOTE: This method is called on the JavaFX Application Thread.
+     * </p>
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set. The primary stage will be embedded in
+     * the browser if the application was launched as an applet.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages and will not be embedded in the browser.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         returnOnline = false;
@@ -114,12 +153,11 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     /**
-     *
+     * updates each view in the game
      * @param gameModel the gamemodel of the match
-     * @throws RemoteException if the reference could not be accessed
      */
     @Override
-    public void update(RemoteGameModel gameModel) throws RemoteException {
+    public void update(RemoteGameModel gameModel) {
         this.gameModel = gameModel;
         try {
             this.run();
@@ -128,6 +166,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * modifies the view based on the current state
+     * check if the server has been shut down
+     * @throws IOException if an I/O error occurs while reading stream header
+     * @throws ClassNotFoundException if class of a serialized object cannot be found
+     */
     public void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
             if(!getDeleteConnectionSocket() && !getBlockSocketConnection()) {
@@ -151,6 +195,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * modifies the view based on the current state
+     * check if the server has been shut down
+     * @throws IOException if an I/O error occurs while reading stream header
+     * @throws ClassNotFoundException if class of a serialized object cannot be found
+     */
     public void updateSocketSP() throws IOException, ClassNotFoundException{
         while(!endGame) {
             try {
@@ -181,6 +231,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * modifies the view based on the current state
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     private void run() throws IOException {
         returnOnline = false;
         state = gameModel.getState();
@@ -236,6 +290,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * shows the players in the lobby
+     */
     private void viewLobby() {
         Platform.runLater(() -> {
             try {
@@ -249,6 +306,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    /**
+     * shows the 2 schemecards (4 window)
+     */
     private void viewSelectWindow() {
         Platform.runLater(()-> {
             try{
@@ -272,6 +332,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    /**
+     * asks the client to select one action between:
+     * pick a dice, use a toolcard, end turn
+     */
     private void viewSelectMove1(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -325,6 +389,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * asks the client to select a die from the draft
+     */
     private void viewSelectDraft(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -354,6 +421,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * asks the client to select a space in the window to put the die in
+     */
     private void viewPutDiceInWindow(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -383,6 +453,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * asks the client to select one action between:
+     * pick a dice/use a toolcard, end turn
+     */
     private void viewSelectMove2(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -419,6 +493,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * asks the client to select a toolcard
+     */
     private void viewSelectCard(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -448,6 +525,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * asks the client to select a die from the draft
+     */
     private void viewSelectDie(){
         Platform.runLater(() -> {
             if(spMatchController == null)
@@ -456,6 +536,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    /**
+     * shows to the client the specific messages of the toolcard selected
+     */
     private void viewUseToolCard(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -489,6 +572,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * shows to the client the specific messages of the toolcard selected
+     */
     private void viewUseToolCard2(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -521,6 +607,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    /**
+     * shows to the client the specific messages of the toolcard selected
+     */
     private void viewUseToolCard3(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -553,6 +642,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    /**
+     * shows the end of a round
+     */
     private void viewEndRound(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -583,6 +675,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * shows the final scores of each player
+     */
     private void viewEndMatch(){
         if(singlePlayer){
             Platform.runLater(() -> {
@@ -610,6 +705,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * asks the client if he wants to restart the game or not
+     */
     private void viewRestart(){
         if(singlePlayer)
             Platform.runLater(() -> spMatchController.restartView());
@@ -617,9 +715,13 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> matchController.restartView());
     }
 
+    /**
+     * shows the client a message error
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     private void viewError() throws IOException {
         if(singlePlayer && spMatchController == null){
-            Platform.runLater(() -> startSinglePlayerMatch());
+            Platform.runLater(this::startSinglePlayerMatch);
         }
         if(socketConnection) {
             setBlockSocketConnection(false);
@@ -728,11 +830,20 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             Platform.runLater(() -> matchController.error(error));
     }
 
-
+    /**
+     * sets the username of this client's view
+     * @param s the name to be set
+     */
     void setUser(String s) {
         this.user = s;
     }
 
+    /**
+     * checks if the username inserted already exists
+     * @param s the username inserted
+     * @return true if doesn't exist the same username, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean verifyUsername(String s) throws RemoteException{
         for(int i=0; i<gameModel.getPlayers().size(); i++){
             if(s.equals(gameModel.getPlayers().get(i).getUsername()))
@@ -741,10 +852,20 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return true;
     }
 
+    /**
+     * checks if the actual state is LOBBY
+     * @return true if the actual state is LOBBY, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean checkLobby() throws RemoteException {
         return gameModel.getState().equals(States.LOBBY);
     }
 
+    /**
+     * checks if the user is trying to reconnecting or not
+     * @return true if the user is reconnecting, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean reconnecting() throws RemoteException {
         if(singlePlayer){
             return !((!gameModel.getObservers().contains(null)) || (gameModel.getObserverSocket() != null));
@@ -759,26 +880,55 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * sets the selectWindowController of the game
+     * @param selectWindowController the selectWindowController to be set
+     */
     void setSelectWindowController(SelectWindowController selectWindowController){
         this.selectWindowController = selectWindowController;
     }
 
+    /**
+     * sets the matchController of the game
+     * @param matchController the matchController to be set
+     */
     void setMatchController(MatchController matchController){
         this.matchController = matchController;
     }
 
+    /**
+     * checks if this client is the actual player or not
+     * @return true if this client is the actual player, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean actualPlayer() throws RemoteException {
         return user.equals(gameModel.getActualPlayer().getUsername());
     }
 
+
+    /**
+     * sets first choice of the client
+     * @param i the choice of the client
+     */
     void setChoose1(int i){
         this.choose1 = i;
     }
 
+    /**
+     * sets the second choice of the client
+     * @param i the choice of the client
+     */
     void setChoose2(int i){
         this.choose2 = i;
     }
 
+    /**
+     * gets the idNumber of the window
+     * @param i the index of the schemecard selected
+     * @param front a boolean to know if select the front or the back of the schemecard
+     * @return the idNumber of the window selected
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getWindowId(int i, boolean front) throws RemoteException {
         if(front)
             return gameModel.getSchemeCards().get(i).getFront().getIdNumber();
@@ -786,20 +936,44 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             return gameModel.getSchemeCards().get(i).getBack().getIdNumber();
     }
 
+    /**
+     * gets the die in the draft at index index
+     * @param index the index of the die in the draft
+     * @return the selected die
+     * @throws RemoteException if the reference could not be accessed
+     */
     String getDraftDice(int index) throws RemoteException {
         return gameModel.getField().getDraft().getDraft().get(index).getColor().toString() + gameModel.getField().getDraft().getDraft().get(index).getValue();
     }
 
+    /**
+     * gets the die in the roundtrack at index index
+     * @param index the index of the die in the roundtrack
+     * @return the selected die
+     * @throws RemoteException if the reference could not be accessed
+     */
     String getRoundtrackDice(int index) throws RemoteException{
         return gameModel.getField().getRoundTrack().getGrid().get(index).getColor().toString() + gameModel.getField().getRoundTrack().getGrid().get(index).getValue();
     }
 
+    /**
+     * gets the window of the player found
+     * @param username the username of the player to be found
+     * @return the window of the player found
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getPlayerWindow(String username) throws RemoteException {
         Player player = findPlayer(username);
-        int i = player.getWindow().getIdNumber();
         return player.getWindow().getIdNumber();
     }
 
+    /**
+     * gets the idNumber of a generic card
+     * @param type the kind of card to be analyzed
+     * @param i the index of the card
+     * @return the idNumber of the card found
+     * @throws RemoteException if the reference could not be accessed
+     */
     String getCardId(String type, int i) throws RemoteException{
         String id = null;
 
@@ -815,11 +989,23 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return id;
     }
 
+    /**
+     * gets the favor tokens of the player found
+     * @param username the username of the player to be found
+     * @return the number of favor tokens of the player found
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getTokens(String username) throws RemoteException {
         Player player = findPlayer(username);
         return player.getTokens();
     }
 
+    /**
+     * finds the correspondence between the name of this view and the player in the model
+     * @param s the name to be searched
+     * @return the player whose name is equal to the string 's'
+     * @throws RemoteException if the reference could not be accessed
+     */
     private Player findPlayer(String s) throws RemoteException {
         for(int i=0; i<gameModel.getPlayers().size(); i++) {
             Player p = gameModel.getPlayers().get(i);
@@ -830,6 +1016,12 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return gameModel.getPlayers().get(0);
     }
 
+    /**
+     * gets the username of the player at index i
+     * @param i the index of the player
+     * @return the username of the player
+     * @throws RemoteException if the reference could not be accessed
+     */
     String getPlayerUsername(int i) throws RemoteException {
         if(gameModel.getPlayers().get(i).getUsername().equals(user))
             return "next";
@@ -837,59 +1029,132 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             return gameModel.getPlayers().get(i).getUsername();
     }
 
-    //
-
+    /**
+     * gets the value of the die at index i in the draft
+     * @param i the index of the die in the draft
+     * @return the value of the die at index i in the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getDraftDiceValue(int i) throws RemoteException {
         return gameModel.getField().getDraft().getDraft().get(i).getValue();
     }
 
+    /**
+     * gets the color of the die at index i in the draft
+     * @param i the index of the die in the draft
+     * @return the color of the die at index i in the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     Colors getDraftDiceColor(int i) throws RemoteException {
         return gameModel.getField().getDraft().getDraft().get(i).getColor();
     }
 
+    /**
+     * gets the list of dice in the draft
+     * @return the list of dice in the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     ArrayList<Dice> getDraft() throws RemoteException {
         return gameModel.getField().getDraft().getDraft();
     }
 
+    /**
+     * gets the number of players in the game
+     * @return the number of players in the game
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getNumberOfPlayers() throws RemoteException {
         return gameModel.getPlayers().size();
     }
 
+    /**
+     * gets the actual state of the gamemodel
+     * @return the actual state of the gamemodel
+     * @throws RemoteException if the reference could not be accessed
+     */
     States getGameState() throws RemoteException {
         return gameModel.getState();
     }
 
+    /**
+     * checks if the size of the draft is bigger than i
+     * @param i the number to check
+     * @return true if the size of the draft is bigger than i, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean checkDraftSize(int i) throws RemoteException {
         return i<gameModel.getField().getDraft().getDraft().size();
     }
 
+    /**
+     * checks if the space at index [i,j] of the player's window is empty or not
+     * @param i the row
+     * @param j the column
+     * @return true if the space is empty, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean checkWindowEmptyCell(int i, int j) throws RemoteException {
         Player player = findPlayer(user);
         return player.getWindow().getWindow()[i][j].getIsEmpty();
     }
 
+    /**
+     * gets the color of the space at index [i,j] of the player's window
+     * @param i the row
+     * @param j the column
+     * @return the color of the space
+     * @throws RemoteException if the reference could not be accessed
+     */
     Colors getWindowDiceColor(int i, int j) throws RemoteException {
         Player player = findPlayer(user);
         return player.getWindow().getWindow()[i][j].getDice().getColor();
     }
 
+    /**
+     * gets the value of the space at index [i,j] of the player's window
+     * @param i the row
+     * @param j the column
+     * @return the value of the space
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getWindowDiceValue(int i, int j) throws RemoteException {
         Player player = findPlayer(user);
         return player.getWindow().getWindow()[i][j].getDice().getValue();
     }
 
+    /**
+     * gets the actual round of the game
+     * @return the actual round
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getRound() throws RemoteException {
         return gameModel.getField().getRoundTrack().getRound();
     }
 
+    /**
+     * gets the roundtrack of the game
+     * @return the roundtrack of the game
+     * @throws RemoteException if the reference could not be accessed
+     */
     ArrayList<Dice> getRoundtrack() throws RemoteException {
         return gameModel.getField().getRoundTrack().getGrid();
     }
 
+    /**
+     * gets the idNumber of the toolcard selected
+     * @return the idNumber of the toolcard selected
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getSelectedToolcardId() throws RemoteException {
         return gameModel.getActualPlayer().getToolCardSelected().getNumber();
     }
 
+    /**
+     * verifies if some client has lost connection to the main server
+     * @param s the name of the client to be verified
+     * @return true if the client has lost connection, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean verifyUserCrashed(String s) throws RemoteException {
         for(Player x : gameModel.getPlayers()){
             if(x.getUsername().equals(s)){
@@ -917,6 +1182,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return false;
     }
 
+    /**
+     * adds again an RMI or SOCKET observer after he has lost connection
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     void reAddPlayer() throws IOException {
         if(socketConnection){
             ObjectOutputStream ob = new ObjectOutputStream(socket.getOutputStream());
@@ -928,6 +1197,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * based on the type of connection, it calls an update to the Server
+     * @throws IOException if an I/O error occurs while reading stream header
+     */
     void notifyNetwork() throws IOException {
         if(socketConnection) {
             if (singlePlayer) {
@@ -953,46 +1226,87 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             network.update(this);
     }
 
-    public int getNextPlayerWindowId(int i) throws RemoteException {
-        if(gameModel.getPlayers().get(i).getUsername().equals(user))
-            return 0;
-        else
-            return gameModel.getPlayers().get(i).getWindow().getIdNumber();
-    }
-
+    /**
+     * checks if the space at index [i,j] of window of the player whose name is equal to 's' is empty or not
+     * @param s the username to be searched
+     * @param i the row
+     * @param j the column
+     * @return true if the space is empty, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean checkOtherPlayerWindowEmptyCell(String s, int i, int j) throws RemoteException {
         Player player = findPlayer(s);
         return player.getWindow().getWindow()[i][j].getIsEmpty();
     }
 
+    /**
+     * checks if the player 's' is online or not
+     * @param s the username to be searched
+     * @return true if 's' is online, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean checkOtherPlayerOnline(String s) throws RemoteException{
         Player player = findPlayer(s);
         return player.getOnline();
     }
 
+    /**
+     * checks if the player 's' is the actual player or not
+     * @param s the username to be searched
+     * @return true if 's' is the actual player, false otherwise
+     * @throws RemoteException if the reference could not be accessed
+     */
     boolean checkOtherPlayerActual(String s) throws RemoteException{
         return (gameModel.getActualPlayer().getUsername().equals(s));
     }
 
+    /**
+     * gets the color of the die at index [i,j] of the player 's'
+     * @param i the row
+     * @param j the column
+     * @return the color of the die
+     * @throws RemoteException if the reference could not be accessed
+     */
     Colors getOtherPlayerDiceColor(String s, int i, int j) throws RemoteException {
         Player player = findPlayer(s);
         return player.getWindow().getWindow()[i][j].getDice().getColor();
     }
 
+    /**
+     * gets the value of the die at index [i,j] of the player 's'
+     * @param i the row
+     * @param j the column
+     * @return the value of the die
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getOtherPlayerDiceValue(String s, int i, int j) throws RemoteException {
         Player player = findPlayer(s);
         return player.getWindow().getWindow()[i][j].getDice().getValue();
     }
 
+    /**
+     * gets the final score of the player 's'
+     * @param s the username to be searched
+     * @return the final score of the player found
+     * @throws RemoteException if the reference could not be accessed
+     */
     int getPlayerScore(String s) throws RemoteException {
         Player player = findPlayer(s);
         return player.getFinalScore();
     }
 
+    /**
+     * gets the gamecontroller of the match
+     * @return the gamecontroller of the match
+     */
     RemoteGameController getNetwork(){
         return this.network;
     }
 
+    /**
+     * establishes a RMI connection
+     * @param ipAddress the IPaddress to connects with
+     */
     void setRMIConnection(String ipAddress){
         socketConnection = false;
         socket = null;
@@ -1009,6 +1323,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             startController.setWrongIP(true);
         }
     }
+
     /**
      * Only for RMI clients.
      * Every 2 seconds verifies if the Server is up.
@@ -1036,6 +1351,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         },2000);
     }
 
+    /**
+     * establishes a socket connection
+     * @param ipAddress the IPaddress to connects with
+     */
     void setSocketConnection(String ipAddress){
         socketConnection = true;
         try {
@@ -1053,6 +1372,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * creates a singleplayer match
+     * @throws RemoteException if the reference could not be accessed
+     */
     void createSinglePlayerMatch() throws RemoteException {
         if(network.getSinglePlayerStarted()){
             gameModel = network.getGameModel();
@@ -1063,6 +1386,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * creates a multiplayer match
+     * @throws RemoteException if the reference could not be accessed
+     */
     void createMultiPlayerMatch() throws RemoteException {
         if(network.getMultiPlayerStarted()){
             gameModel = network.getGameModel();
@@ -1073,24 +1400,36 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * gets if has started a singleplayer match
+     * @return true if the game is in singleplayer mode
+     */
     @Override
     public boolean getSinglePlayer(){
         return singlePlayer;
     }
 
+    /**
+     * sets if has started a singleplayer match
+     * @param singlePlayer the boolean to be set
+     */
     public void setSinglePlayer(boolean singlePlayer){
         this.singlePlayer = singlePlayer;
     }
 
+    /**
+     * gets if the client is connected with socket
+     * @return true if the client is connected with socket
+     */
     @Override
     public boolean getSocketConnection(){
         return socketConnection;
     }
 
-    void setStartTimerSocket(boolean b){
-        this.startTimerSocket = b;
-    }
-
+    /**
+     * allow the player to rejoin the match setting him online again
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     void matchRejoined() throws IOException {
         if(socketConnection){
             returnOnline = true;
@@ -1105,6 +1444,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * based on the type of connection, starts a new timer on the server
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     void playTimer() throws IOException {
         if(socketConnection){
             startTimerSocket = true;
@@ -1118,6 +1461,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         startTimerSocket = false;
     }
 
+    /**
+     * creates a new match
+     */
     private void showMatch(){
         Platform.runLater(() -> {
             try {
@@ -1146,6 +1492,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         });
     }
 
+    /**
+     * starts a singleplayer match
+     */
     private void startSinglePlayerMatch(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/spmatch.fxml"));
@@ -1167,46 +1516,66 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         }
     }
 
+    /**
+     * gets the gamemodel of the match
+     * @return the gamemodel of the match
+     */
     RemoteGameModel getGameModel(){
         return this.gameModel;
     }
 
+    /**
+     * if the timer expired, set the player offline
+     */
     public void socketTimeOut(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
-                    gameModel = (RemoteGameModel) ob.readObject();
-                    setDeleteConnectionSocket(false);
-                    for(Player x : gameModel.getPlayers()){
-                        if(x.getUsername().equals(user) && !x.getOnline()) {
-                            setOnline(false);
-                        }
+        new Thread(() -> {
+            try {
+                ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
+                gameModel = (RemoteGameModel) ob.readObject();
+                setDeleteConnectionSocket(false);
+                for(Player x : gameModel.getPlayers()){
+                    if(x.getUsername().equals(user) && !x.getOnline()) {
+                        setOnline(false);
                     }
-                    setBlockSocketConnection(false);
-                }catch (IOException e){
-                    //do nothing
-                }catch (ClassNotFoundException e1){
-                    //
                 }
+                setBlockSocketConnection(false);
+            }catch (IOException e){
+                //do nothing
+            }catch (ClassNotFoundException e1){
+                //
             }
         }).start();
     }
 
+    /**
+     * gets if this client wants to restart the game
+     * @return true if the client wants to restart the game, false otherwise
+     */
     public boolean getRestart() {
         return restart;
     }
 
+    /**
+     * sets if the client wants to restart the game
+     * @param restart the boolean to be set
+     */
     public void setRestart(boolean restart) {
         this.restart = restart;
     }
 
+    /**
+     * gets the level of difficulty of a the match
+     * @return 0 if multiplayer, an int between 1 and 5 if singleplayer
+     */
    @Override
     public int getLevel(){
         return level;
     }
 
+    /**
+     * sets the level of difficulty of a the match
+     * 0 if multiplayer, an int between 1 and 5 if singleplayer
+     */
     public void setLevel(int level){
         this.level = level;
     }

@@ -40,6 +40,10 @@ public class MatchController {
     @FXML
     private TextField input;
 
+    private static final String GREEN = "#00FF00";
+    private static final String RED = "#FF0000";
+    private static final String BLUE = "#0000FF";
+
     private ViewGUI viewGUI;
     private int firstMove = 0;
     private boolean enableRoundtrack = false;
@@ -59,7 +63,7 @@ public class MatchController {
         refreshTokens();
         setOtherPlayerNumber();
         loadOtherPlayerWindowImages();
-        if(viewGUI.getGameModel().getField().getRoundTrack().getGrid().size()!=0)
+        if(!viewGUI.getGameModel().getField().getRoundTrack().getGrid().isEmpty())
             recreateRoundtrack();
         rejoined = false;
 
@@ -83,18 +87,31 @@ public class MatchController {
         restartButton.setVisible(false);
     }
 
+    /**
+     * hides the interactive window due to a server disconnection
+     */
     void serverDown(){
         setInactive();
         rejoinButton.setVisible(false);
         message.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
     }
 
+    /**
+     * sets the cards for the game
+     * @param type the kind of card to be created
+     * @param folder the folder where the images are saved
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void setCards(GridPane type, String folder) throws RemoteException {
         for(Node card : type.getChildren()){
             loadCardImage(folder, viewGUI.getCardId(folder, GridPane.getRowIndex(card)), (ImageView)card, 162, 226);
         }
     }
 
+    /**
+     * sets the draft dimension based on the number of players in game
+     * @param numberOfPlayers the number of players in game
+     */
     private void setDraftDimension(int numberOfPlayers){
         createDraftSpace(0);
         for(int i=0; i<numberOfPlayers*2; i++) {
@@ -102,6 +119,10 @@ public class MatchController {
         }
     }
 
+    /**
+     * creates the space to allocate a die
+     * @param columnIndex the index of the column
+     */
     private void createDraftSpace(int columnIndex){
         ImageView space = createEmptyImageView(60, 60);
         space.setOnMouseClicked(e -> {
@@ -115,6 +136,10 @@ public class MatchController {
         draft.add(space, columnIndex, 0);
     }
 
+    /**
+     * shows the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void refreshDraft() throws RemoteException {
         for(Node diceImage : draft.getChildren()){
             if(viewGUI.checkDraftSize(GridPane.getColumnIndex(diceImage))) {
@@ -158,6 +183,10 @@ public class MatchController {
         return imageView;
     }
 
+    /**
+     * shows the favor tokens remaining
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void refreshTokens() throws RemoteException {
         int t = viewGUI.getTokens(viewGUI.getUser());
         tokens.setText("TOKENS: " + t);
@@ -193,6 +222,11 @@ public class MatchController {
         }
     }
 
+    /**
+     * disables the interactive buttons to non-actual players
+     * shows a WAIT message
+     * @throws RemoteException if the reference could not be accessed
+     */
     void waitTurn() throws RemoteException {
         refreshTokens();
         buttons.setDisable(true);
@@ -467,6 +501,8 @@ public class MatchController {
                 useToolcard.setText("USE A TOOLCARD");
                 useToolcard.setDisable(true);
                 break;
+            default:
+                assert false;
         }
     }
 
@@ -499,6 +535,8 @@ public class MatchController {
                 pickDice.setText("PICK A DICE");
                 viewGUI.notifyNetwork();
                 break;
+            default:
+                assert false;
         }
     }
 
@@ -579,6 +617,10 @@ public class MatchController {
                     viewGUI.notifyNetwork();
                     break;
                 }
+                break;
+
+            default:
+                assert false;
         }
     }
 
@@ -604,6 +646,9 @@ public class MatchController {
                     viewGUI.notifyNetwork();
                 }
                 break;
+
+            default:
+                assert false;
         }
     }
 
@@ -724,11 +769,11 @@ public class MatchController {
                 }
             }
             if(viewGUI.checkOtherPlayerOnline(player2label.getText()))
-                player2label.setTextFill(Color.web("#00FF00"));
+                player2label.setTextFill(Color.web(GREEN));
             else
-                player2label.setTextFill(Color.web("#FF0000"));
+                player2label.setTextFill(Color.web(RED));
             if(viewGUI.checkOtherPlayerActual(player2label.getText()))
-                player2label.setTextFill(Color.web("#0000FF"));
+                player2label.setTextFill(Color.web(BLUE));
         }
         if(viewGUI.getNumberOfPlayers() > 2){
             for(int i=0; i < player3windowGrid.getRowConstraints().size(); i++){
@@ -744,11 +789,11 @@ public class MatchController {
                 }
             }
             if(viewGUI.checkOtherPlayerOnline(player3label.getText()))
-                player3label.setTextFill(Color.web("#00FF00"));
+                player3label.setTextFill(Color.web(GREEN));
             else
-                player3label.setTextFill(Color.web("#FF0000"));
+                player3label.setTextFill(Color.web(RED));
             if(viewGUI.checkOtherPlayerActual(player3label.getText()))
-                player3label.setTextFill(Color.web("#0000FF"));
+                player3label.setTextFill(Color.web(BLUE));
             if(viewGUI.getNumberOfPlayers() == 4){
                 for(int i=0; i < player4windowGrid.getRowConstraints().size(); i++){
                     for(int j=0; j<player4windowGrid.getColumnConstraints().size(); j++){
@@ -763,11 +808,11 @@ public class MatchController {
                     }
                 }
                 if(viewGUI.checkOtherPlayerOnline(player4label.getText()))
-                    player4label.setTextFill(Color.web("#00FF00"));
+                    player4label.setTextFill(Color.web(GREEN));
                 else
-                    player4label.setTextFill(Color.web("#FF0000"));
+                    player4label.setTextFill(Color.web(RED));
                 if(viewGUI.checkOtherPlayerActual(player4label.getText()))
-                    player4label.setTextFill(Color.web("#0000FF"));
+                    player4label.setTextFill(Color.web(BLUE));
             }
         }
     }

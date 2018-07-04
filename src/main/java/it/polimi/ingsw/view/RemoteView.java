@@ -100,7 +100,6 @@ public interface RemoteView extends Remote {
     void printError(String string) throws RemoteException;
 
     /**
-     /**
      * gets if has started a singleplayer match
      * @return true if the game is in singleplayer mode
      * @throws RemoteException if the reference could not be accessed

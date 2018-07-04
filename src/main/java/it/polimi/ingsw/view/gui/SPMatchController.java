@@ -373,6 +373,8 @@ public class SPMatchController {
                 useToolcard.setText("USE A TOOLCARD");
                 useToolcard.setDisable(true);
                 break;
+            default:
+                assert false;
         }
     }
 
@@ -403,6 +405,8 @@ public class SPMatchController {
                 pickDice.setText("PICK A DICE");
                 viewGUI.notifyNetwork();
                 break;
+            default:
+                assert false;
         }
     }
 
@@ -483,6 +487,8 @@ public class SPMatchController {
                     viewGUI.notifyNetwork();
                     break;
                 }
+            default:
+                assert false;
         }
     }
 
@@ -508,6 +514,8 @@ public class SPMatchController {
                     viewGUI.notifyNetwork();
                 }
                 break;
+            default:
+                assert false;
         }
     }
 
