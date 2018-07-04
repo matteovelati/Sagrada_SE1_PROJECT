@@ -38,9 +38,9 @@ Se si intende giocare tramite CLI, per un'ottima esperienza di gioco il jar del 
 eseguito su __Git Bash__ , pena la mancata visualizzazione dei colori.
 Inoltre, è richiesto che i client non si connettano contemporaneamente (socket).
 
-Sono state gestiti tutti i tipi di disconnessione lato Server e lato Client, eccetto per la caduta 
+Sono stati gestiti tutti i tipi di disconnessione lato Server e lato Client, eccetto per la caduta 
 di connessione del server durante l'attesa di inizio partita e la disconnessione di un client 
-quando si trova nello stato LOBBY.
+quando si trova da solo nello stato LOBBY.
 
 Tramite connessione socket non è mostrata al giocatore la distinzione sul tipo di errore che sta commettendo
 mentre gioca.
