@@ -102,6 +102,13 @@ public class TCEglomiseBrushTest {
         input.add(2);
         input.add(3);
 
+
+        assertFalse(tc.getIsUsed());
+        assertEquals(2, tc.getNumber());
+        assertEquals("Eglomise Brush", tc.getTitle());
+        assertEquals("Move any ONE die in your window ignoring color restrictions.\n", tc.getDescr());
+        assertFalse(tc.getForceTurn());
+        assertEquals(1, tc.getCalls());
         assertTrue(tc.useToolCard(gameModel, input));
         assertEquals(gameModel.getActualPlayer().getWindow().getWindow()[input.get(2)][input.get(3)].getDice(), dice2);
     }

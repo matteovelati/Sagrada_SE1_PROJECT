@@ -37,6 +37,7 @@ public class WindowTest {
             window = new Window(x);
             assertNotNull(window.getName());
             assertTrue(window.getDifficulty() > 2);
+            assertEquals(x, window.getIdNumber());
         }
     }
 

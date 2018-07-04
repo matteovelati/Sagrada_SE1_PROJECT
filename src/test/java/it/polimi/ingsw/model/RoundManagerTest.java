@@ -67,6 +67,7 @@ public class RoundManagerTest {
         setUp();
         Dice dice = draft.getDraft().get(0);
         roundManager.endRound(draft, roundTrack);
+        assertEquals(1, roundManager.getCounter());
         assertEquals(dice, roundTrack.getGrid().get(0));
         assertFalse(draft.getDraft().contains(dice));
     }

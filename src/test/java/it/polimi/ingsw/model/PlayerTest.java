@@ -48,6 +48,7 @@ public class PlayerTest {
         draft.addDice(new Dice(Colors.G));
         draft.addDice(new Dice(Colors.P));
         input = new ArrayList<>(1);
+        assertTrue(player1.getOnline());
     }
 
     @Test
@@ -86,8 +87,12 @@ public class PlayerTest {
     public void pickDice() {
         setUp();
         assertEquals(5, draft.getDraft().size());
-        player1.pickDice(draft, 2);
+        player1.pickDice(draft, 1);
         assertEquals(4, draft.getDraft().size());
+        assertEquals(diceB, player1.getDice());
+        Dice diceX = new Dice(Colors.R);
+        player1.setDice(diceX);
+        assertEquals(diceX, player1.getDice());
     }
 
     @Test
@@ -120,6 +125,7 @@ public class PlayerTest {
         }
         gameModel.setActualPlayer(0);
         assertFalse(player1.useToolCard(gameModel, input));
+        assertFalse(player1.getSkipNextTurn());
     }
 
     @Test
@@ -136,5 +142,13 @@ public class PlayerTest {
         assertEquals(5, player2.getTokens());
         player2.decreaseToken();
         assertEquals(3, player2.getTokens());
+    }
+
+
+    @Test
+    public void getFinalScore(){
+        setUp();
+        player1.setFinalScore(21);
+        assertEquals(21, player1.getFinalScore());
     }
 }

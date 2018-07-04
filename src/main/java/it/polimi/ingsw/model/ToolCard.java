@@ -124,7 +124,7 @@ public abstract class ToolCard extends Card {
         if (input.get(0) != -1)
             return (moveDice(gameModel.getActualPlayer().getWindow(), input.get(0), input.get(1), input.get(2), input.get(3), card));
         else
-            return false; //con questo false NON deve richiamare il metodo
+            return false;
     }
 
     /**
@@ -138,7 +138,7 @@ public abstract class ToolCard extends Card {
      * @param card an identifier of some toolcards
      * @return true if the die has been moved, false otherwise
      */
-    private boolean moveDice(Window window, int i, int j, int x, int y, int card) { //i,j dado da muovere - x,y nuova casella
+    private boolean moveDice(Window window, int i, int j, int x, int y, int card) {
         Dice dicetmp = window.getWindow()[i][j].getDice();
         if (dicetmp == null)
             return false;

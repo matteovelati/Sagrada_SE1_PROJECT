@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.toolcards.TCEglomiseBrush;
-import it.polimi.ingsw.model.toolcards.TCGlazingHammer;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -39,6 +39,19 @@ public class GameModelTest {
     public void getInstance() {
         setUp();
         assertEquals(gameModel, GameModel.getInstance(0));
+    }
+
+    @Test
+    public void getUpdateSocket() {
+        setUp();
+        assertTrue(gameModel.getUpdateSocket());
+    }
+
+    @Test
+    public void setUpdateSocket() {
+        setUp();
+        gameModel.setUpdateSocket(false);
+        assertFalse(gameModel.getUpdateSocket());
     }
 
     @Test
@@ -84,11 +97,19 @@ public class GameModelTest {
     }
 
     @Test
-    public void playerSelectToolCard() {
+    public void playerSelectToolCardMP() {
         setUp();
         gameModel.setSchemeCards();
         gameModel.playerSetWindow(1);
         assertTrue(gameModel.playerSelectToolCardMP(2));
+    }
+
+    @Test
+    public void playerSelectToolCardSP() {
+        setUp();
+        gameModel.setSchemeCards();
+        gameModel.playerSetWindow(1);
+        assertFalse(gameModel.playerSelectToolCardSP(2));
     }
 
     @Test
@@ -141,5 +162,20 @@ public class GameModelTest {
         int oldtokens = gameModel.getActualPlayer().getTokens();
         gameModel.decreaseToken();
         assertTrue(gameModel.getActualPlayer().getTokens() < oldtokens);
+    }
+
+    @Test
+    public void setState(){
+        setUp();
+        gameModel.setState(States.SELECTMOVE1);
+        assertEquals(States.SELECTMOVE1, gameModel.getState());
+    }
+
+    @Test
+    public void getPlayers(){
+        setUp();
+        assertEquals(5, gameModel.getAllColors().size());
+        assertEquals(2, gameModel.getPlayers().size());
+        assertEquals(player1, gameModel.getPlayers().get(0));
     }
 }
