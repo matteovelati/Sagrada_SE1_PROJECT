@@ -34,6 +34,7 @@ public class StartController {
     private int state = 0;
     private int connectionType = 0;     //1 RMI; 2 SOCKET
     private String ipAddress;
+    private boolean wrongIP = false;
 
     void init() {
         error.managedProperty().bind(error.visibleProperty());
@@ -73,6 +74,10 @@ public class StartController {
 
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
+    }
+
+    public void setWrongIP(boolean wrongIP) {
+        this.wrongIP = wrongIP;
     }
 
     private void setUser(String s){
@@ -225,41 +230,43 @@ public class StartController {
             ipAddress = username.getText();
         }
 
-        if(viewGUI.getSinglePlayer()){
-            if(connectionType==1){
-                if(viewGUI.getNetwork().getMultiPlayerStarted())
-                    gameStarted();
-            }
-            state = 3;
-            chooseDifficulty();
-        }
-        else{
-            if(connectionType==1) {
-                if (viewGUI.getNetwork().getSinglePlayerStarted())
-                    gameStarted();
-                else {
-                    viewGUI.createMultiPlayerMatch();
-                    state = 4;
-                    try {
-                        if(checkState()) {
-                            insertUsername();
-                        }
-                    } catch (RemoteException e) {
-                        //do nothing
-                    }
+        if(!wrongIP) {
+            if (viewGUI.getSinglePlayer()) {
+                if (connectionType == 1) {
+                    if (viewGUI.getNetwork().getMultiPlayerStarted())
+                        gameStarted();
                 }
-            }
-            else{
-                viewGUI.setSocketConnection(ipAddress);
-                if (viewGUI.getNetwork().getSinglePlayerStarted())
-                    gameStarted();
-                else{
-                    state = 4;
-                    try {
-                        if(checkState())
-                            insertUsername();
-                    } catch (RemoteException e) {
-                        //do nothing
+                state = 3;
+                chooseDifficulty();
+            } else {
+                if (connectionType == 1) {
+                    if (viewGUI.getNetwork().getSinglePlayerStarted())
+                        gameStarted();
+                    else {
+                        viewGUI.createMultiPlayerMatch();
+                        state = 4;
+                        try {
+                            if (checkState()) {
+                                insertUsername();
+                            }
+                        } catch (RemoteException e) {
+                            //do nothing
+                        }
+                    }
+                } else {
+                    viewGUI.setSocketConnection(ipAddress);
+                    if(!wrongIP) {
+                        if (viewGUI.getNetwork().getSinglePlayerStarted())
+                            gameStarted();
+                        else {
+                            state = 4;
+                            try {
+                                if (checkState())
+                                    insertUsername();
+                            } catch (RemoteException e) {
+                                //do nothing
+                            }
+                        }
                     }
                 }
             }
@@ -283,13 +290,17 @@ public class StartController {
         else
             viewGUI.createSinglePlayerMatch();
 
-        state = 4;
-        try {
-            if(checkState())
-                insertUsername();
-        } catch (RemoteException e) {
-            //do nothing
+        if(!wrongIP) {
+            state = 4;
+            try {
+                if (checkState())
+                    insertUsername();
+            } catch (RemoteException e) {
+                //do nothing
+            }
         }
+        else
+            container.getChildren().removeAll(radioButton3, radioButton4, radioButton5);
     }
 
     private void usernameInserted() throws IOException {

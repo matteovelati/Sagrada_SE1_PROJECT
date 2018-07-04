@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -722,6 +723,12 @@ public class MatchController {
                     player2windowGrid.add(dice, j, i);
                 }
             }
+            if(viewGUI.checkOtherPlayerOnline(player2label.getText()))
+                player2label.setTextFill(Color.web("#00FF00"));
+            else
+                player2label.setTextFill(Color.web("#FF0000"));
+            if(viewGUI.checkOtherPlayerActual(player2label.getText()))
+                player2label.setTextFill(Color.web("#0000FF"));
         }
         if(viewGUI.getNumberOfPlayers() > 2){
             for(int i=0; i < player3windowGrid.getRowConstraints().size(); i++){
@@ -736,6 +743,12 @@ public class MatchController {
                     }
                 }
             }
+            if(viewGUI.checkOtherPlayerOnline(player3label.getText()))
+                player3label.setTextFill(Color.web("#00FF00"));
+            else
+                player3label.setTextFill(Color.web("#FF0000"));
+            if(viewGUI.checkOtherPlayerActual(player3label.getText()))
+                player3label.setTextFill(Color.web("#0000FF"));
             if(viewGUI.getNumberOfPlayers() == 4){
                 for(int i=0; i < player4windowGrid.getRowConstraints().size(); i++){
                     for(int j=0; j<player4windowGrid.getColumnConstraints().size(); j++){
@@ -749,6 +762,12 @@ public class MatchController {
                         }
                     }
                 }
+                if(viewGUI.checkOtherPlayerOnline(player4label.getText()))
+                    player4label.setTextFill(Color.web("#00FF00"));
+                else
+                    player4label.setTextFill(Color.web("#FF0000"));
+                if(viewGUI.checkOtherPlayerActual(player4label.getText()))
+                    player4label.setTextFill(Color.web("#0000FF"));
             }
         }
     }

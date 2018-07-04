@@ -821,14 +821,13 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     private Player findPlayer(String s) throws RemoteException {
-        Player p = null;
         for(int i=0; i<gameModel.getPlayers().size(); i++) {
-            p = gameModel.getPlayers().get(i);
+            Player p = gameModel.getPlayers().get(i);
             if(p.getUsername().equals(s)) {
                 return p;
             }
         }
-        return p;
+        return gameModel.getPlayers().get(0);
     }
 
     String getPlayerUsername(int i) throws RemoteException {
@@ -950,12 +949,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
                 }
             }
         }
-        else {
-            if(singlePlayer)
-                network.update(this);
-            else
-                network.update(this);
-        }
+        else
+            network.update(this);
     }
 
     public int getNextPlayerWindowId(int i) throws RemoteException {
@@ -968,6 +963,15 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     boolean checkOtherPlayerWindowEmptyCell(String s, int i, int j) throws RemoteException {
         Player player = findPlayer(s);
         return player.getWindow().getWindow()[i][j].getIsEmpty();
+    }
+
+    boolean checkOtherPlayerOnline(String s) throws RemoteException{
+        Player player = findPlayer(s);
+        return player.getOnline();
+    }
+
+    boolean checkOtherPlayerActual(String s) throws RemoteException{
+        return (gameModel.getActualPlayer().getUsername().equals(s));
     }
 
     Colors getOtherPlayerDiceColor(String s, int i, int j) throws RemoteException {
@@ -999,8 +1003,10 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             verifyServerConnection();
         } catch (RemoteException e) {
             startController.printError("THIS IP ADDRESS DOES NOT EXIST");
+            startController.setWrongIP(true);
         } catch (NotBoundException e){
             startController.printError("OPS... AN ERROR OCCURRED. PLEASE RESTART THE GAME.");
+            startController.setWrongIP(true);
         }
     }
     /**
@@ -1041,8 +1047,9 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
             gameModel = network.getGameModel();
         } catch (IOException e) {
             startController.printError("THIS IP ADDRESS DOES NOT EXIST");
+            startController.setWrongIP(true);
         } catch (ClassNotFoundException e) {
-            //do nothing
+            startController.setWrongIP(true);
         }
     }
 
