@@ -66,7 +66,6 @@ public class Draft implements Serializable {
             return draft.remove(i);
         }
         catch(IndexOutOfBoundsException e){
-            System.out.println("Errore estrazione");
             return null;
         }
     }

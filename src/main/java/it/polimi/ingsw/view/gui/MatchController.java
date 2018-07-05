@@ -43,9 +43,16 @@ public class MatchController {
     private static final String GREEN = "#00FF00";
     private static final String RED = "#FF0000";
     private static final String BLUE = "#0000FF";
+    private static final String DICEPATH = "images/dices/";
+    private static final String PRIVATEOBJECTIVEPATH = "images/private_obj/";
+    private static final String PUBLICOBJECTIVEPATH = "images/public_obj/";
+    private static final String TOOLCARDPATH = "images/toolcards/";
+    private static final String WINDOWPATH = "images/windows/";
+    private static final String PNG = ".png";
 
     private ViewGUI viewGUI;
-    private int firstMove = 0;
+    private String path;
+    private int firstMove;
     private boolean enableRoundtrack = false;
     private boolean rejoined;
 
@@ -54,12 +61,15 @@ public class MatchController {
     }
 
     void init() throws RemoteException {
-        setCards(toolcards, "toolcards");
-        setCards(publicObjectives, "public_obj");
+        loadToolCards();
+        //setCards(toolcards, "toolcards");
+        loadPublicObjectives();
+        //setCards(publicObjectives, "public_obj");
         setDraftDimension(viewGUI.getNumberOfPlayers());
         refreshDraft();
         loadWindowImage(viewGUI.getUser(), 300, 265, clientWindow);
-        loadCardImage("private_obj", viewGUI.getCardId("private_obj", 0), privateObjective, 173, 241);
+        loadPrivateObjective();
+        //loadCardImage("private_obj", viewGUI.getCardId("private_obj", 0), privateObjective, 173, 241);
         refreshTokens();
         setOtherPlayerNumber();
         loadOtherPlayerWindowImages();
@@ -98,14 +108,30 @@ public class MatchController {
 
     /**
      * sets the cards for the game
-     * @param type the kind of card to be created
-     * @param folder the folder where the images are saved
      * @throws RemoteException if the reference could not be accessed
      */
-    private void setCards(GridPane type, String folder) throws RemoteException {
-        for(Node card : type.getChildren()){
-            loadCardImage(folder, viewGUI.getCardId(folder, GridPane.getRowIndex(card)), (ImageView)card, 162, 226);
+
+    private void loadToolCards() throws RemoteException {
+        for(int i=0; i<3; i++){
+            ImageView card = new ImageView();
+            path = TOOLCARDPATH + viewGUI.getGameModel().getField().getToolCards().get(i).getNumber() + PNG;
+            loadImage(path, 162, 226, card, 0);
+            toolcards.add(card, 0, i);
         }
+    }
+
+    private void loadPublicObjectives() throws RemoteException {
+        for(int i=0; i<3; i++){
+            ImageView card = new ImageView();
+            path = PUBLICOBJECTIVEPATH + viewGUI.getGameModel().getField().getPublicObjectives().get(i).getIdNumber() + PNG;
+            loadImage(path, 162, 226, card, 0);
+            publicObjectives.add(card, 0, i);
+        }
+    }
+
+    private void loadPrivateObjective() throws RemoteException {
+        path = PRIVATEOBJECTIVEPATH + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(0).getColor() + PNG;
+        loadImage(path, 173, 241, privateObjective, 0);
     }
 
     /**
@@ -124,7 +150,9 @@ public class MatchController {
      * @param columnIndex the index of the column
      */
     private void createDraftSpace(int columnIndex){
-        ImageView space = createEmptyImageView(60, 60);
+        ImageView space = new ImageView();
+        space.setFitWidth(60);
+        space.setFitHeight(60);
         space.setOnMouseClicked(e -> {
             try {
                 draftClick(e);
@@ -141,9 +169,12 @@ public class MatchController {
      * @throws RemoteException if the reference could not be accessed
      */
     private void refreshDraft() throws RemoteException {
+        int diceIndex;
         for(Node diceImage : draft.getChildren()){
-            if(viewGUI.checkDraftSize(GridPane.getColumnIndex(diceImage))) {
-                loadDiceImageFromDraft(GridPane.getColumnIndex(diceImage), (ImageView)diceImage, 60, 60);
+            diceIndex = GridPane.getColumnIndex(diceImage);
+            if(diceIndex < viewGUI.getGameModel().getField().getDraft().getDraft().size()) {
+                path = DICEPATH + viewGUI.getDraftDice(diceIndex) + PNG;
+                loadImage(path, 60, 60, diceImage, 0);
             }else{
                 ((ImageView) diceImage).setImage(null);
             }
@@ -151,18 +182,8 @@ public class MatchController {
     }
 
     private void loadWindowImage(String player, int width, int height, AnchorPane window) throws RemoteException {
-        String path = "images/windows/" + viewGUI.getPlayerWindow(player) + ".png";
+        String path = WINDOWPATH + viewGUI.getPlayerWindow(player) + PNG;
         loadImage(path, width, height, window, 1);
-    }
-
-    private void loadDiceImageFromDraft(int column, ImageView diceImage, int width, int height) throws RemoteException {
-        String path = "images/dices/" + viewGUI.getDraftDice(column) + ".png";
-        loadImage(path, width, height, diceImage, 0);
-    }
-
-    private void loadCardImage(String folder, String id, ImageView container, int width, int height){
-        String path = "images/" + folder + "/" + id + ".png";
-        loadImage(path, width, height, container, 0);
     }
 
     private void loadImage(String path, int width, int height, Node element, int type){//type 0: imageview, type 1: anchorpane
@@ -174,13 +195,6 @@ public class MatchController {
             BackgroundImage bg = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
             ((AnchorPane) element).setBackground(new Background(bg));
         }
-    }
-
-    private ImageView createEmptyImageView(int width, int height){
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(width);
-        imageView.setFitHeight(height);
-        return imageView;
     }
 
     /**
@@ -446,8 +460,11 @@ public class MatchController {
     }
 
     private void addDiceToRoundtrack(int row, int column) throws RemoteException {
-        ImageView dice = createEmptyImageView(57, 57);
-        loadDiceImageFromDraft(row, dice, 57, 57);
+        ImageView dice = new ImageView();
+        dice.setFitHeight(57);
+        dice.setFitWidth(57);
+        path = "images/dices/" + viewGUI.getDraftDice(row) + ".png";
+        loadImage(path, 57, 57, dice, 0);
         dice.setOnMouseClicked(e -> {
             try {
                 roundtrackClick(e);

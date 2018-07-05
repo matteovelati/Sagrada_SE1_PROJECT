@@ -372,7 +372,7 @@ public class GameModel implements RemoteGameModel, Serializable {
     }
 
     /**
-     * removes an RMI observer from the observers's list (setting him as 'null')
+     * removes a SOCKET observer from the observers's list (setting him as 'null')
      * @param socket the observer to be removed
      */
     public void removeObserverSocket(Socket socket){

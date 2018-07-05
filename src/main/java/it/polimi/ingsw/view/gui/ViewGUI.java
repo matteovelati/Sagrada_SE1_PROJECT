@@ -968,28 +968,6 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     }
 
     /**
-     * gets the idNumber of a generic card
-     * @param type the kind of card to be analyzed
-     * @param i the index of the card
-     * @return the idNumber of the card found
-     * @throws RemoteException if the reference could not be accessed
-     */
-    String getCardId(String type, int i) throws RemoteException{
-        String id = null;
-
-        if(type.equals("toolcards"))
-            id = String.valueOf(gameModel.getField().getToolCards().get(i).getNumber());
-        else if(type.equals("public_obj"))
-            id = String.valueOf(gameModel.getField().getPublicObjectives().get(i).getIdNumber());
-        else if(type.equals("private_obj")) {
-            Player p = findPlayer(user);
-            id = p.getPrivateObjectives().get(i).getColor().toString();
-        }
-
-        return id;
-    }
-
-    /**
      * gets the favor tokens of the player found
      * @param username the username of the player to be found
      * @return the number of favor tokens of the player found
@@ -1076,15 +1054,6 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         return gameModel.getState();
     }
 
-    /**
-     * checks if the size of the draft is bigger than i
-     * @param i the number to check
-     * @return true if the size of the draft is bigger than i, false otherwise
-     * @throws RemoteException if the reference could not be accessed
-     */
-    boolean checkDraftSize(int i) throws RemoteException {
-        return i<gameModel.getField().getDraft().getDraft().size();
-    }
 
     /**
      * checks if the space at index [i,j] of the player's window is empty or not

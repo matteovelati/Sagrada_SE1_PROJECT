@@ -40,7 +40,7 @@ public class SPMatchController {
 
     private ViewGUI viewGUI;
     private String path;
-    int firstMove;
+    private int firstMove;
     private boolean enableRoundtrack = false;
 
     void setViewGUI(ViewGUI viewGUI){
@@ -52,7 +52,6 @@ public class SPMatchController {
         loadPublicObjectives();
         refreshDraft();
         loadWindowImage(viewGUI.getUser(), 300, 265, clientWindow);
-        refreshDraft();
         loadPrivateObjectives();
         refreshTargetScore();
         if(!viewGUI.getGameModel().getField().getRoundTrack().getGrid().isEmpty())
