@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.model.States;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -13,162 +12,54 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-public class MatchController {
+public abstract class MatchController {
 
     @FXML
-    private GridPane draft, toolcards, publicObjectives, roundtrack, grid, player2windowGrid, player3windowGrid, player4windowGrid;
+    protected GridPane draft, toolcards, publicObjectives, roundtrack, grid;
     @FXML
-    private AnchorPane clientWindow, player2window, player3window, player4window;
+    protected AnchorPane clientWindow;
     @FXML
-    private Label message, tokens, errorMessage, player2label, player3label, player4label;
+    protected Label message, errorMessage, tokens;
     @FXML
-    private HBox buttons, draftArea, windowArea, roundtrackArea, left;
+    protected HBox buttons, draftArea, windowArea, roundtrackArea, left;
     @FXML
-    private VBox middle, right;
+    protected VBox middle;
     @FXML
-    private Button pickDice, useToolcard, endTurn, showDices, rejoinButton, restartButton;
+    protected Button pickDice, useToolcard, endTurn, showDices, restartButton;
     @FXML
-    private ImageView privateObjective;
+    protected Region region1, region2, region3;
     @FXML
-    private Region region1, region2, region3;
-    @FXML
-    private TextField input;
+    protected TextField input;
 
-    private static final String GREEN = "#00FF00";
-    private static final String RED = "#FF0000";
-    private static final String BLUE = "#0000FF";
-    private static final String DICEPATH = "images/dices/";
-    private static final String PRIVATEOBJECTIVEPATH = "images/private_obj/";
-    private static final String PUBLICOBJECTIVEPATH = "images/public_obj/";
-    private static final String TOOLCARDPATH = "images/toolcards/";
-    private static final String WINDOWPATH = "images/windows/";
-    private static final String PNG = ".png";
+    static final String GREEN = "#00FF00";
+    static final String RED = "#FF0000";
+    static final String BLUE = "#0000FF";
+    static final String DICEPATH = "images/dices/";
+    static final String PRIVATEOBJECTIVEPATH = "images/private_obj/";
+    static final String PUBLICOBJECTIVEPATH = "images/public_obj/";
+    static final String TOOLCARDPATH = "images/toolcards/";
+    static final String WINDOWPATH = "images/windows/";
+    static final String PNG = ".png";
 
-    private ViewGUI viewGUI;
-    private String path;
-    private int firstMove;
-    private boolean enableRoundtrack = false;
-    private boolean rejoined;
+    ViewGUI viewGUI;
+    String path;
+    int firstMove;
+    boolean enableRoundtrack;
 
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
-    }
-
-    void init() throws RemoteException {
-        loadToolCards();
-        //setCards(toolcards, "toolcards");
-        loadPublicObjectives();
-        //setCards(publicObjectives, "public_obj");
-        setDraftDimension(viewGUI.getNumberOfPlayers());
-        refreshDraft();
-        loadWindowImage(viewGUI.getUser(), 300, 265, clientWindow);
-        loadPrivateObjective();
-        //loadCardImage("private_obj", viewGUI.getCardId("private_obj", 0), privateObjective, 173, 241);
-        refreshTokens();
-        setOtherPlayerNumber();
-        loadOtherPlayerWindowImages();
-        if(!viewGUI.getGameModel().getField().getRoundTrack().getGrid().isEmpty())
-            recreateRoundtrack();
-        rejoined = false;
-
-        errorMessage.managedProperty().bind(errorMessage.visibleProperty());
-        input.managedProperty().bind(input.visibleProperty());
-        draftArea.managedProperty().bind(draftArea.visibleProperty());
-        windowArea.managedProperty().bind(windowArea.visibleProperty());
-        tokens.managedProperty().bind(tokens.visibleProperty());
-        region1.managedProperty().bind(region1.visibleProperty());
-        region2.managedProperty().bind(region2.visibleProperty());
-        buttons.managedProperty().bind(buttons.visibleProperty());
-        roundtrackArea.managedProperty().bind(roundtrackArea.visibleProperty());
-        rejoinButton.managedProperty().bind(rejoinButton.visibleProperty());
-        left.managedProperty().bind(left.visibleProperty());
-        right.managedProperty().bind(right.visibleProperty());
-        restartButton.managedProperty().bind(restartButton.visibleProperty());
-
-        errorMessage.setVisible(false);
-        input.setVisible(false);
-        rejoinButton.setVisible(false);
-        restartButton.setVisible(false);
-    }
-
-    /**
-     * hides the interactive window due to a server disconnection
-     */
-    void serverDown(){
-        setInactive();
-        rejoinButton.setVisible(false);
-        message.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
-    }
-
-    /**
-     * sets the cards for the game
-     * @throws RemoteException if the reference could not be accessed
-     */
-
-    private void loadToolCards() throws RemoteException {
-        for(int i=0; i<3; i++){
-            ImageView card = new ImageView();
-            path = TOOLCARDPATH + viewGUI.getGameModel().getField().getToolCards().get(i).getNumber() + PNG;
-            loadImage(path, 162, 226, card, 0);
-            toolcards.add(card, 0, i);
-        }
-    }
-
-    private void loadPublicObjectives() throws RemoteException {
-        for(int i=0; i<3; i++){
-            ImageView card = new ImageView();
-            path = PUBLICOBJECTIVEPATH + viewGUI.getGameModel().getField().getPublicObjectives().get(i).getIdNumber() + PNG;
-            loadImage(path, 162, 226, card, 0);
-            publicObjectives.add(card, 0, i);
-        }
-    }
-
-    private void loadPrivateObjective() throws RemoteException {
-        path = PRIVATEOBJECTIVEPATH + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(0).getColor() + PNG;
-        loadImage(path, 173, 241, privateObjective, 0);
-    }
-
-    /**
-     * sets the draft dimension based on the number of players in game
-     * @param numberOfPlayers the number of players in game
-     */
-    private void setDraftDimension(int numberOfPlayers){
-        createDraftSpace(0);
-        for(int i=0; i<numberOfPlayers*2; i++) {
-            createDraftSpace(i+1);
-        }
-    }
-
-    /**
-     * creates the space to allocate a die
-     * @param columnIndex the index of the column
-     */
-    private void createDraftSpace(int columnIndex){
-        ImageView space = new ImageView();
-        space.setFitWidth(60);
-        space.setFitHeight(60);
-        space.setOnMouseClicked(e -> {
-            try {
-                draftClick(e);
-            } catch (IOException e1) {
-                //do nothing
-            }
-        });
-        draft.getColumnConstraints().add(new ColumnConstraints(60));
-        draft.add(space, columnIndex, 0);
     }
 
     /**
      * shows the draft
      * @throws RemoteException if the reference could not be accessed
      */
-    private void refreshDraft() throws RemoteException {
+    void refreshDraft() throws RemoteException {
         int diceIndex;
         for(Node diceImage : draft.getChildren()){
             diceIndex = GridPane.getColumnIndex(diceImage);
@@ -181,12 +72,12 @@ public class MatchController {
         }
     }
 
-    private void loadWindowImage(String player, int width, int height, AnchorPane window) throws RemoteException {
+    void loadWindowImage(String player, int width, int height, AnchorPane window) throws RemoteException {
         String path = WINDOWPATH + viewGUI.getPlayerWindow(player) + PNG;
         loadImage(path, width, height, window, 1);
     }
 
-    private void loadImage(String path, int width, int height, Node element, int type){//type 0: imageview, type 1: anchorpane
+    void loadImage(String path, int width, int height, Node element, int type){//type 0: imageview, type 1: anchorpane
         Image image = new Image(getClass().getResourceAsStream(path), width, height, false, true);
 
         if(type == 0)
@@ -197,122 +88,11 @@ public class MatchController {
         }
     }
 
-    /**
-     * shows the favor tokens remaining
-     * @throws RemoteException if the reference could not be accessed
-     */
-    private void refreshTokens() throws RemoteException {
-        int t = viewGUI.getTokens(viewGUI.getUser());
-        tokens.setText("TOKENS: " + t);
-    }
-
-    private void setOtherPlayerNumber() throws RemoteException {
-        if(viewGUI.getNumberOfPlayers() < 4){
-            right.getChildren().removeAll(player4label, player4window);
-            if(viewGUI.getNumberOfPlayers() < 3)
-                right.getChildren().removeAll(player3label, player3window, region3);
-        }
-    }
-
-    private void loadOtherPlayerWindowImages() throws RemoteException {
-        int set=0;
-        for(int i = 0; i < viewGUI.getNumberOfPlayers(); i++){
-            if(!viewGUI.getPlayerUsername(i).equals("next")) {
-                if(set == 0){
-                    loadWindowImage(viewGUI.getPlayerUsername(i), 210, 187, player2window);
-                    player2label.setText(viewGUI.getPlayerUsername(i));
-                    set++;
-                }
-                else if(set == 1){
-                    loadWindowImage(viewGUI.getPlayerUsername(i), 210, 187, player3window);
-                    player3label.setText(viewGUI.getPlayerUsername(i));
-                    set++;
-                }
-                else if(set == 2){
-                    loadWindowImage(viewGUI.getPlayerUsername(i), 210, 187, player4window);
-                    player4label.setText(viewGUI.getPlayerUsername(i));
-                }
-            }
-        }
-    }
-
-    /**
-     * disables the interactive buttons to non-actual players
-     * shows a WAIT message
-     * @throws RemoteException if the reference could not be accessed
-     */
-    void waitTurn() throws RemoteException {
-        refreshTokens();
-        buttons.setDisable(true);
-        clientWindow.setDisable(true);
-        draft.setDisable(true);
-        toolcards.setDisable(true);
-        publicObjectives.setDisable(true);
-        roundtrack.setDisable(true);
-        message.setText("WAIT YOUR TURN");
-        if(!viewGUI.actualPlayer())
-            viewGUI.setBlockSocketConnection(false);
-    }
-
-    void selectMove1View() throws RemoteException {
-        if(rejoined) {
-            if (!roundtrack.getChildren().isEmpty())
-                roundtrack.getChildren().clear();
-            recreateRoundtrack();
-            rejoined = false;
-        }
-        buttons.setVisible(true);
-        tokens.setVisible(true);
-        windowArea.setVisible(true);
-        region2.setVisible(true);
-        draftArea.setVisible(true);
-        region1.setVisible(true);
-        roundtrackArea.setVisible(true);
-        left.setVisible(true);
-        right.setVisible(true);
-
-        firstMove = 0;
-        refreshTokens();
-        refresh();
-        refreshOtherPlayerWindow();
-        enableAllButtons();
-        setStandardTexts();
-    }
-
-    void selectMove2View() throws RemoteException {
-        refreshDraft();
-        setWindowGrid();
-        refreshTokens();
-        if(firstMove == 1) {
-            pickDice.setDisable(true);
-            useToolcard.setDisable(false);
-        }
-        else if(firstMove == 2) {
-            useToolcard.setDisable(true);
-            pickDice.setDisable(false);
-        }
-        setStandardTexts();
-    }
-
-    void selectDraftView(){
-        draft.setDisable(false);
-        endTurn.setText("ABORT");
-        message.setText("SELECT A DICE");
-    }
-
-    void putDiceInWindowView(){
-        clientWindow.setDisable(false);
-        message.setText("PUT THE DICE IN YOUR WINDOW");
-    }
-
-    void selectToolcardView(){
-        toolcards.setDisable(false);
-        endTurn.setText("ABORT");
-        message.setText("SELECT A TOOLCARD");
-    }
-
     void useToolcardView() throws IOException {
+        System.out.println("usa toolcard");
         viewGUI.getChoices().clear();
+        refreshDraft();
+        System.out.println("prima switch");
 
         switch (viewGUI.getSelectedToolcardId()){
             case 1: case 5: case 6: case 8: case 9: case 10: case 11:  //GROZING PLIERS, LENS CUTTER, FLUX BRUSH, FLUX REMOVER, GRINDING STONE, RUNNING PLIERS, CORKBACKEDSTRAIGHTEDGE
@@ -398,22 +178,6 @@ public class MatchController {
         }
     }
 
-    void useToolcard3View() throws RemoteException {
-        refreshTokens();
-        refreshDraft();
-        if(viewGUI.getSelectedToolcardId() == 11){
-            try {
-                viewGUI.getChoices().remove(2);
-                viewGUI.getChoices().remove(2);
-            } catch (IndexOutOfBoundsException e){
-                //DO NOTHING
-            }
-            message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
-            showErrorMessage("(THE SELECTED DICE IS IN POSITION " + (viewGUI.getChoices().get(0)+1) + ")");
-            clientWindow.setDisable(false);
-        }
-    }
-
     void endRoundView() throws RemoteException {
         addDiceToRoundtrack(0, viewGUI.getRound()-1);
         if(viewGUI.getDraft().size() > 1){
@@ -426,135 +190,8 @@ public class MatchController {
         }
     }
 
-    void endMatchView() throws IOException {
-        middle.getChildren().removeAll(buttons, tokens, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
-        message.setText("YOUR FINAL SCORE IS: " + viewGUI.getPlayerScore(viewGUI.getUser()) + "\n" + player2label.getText() + "'S FINAL SCORE IS: " + viewGUI.getPlayerScore(player2label.getText()));
-        if(viewGUI.getNumberOfPlayers() > 2){
-            message.setText(message.getText() + "\n" + player3label.getText() + "'S FINAL SCORE IS: " + viewGUI.getPlayerScore(player3label.getText()));
-            if(viewGUI.getNumberOfPlayers() == 4)
-                message.setText(message.getText() + "\n" + player4label.getText() + "'S FINAL SCORE IS: " + viewGUI.getPlayerScore(player4label.getText()));
-        }
-        if(viewGUI.actualPlayer())
-            viewGUI.notifyNetwork();
-    }
-
     void restartView(){
         restartButton.setVisible(true);
-    }
-
-    private void showErrorMessage(String s){
-        errorMessage.setVisible(true);
-        errorMessage.setText(s);
-    }
-
-    private void enableAllButtons(){
-        buttons.setDisable(false);
-        pickDice.setDisable(false);
-        useToolcard.setDisable(false);
-        endTurn.setDisable(false);
-    }
-
-    private void setStandardTexts(){
-        endTurn.setText("END TURN");
-        message.setText("CHOOSE YOUR MOVE");
-    }
-
-    private void addDiceToRoundtrack(int row, int column) throws RemoteException {
-        ImageView dice = new ImageView();
-        dice.setFitHeight(57);
-        dice.setFitWidth(57);
-        path = "images/dices/" + viewGUI.getDraftDice(row) + ".png";
-        loadImage(path, 57, 57, dice, 0);
-        dice.setOnMouseClicked(e -> {
-            try {
-                roundtrackClick(e);
-            } catch (IOException e1) {
-                //do nothing
-            }
-        });
-        roundtrack.add(dice, column, row);
-    }
-
-    //
-
-    private void setWindowGrid() throws RemoteException {
-        for(Node child : grid.getChildren()){
-            if(viewGUI.checkWindowEmptyCell(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)))
-                ((ImageView) child).setImage(null);
-            else {
-                String s = "images/dices/" + viewGUI.getWindowDiceColor(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)) + viewGUI.getWindowDiceValue(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)) + ".png";
-                Image image = new Image(getClass().getResourceAsStream(s));
-                ((ImageView) child).setImage(image);
-            }
-        }
-    }
-
-    public void pickDiceButton(ActionEvent e) throws IOException {
-        switch (pickDice.getText()) {
-            case "PICK A DICE":
-                viewGUI.setChoose1(1);
-                if (viewGUI.getGameState().equals(States.SELECTMOVE1))
-                    firstMove = 1;
-                pickDice.setDisable(true);
-                useToolcard.setDisable(true);
-                viewGUI.notifyNetwork();
-                break;
-            case "INCREASE":
-                viewGUI.getChoices().add(1);
-                pickDice.setText("PICK A DICE");
-                pickDice.setDisable(true);
-                useToolcard.setText("USE A TOOLCARD");
-                useToolcard.setDisable(true);
-                viewGUI.notifyNetwork();
-                break;
-            case "YES":
-                errorMessage.setVisible(false);
-                endTurn.setDisable(false);
-                viewGUI.getChoices().add(1);
-                clientWindow.setDisable(false);
-                message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
-                pickDice.setText("PICK A DICE");
-                pickDice.setDisable(true);
-                useToolcard.setText("USE A TOOLCARD");
-                useToolcard.setDisable(true);
-                break;
-            default:
-                assert false;
-        }
-    }
-
-    public void useToolcardButton(ActionEvent e) throws IOException {
-        switch (useToolcard.getText()) {
-            case "USE A TOOLCARD":
-                if (viewGUI.getGameState().equals(States.SELECTMOVE1)) {
-                    viewGUI.setChoose1(2);
-                    firstMove = 2;
-                } else {
-                    viewGUI.setChoose1(1);
-                }
-                pickDice.setDisable(true);
-                useToolcard.setDisable(true);
-                viewGUI.notifyNetwork();
-                break;
-            case "DECREASE":
-                viewGUI.getChoices().add(-2);
-                useToolcard.setText("USE A TOOLCARD");
-                useToolcard.setDisable(true);
-                pickDice.setText("PICK A DICE");
-                pickDice.setDisable(true);
-                viewGUI.notifyNetwork();
-                break;
-            case "NO":
-                errorMessage.setVisible(false);
-                endTurn.setDisable(false);
-                viewGUI.getChoices().add(2);
-                useToolcard.setText("USE A TOOLCARD");
-                pickDice.setText("PICK A DICE");
-                viewGUI.notifyNetwork();
-                break;
-            default:
-                assert false;
-        }
     }
 
     public void endTurnButton(ActionEvent e) throws IOException {
@@ -592,12 +229,12 @@ public class MatchController {
         }
     }
 
-    private void draftClick(MouseEvent e) throws IOException {
+    public void draftClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         errorMessage.setVisible(false);
 
         switch (viewGUI.getGameState()) {
-            case SELECTDRAFT:
+            case SELECTDRAFT: case SELECTDIE:
                 viewGUI.setChoose1(GridPane.getColumnIndex(selected) + 1);
                 draft.setDisable(true);
                 viewGUI.notifyNetwork();
@@ -669,14 +306,6 @@ public class MatchController {
         }
     }
 
-    public void toolcardClick(MouseEvent e) throws IOException {
-        errorMessage.setVisible(false);
-        ImageView selected = (ImageView) e.getSource();
-        viewGUI.setChoose1(GridPane.getRowIndex(selected)+1);
-        toolcards.setDisable(true);
-        viewGUI.notifyNetwork();
-    }
-
     public void roundtrackClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         int index = findElementIndex(GridPane.getRowIndex(selected), GridPane.getColumnIndex(selected));
@@ -688,7 +317,7 @@ public class MatchController {
             clientWindow.setDisable(false);
         }
         else if(viewGUI.getSelectedToolcardId() == 5) {
-            String s = "images/dices/" + viewGUI.getDraftDiceColor(viewGUI.getChoices().get(0)) + viewGUI.getDraftDiceValue(viewGUI.getChoices().get(0)) + ".png";
+            String s = DICEPATH + viewGUI.getDraftDiceColor(viewGUI.getChoices().get(0)) + viewGUI.getDraftDiceValue(viewGUI.getChoices().get(0)) + PNG;
             Image image = new Image(getClass().getResourceAsStream(s));
             selected.setImage(image);
             viewGUI.notifyNetwork();
@@ -696,8 +325,8 @@ public class MatchController {
     }
 
     public void inputEnter(ActionEvent e) throws IOException {
-        if(isInt(input)){
-            int value = Integer.parseInt(input.getText());
+        int value = isInt(input);
+        if(value != 0){
             if(value>=1 && value<=6){
                 viewGUI.getChoices().add(value);
                 errorMessage.setVisible(false);
@@ -711,9 +340,13 @@ public class MatchController {
         }
     }
 
-    public void error(String error){
-        errorMessage.setVisible(true);
-        errorMessage.setText(error);
+    public int isInt(TextField input){
+        try{
+            int i = Integer.parseInt(input.getText());
+            return i;
+        }catch(NumberFormatException e){
+            return 0;
+        }
     }
 
     public void refresh() throws RemoteException {
@@ -721,7 +354,31 @@ public class MatchController {
         setWindowGrid();
     }
 
-    private void showRoundtrackDices(){
+    public void setWindowGrid() throws RemoteException {
+        for(Node child : grid.getChildren()){
+            if(viewGUI.checkWindowEmptyCell(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)))
+                ((ImageView) child).setImage(null);
+            else {
+                String s = DICEPATH + viewGUI.getWindowDiceColor(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)) + viewGUI.getWindowDiceValue(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)) + PNG;
+                Image image = new Image(getClass().getResourceAsStream(s));
+                ((ImageView) child).setImage(image);
+            }
+        }
+    }
+
+    public void enableAllButtons(){
+        buttons.setDisable(false);
+        pickDice.setDisable(false);
+        useToolcard.setDisable(false);
+        endTurn.setDisable(false);
+    }
+
+    public void setStandardTexts(){
+        endTurn.setText("END TURN");
+        message.setText("CHOOSE YOUR MOVE");
+    }
+
+    public void showRoundtrackDices(){
         showDices.setText("HIDE DICES");
         for (RowConstraints row : roundtrack.getRowConstraints())
             row.setPrefHeight(57);
@@ -738,7 +395,7 @@ public class MatchController {
         middle.setAlignment(Pos.TOP_CENTER);
     }
 
-    private void hideRoundtrackDices(){
+    public void hideRoundtrackDices(){
         showDices.setText("SHOW DICES");
         for (RowConstraints row : roundtrack.getRowConstraints())
             row.setPrefHeight(5);
@@ -754,7 +411,28 @@ public class MatchController {
         middle.setAlignment(Pos.CENTER);
     }
 
-    private int findElementIndex(int row, int column){
+    public void showErrorMessage(String s){
+        errorMessage.setVisible(true);
+        errorMessage.setText(s);
+    }
+
+    public void addDiceToRoundtrack(int row, int column) throws RemoteException {
+        ImageView dice = new ImageView();
+        dice.setFitHeight(57);
+        dice.setFitWidth(57);
+        path = DICEPATH + viewGUI.getDraftDice(row) + PNG;
+        loadImage(path, 57, 57, dice, 0);
+        dice.setOnMouseClicked(e -> {
+            try {
+                roundtrackClick(e);
+            } catch (IOException e1) {
+                //do nothing
+            }
+        });
+        roundtrack.add(dice, column, row);
+    }
+
+    public int findElementIndex(int row, int column){
         int counter = 0;
         for(Node child : roundtrack.getChildren()){
             if (GridPane.getColumnIndex(child) == column && GridPane.getRowIndex(child) == row)
@@ -764,98 +442,9 @@ public class MatchController {
         return counter;
     }
 
-    private boolean isInt(TextField input){
-        try{
-            int i = Integer.parseInt(input.getText());
-            return true;
-        }catch(NumberFormatException e){
-            return false;
-        }
-    }
-
-    void refreshOtherPlayerWindow() throws RemoteException {
-        for(int i=0; i < player2windowGrid.getRowConstraints().size(); i++){
-            for(int j=0; j<player2windowGrid.getColumnConstraints().size(); j++){
-                if(!viewGUI.checkOtherPlayerWindowEmptyCell(player2label.getText(), i, j)){
-                    String s = "images/dices/" + viewGUI.getOtherPlayerDiceColor(player2label.getText(), i, j) + viewGUI.getOtherPlayerDiceValue(player2label.getText(), i, j) + ".png";
-                    Image image = new Image(getClass().getResourceAsStream(s), 35, 35, false, true);
-                    ImageView dice = new ImageView(image);
-                    dice.setFitHeight(35);
-                    dice.setFitWidth(35);
-                    player2windowGrid.add(dice, j, i);
-                }
-            }
-            if(viewGUI.checkOtherPlayerOnline(player2label.getText()))
-                player2label.setTextFill(Color.web(GREEN));
-            else
-                player2label.setTextFill(Color.web(RED));
-            if(viewGUI.checkOtherPlayerActual(player2label.getText()))
-                player2label.setTextFill(Color.web(BLUE));
-        }
-        if(viewGUI.getNumberOfPlayers() > 2){
-            for(int i=0; i < player3windowGrid.getRowConstraints().size(); i++){
-                for(int j=0; j<player3windowGrid.getColumnConstraints().size(); j++){
-                    if(!viewGUI.checkOtherPlayerWindowEmptyCell(player3label.getText(), i, j)){
-                        String s = "images/dices/" + viewGUI.getOtherPlayerDiceColor(player3label.getText(), i, j) + viewGUI.getOtherPlayerDiceValue(player3label.getText(), i, j) + ".png";
-                        Image image = new Image(getClass().getResourceAsStream(s), 35, 35, false, true);
-                        ImageView dice = new ImageView(image);
-                        dice.setFitHeight(35);
-                        dice.setFitWidth(35);
-                        player3windowGrid.add(dice, j, i);
-                    }
-                }
-            }
-            if(viewGUI.checkOtherPlayerOnline(player3label.getText()))
-                player3label.setTextFill(Color.web(GREEN));
-            else
-                player3label.setTextFill(Color.web(RED));
-            if(viewGUI.checkOtherPlayerActual(player3label.getText()))
-                player3label.setTextFill(Color.web(BLUE));
-            if(viewGUI.getNumberOfPlayers() == 4){
-                for(int i=0; i < player4windowGrid.getRowConstraints().size(); i++){
-                    for(int j=0; j<player4windowGrid.getColumnConstraints().size(); j++){
-                        if(!viewGUI.checkOtherPlayerWindowEmptyCell(player4label.getText(), i, j)){
-                            String s = "images/dices/" + viewGUI.getOtherPlayerDiceColor(player4label.getText(), i, j) + viewGUI.getOtherPlayerDiceValue(player4label.getText(), i, j) + ".png";
-                            Image image = new Image(getClass().getResourceAsStream(s), 35, 35, false, true);
-                            ImageView dice = new ImageView(image);
-                            dice.setFitHeight(35);
-                            dice.setFitWidth(35);
-                            player4windowGrid.add(dice, j, i);
-                        }
-                    }
-                }
-                if(viewGUI.checkOtherPlayerOnline(player4label.getText()))
-                    player4label.setTextFill(Color.web(GREEN));
-                else
-                    player4label.setTextFill(Color.web(RED));
-                if(viewGUI.checkOtherPlayerActual(player4label.getText()))
-                    player4label.setTextFill(Color.web(BLUE));
-            }
-        }
-    }
-
-    void setInactive(){
-        buttons.setVisible(false);
-        tokens.setVisible(false);
-        windowArea.setVisible(false);
-        region2.setVisible(false);
-        draftArea.setVisible(false);
-        region1.setVisible(false);
-        roundtrackArea.setVisible(false);
-        input.setVisible(false);
-        errorMessage.setVisible(false);
-        left.setVisible(false);
-        right.setVisible(false);
-
-        message.setText("YOU ARE NOW INACTIVE!\nTO JOIN AGAIN THE MATCH, PRESS THE BUTTON");
-        rejoinButton.setVisible(true);
-    }
-
-    public void rejoinButtonClicked(ActionEvent e) throws IOException {
-        viewGUI.matchRejoined();
-        rejoinButton.setVisible(false);
-        message.setText("JOINING AGAIN THE MATCH...\nWAIT YOUR TURN");
-        rejoined = true;
+    public void error(String error){
+        errorMessage.setVisible(true);
+        errorMessage.setText(error);
     }
 
     public void restartButtonClicked(ActionEvent e) throws Exception {
@@ -864,7 +453,7 @@ public class MatchController {
         new ViewGUI().start(new Stage());
     }
 
-    private void recreateRoundtrack() throws RemoteException {
+    public void recreateRoundtrack() throws RemoteException {
         int roundtrackSize = viewGUI.getGameModel().getField().getRoundTrack().getGrid().size();
         int necessaryColumn = viewGUI.getGameModel().getField().getRoundTrack().getRound()-1;
         int necessaryRow;
@@ -893,11 +482,11 @@ public class MatchController {
         }
     }
 
-    private void reAddDice(int row, int column, String diceName) {
+    public void reAddDice(int row, int column, String diceName) {
         ImageView dice = new ImageView();
         dice.setFitHeight(57);
         dice.setFitWidth(57);
-        String path = "images/dices/" + diceName + ".png";
+        String path = DICEPATH + diceName + PNG;
         loadImage(path, 57, 57, dice, 0);
         dice.setOnMouseClicked(e -> {
             try {
@@ -908,5 +497,4 @@ public class MatchController {
         });
         roundtrack.add(dice, column, row);
     }
-
 }

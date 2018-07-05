@@ -87,7 +87,7 @@ public class SelectWindowController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/match.fxml"));
         Parent match = loader.load();
 
-        MatchController matchController = loader.getController();
+        MPMatchController matchController = loader.getController();
         matchController.setViewGUI(viewGUI);
         viewGUI.setMatchController(matchController);
         matchController.init();

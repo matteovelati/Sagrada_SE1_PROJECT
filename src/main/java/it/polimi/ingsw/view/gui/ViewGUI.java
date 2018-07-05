@@ -52,7 +52,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
 
     private transient StartController startController;
     private transient SelectWindowController selectWindowController;
-    private transient MatchController matchController;
+    private transient MPMatchController matchController;
     private transient SPMatchController spMatchController;
 
     /**
@@ -892,7 +892,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * sets the matchController of the game
      * @param matchController the matchController to be set
      */
-    void setMatchController(MatchController matchController){
+    void setMatchController(MPMatchController matchController){
         this.matchController = matchController;
     }
 
@@ -1328,6 +1328,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
         socketConnection = true;
         try {
             socket = new Socket(ipAddress, 1337);
+            if(singlePlayer)
+                choose1 = 1;
             ObjectOutputStream obj = new ObjectOutputStream(socket.getOutputStream());
             obj.writeObject(this);
             ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
@@ -1348,6 +1350,8 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     void createSinglePlayerMatch() throws RemoteException {
         if(network.getSinglePlayerStarted()){
             gameModel = network.getGameModel();
+            if(gameModel.getState().equals(States.SELECTWINDOW))
+                choose1 = 1;
         }
         else {
             network.createGameModel(level);
