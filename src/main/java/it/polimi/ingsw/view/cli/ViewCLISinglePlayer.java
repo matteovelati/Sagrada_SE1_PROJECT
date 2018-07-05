@@ -389,7 +389,7 @@ public class ViewCLISinglePlayer extends ViewCLI implements Serializable {
      * @throws IOException if an I/O error occurs while reading stream header
      * @throws ClassNotFoundException if class of a serialized object cannot be found
      */
-    public void updateSocket() throws IOException, ClassNotFoundException {
+    private void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
                 try {
                     ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());

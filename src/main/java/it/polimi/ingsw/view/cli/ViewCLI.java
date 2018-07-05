@@ -150,15 +150,6 @@ public abstract class ViewCLI implements RemoteView, Serializable {
     }
 
     /**
-     * gets if the game is ended or not
-     * @return true if game is ended, false otherwise
-     */
-    @Override
-    public boolean getEndGame() {
-        return endGame;
-    }
-
-    /**
      * gets the list of inputs of the client
      * @return an arraylist of client's inputs
      */

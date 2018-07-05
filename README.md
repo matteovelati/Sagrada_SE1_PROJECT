@@ -14,7 +14,8 @@ Coverage dei test mostrata da Intellij IDEA
 
 ![coverage_test](http://oi63.tinypic.com/2pyt4rd.jpg)
 
-[Link al diagramma UML finale delle classi](https://www.google.com/)
+[Link al diagramma UML finale delle classi](UML)
+
 
 Funzionalità implementate:
 

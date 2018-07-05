@@ -77,7 +77,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * gets if the socket connection has to be blocked or not
      * @return true if the socket conncetion has to be blocked
      */
-    public synchronized boolean getBlockSocketConnection() {
+    private synchronized boolean getBlockSocketConnection() {
         return blockSocketConnection;
     }
 
@@ -85,7 +85,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * sets if the socket connection has to be blocked or not
      * @param blockSocketConnection the boolean to be set
      */
-    public synchronized void setBlockSocketConnection(boolean blockSocketConnection) {
+    synchronized void setBlockSocketConnection(boolean blockSocketConnection) {
         this.blockSocketConnection = blockSocketConnection;
     }
 
@@ -102,7 +102,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * sets if the socket timeout connection needs be deleted or not
      * @param x the boolean to be set
      */
-    public synchronized void setDeleteConnectionSocket(boolean x){
+    private synchronized void setDeleteConnectionSocket(boolean x){
         this.deleteConnectionSocket = x;
     }
 
@@ -172,7 +172,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * @throws IOException if an I/O error occurs while reading stream header
      * @throws ClassNotFoundException if class of a serialized object cannot be found
      */
-    public void updateSocket() throws IOException, ClassNotFoundException {
+    void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
             if(!getDeleteConnectionSocket() && !getBlockSocketConnection()) {
                 try {
@@ -201,7 +201,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * @throws IOException if an I/O error occurs while reading stream header
      * @throws ClassNotFoundException if class of a serialized object cannot be found
      */
-    public void updateSocketSP() throws IOException, ClassNotFoundException{
+    void updateSocketSP() throws IOException, ClassNotFoundException{
         while(!endGame) {
             try {
                 try {
@@ -784,15 +784,6 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     @Override
     public int getChoose2() {
         return choose2;
-    }
-
-    /**
-     * gets if the game is ended or not
-     * @return true if game is ended, false otherwise
-     */
-    @Override
-    public boolean getEndGame() {
-        return endGame;
     }
 
     /**
@@ -1386,7 +1377,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * sets if has started a singleplayer match
      * @param singlePlayer the boolean to be set
      */
-    public void setSinglePlayer(boolean singlePlayer){
+    void setSinglePlayer(boolean singlePlayer){
         this.singlePlayer = singlePlayer;
     }
 
@@ -1500,7 +1491,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
     /**
      * if the timer expired, set the player offline
      */
-    public void socketTimeOut(){
+    private void socketTimeOut(){
         new Thread(() -> {
             try {
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
@@ -1549,7 +1540,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * sets the level of difficulty of a the match
      * 0 if multiplayer, an int between 1 and 5 if singleplayer
      */
-    public void setLevel(int level){
+    void setLevel(int level){
         this.level = level;
     }
 }

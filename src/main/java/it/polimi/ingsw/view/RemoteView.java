@@ -65,13 +65,6 @@ public interface RemoteView extends Remote {
     int getChoose2() throws RemoteException;
 
     /**
-     * gets if game is ended or not
-     * @return true if game is ended, false otherwise
-     * @throws RemoteException if the reference could not be accessed
-     */
-    boolean getEndGame() throws RemoteException;
-
-    /**
      * gets arraylist of choices
      * @return an arraylist of integer which contains the client's inputs
      * @throws RemoteException if the reference could not be accessed

@@ -138,7 +138,7 @@ public class ViewCLIMultiPlayer extends ViewCLI implements Serializable {
     /**
      * if the timer expired, set the player offline
      */
-    public void socketTimeOut(){
+    private void socketTimeOut(){
         new Thread(() -> {
             try {
                 ObjectInputStream ob = new ObjectInputStream(socket.getInputStream());
@@ -651,7 +651,7 @@ public class ViewCLIMultiPlayer extends ViewCLI implements Serializable {
      * @throws IOException if an I/O error occurs while reading stream header
      * @throws ClassNotFoundException if class of a serialized object cannot be found
      */
-    public void updateSocket() throws IOException, ClassNotFoundException {
+    private void updateSocket() throws IOException, ClassNotFoundException {
         while(!endGame) {
             if(!getDeleteConnectionSocket()) {
                 try {
