@@ -29,11 +29,18 @@ public class SelectWindowController {
 
     private ViewGUI viewGUI;
 
-
+    /**
+     * sets the viewGUI reference
+     * @param viewGUI the viewGUI reference
+     */
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
     }
 
+    /**
+     * initializes the select window scene
+     * @throws RemoteException if the reference could not be accessed
+     */
     void init() throws RemoteException {
         allWindows.managedProperty().bind(allWindows.visibleProperty());
         rejoin.managedProperty().bind(rejoin.visibleProperty());
@@ -41,12 +48,19 @@ public class SelectWindowController {
         loadWindowPatterns();
     }
 
+    /**
+     * removes all the center graphics and show a message
+     */
     void serverDown(){
         allWindows.setVisible(false);
         rejoin.setVisible(false);
         text.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
     }
 
+    /**
+     * loads the window patterns images
+     * @throws RemoteException if the reference could not be accessed
+     */
     void loadWindowPatterns() throws RemoteException {
         loadImage(0, true, card1front);
         loadImage(0, false, card1back);
@@ -54,6 +68,9 @@ public class SelectWindowController {
         loadImage(1, false, card2back);
     }
 
+    /**
+     * hides all the select window scene and show a "wait your turn" text
+     */
     void waitTurn(){
         allWindows.setVisible(false);
         if(viewGUI.getSinglePlayer()){
@@ -64,25 +81,44 @@ public class SelectWindowController {
         }
     }
 
+    /**
+     * shows the window patterns
+     */
     void showWindowPatterns(){
         text.setText("CHOOSE A WINDOW PATTERN");
         allWindows.setVisible(true);
     }
 
+    /**
+     * loads the image based on the parameters
+     * @param schemeCard scheme card index from the model
+     * @param frontSide true if needs to load the front side image, otherwise the back side image
+     * @param window image container
+     * @throws RemoteException
+     */
     private void loadImage(int schemeCard, boolean frontSide, ImageView window) throws RemoteException {
         String s = "images/windows/" + viewGUI.getWindowId(schemeCard, frontSide) + ".png";
         Image image = new Image(getClass().getResourceAsStream(s), 350, 313, false, true);
         window.setImage(image);
     }
 
+    /**
+     * sets the window pattern selected
+     * @param e windowclick event
+     * @throws IOException
+     */
     public void windowClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         int selection = GridPane.getRowIndex(selected)*2 + GridPane.getColumnIndex(selected) + 1;
-        //waitTurn();
         viewGUI.setChoose1(selection);
         viewGUI.notifyNetwork();
     }
 
+    /**
+     * changes the screen scene
+     * @param mainStage where the schene must be loaded
+     * @throws IOException
+     */
     void changeScene(Stage mainStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/match.fxml"));
         Parent match = loader.load();
@@ -106,12 +142,20 @@ public class SelectWindowController {
         match.requestFocus();
     }
 
+    /**
+     * hides all the select window graphics and show the rejoin button
+     */
     void setInactive(){
         allWindows.setVisible(false);
         text.setText("YOU ARE NOW INACTIVE! TO JOIN AGAIN THE MATCH, PRESS THE BUTTON");
         rejoin.setVisible(true);
     }
 
+    /**
+     * hide the rejoin button and add again the player to the match
+     * @param e rejoin button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void rejoinButtonClicked(ActionEvent e) throws IOException {
         viewGUI.matchRejoined();
         rejoin.setVisible(false);

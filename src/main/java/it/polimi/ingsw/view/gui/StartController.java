@@ -36,6 +36,9 @@ public class StartController {
     private String ipAddress;
     private boolean wrongIP = false;
 
+    /**
+     * initializes the first gui screen
+     */
     void init() {
         error.managedProperty().bind(error.visibleProperty());
         message.managedProperty().bind(message.visibleProperty());
@@ -52,6 +55,11 @@ public class StartController {
         chooseMatchType();
     }
 
+    /**
+     * refreshes the window based on the actual state
+     * @param event start button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void startButtonClicked(ActionEvent event) throws IOException {
         if(state == 0)
             matchSelected();
@@ -65,6 +73,11 @@ public class StartController {
             usernameInserted();
     }
 
+    /**
+     * refreshes the window based on the actual state
+     * @param e input action event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void inputEnter(ActionEvent e) throws IOException {
         if(state == 2)
             ipInsertion();
@@ -72,14 +85,26 @@ public class StartController {
             usernameInserted();
     }
 
+    /**
+     * sets the viewGUI reference
+     * @param viewGUI the viewGUI reference
+     */
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
     }
 
+    /**
+     * sets if the ip address inserted is wrong
+     * @param wrongIP
+     */
     public void setWrongIP(boolean wrongIP) {
         this.wrongIP = wrongIP;
     }
 
+    /**
+     * sets the client username
+     * @param s username
+     */
     private void setUser(String s){
         viewGUI.setUser(s);
         container.getChildren().removeAll(startButton, username, error);
@@ -89,12 +114,20 @@ public class StartController {
             lobby.setVisible(true);
     }
 
+    /**
+     * hides all if the game is already started
+     */
     private void gameStarted(){
         container.getChildren().removeAll(message, lobby, startButton, username, radioButton1, radioButton2, radioButton3, radioButton4, radioButton5);
         error.setVisible(true);
         error.setText("OPS! THE GAME IS ALREADY STARTED!\nCOME BACK LATER!");
     }
 
+    /**
+     * verifies if the client can continue joining the match
+     * @return true if the client can join the match, otherwise false
+     * @throws RemoteException if the reference could not be accessed
+     */
     private boolean checkState() throws RemoteException {
         if((viewGUI.getSinglePlayer() && viewGUI.getNetwork().getMultiPlayerStarted()) || (!viewGUI.getSinglePlayer() && viewGUI.getNetwork().getSinglePlayerStarted())) {
             gameStarted();
@@ -109,6 +142,11 @@ public class StartController {
         return true;
     }
 
+    /**
+     * changes the screen scene
+     * @param mainStage where the schene must be loaded
+     * @throws IOException
+     */
     void changeScene(Stage mainStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/selectwindow.fxml"));
         Parent selectWindow = loader.load();
@@ -138,20 +176,34 @@ public class StartController {
         selectWindow.requestFocus();
     }
 
+    /**
+     * show a text in the lobby
+     */
     void printLobby(){
         lobby.setText("GAMERS IN THE LOBBY:\n");
     }
 
+    /**
+     * show the player username
+     * @param s player username
+     */
     void addPrint(String s){
         lobby.setText(lobby.getText() + s + "\n");
     }
 
+    /**
+     * hides all and show the string error
+     * @param s string error
+     */
     void printError(String s){
         container.getChildren().removeAll(startButton, message, lobby, username, radioButton1, radioButton2);
         error.setVisible(true);
         error.setText(s);
     }
 
+    /**
+     * enables to select the match type you want to play
+     */
     private void chooseMatchType(){
         error.setVisible(false);
         lobby.setVisible(false);
@@ -162,12 +214,18 @@ public class StartController {
         startButton.setText("OK");
     }
 
+    /**
+     * enables to select the connection type (RMI or SOCKET)
+     */
     private void chooseConnection(){
         message.setText("CHOOSE YOUR CONNECTION:");
         radioButton1.setText("RMI");
         radioButton2.setText("SOCKET");
     }
 
+    /**
+     * enables to insert the server ip addres
+     */
     private void setIpIndex(){
         radioButton1.setVisible(false);
         radioButton2.setVisible(false);
@@ -176,6 +234,9 @@ public class StartController {
         message.setText("INSERT THE IP ADDRESS");
     }
 
+    /**
+     * enables to select the difficulty (only for single player)
+     */
     private void chooseDifficulty(){
         username.setVisible(false);
         radioButton1.setVisible(true);
@@ -188,6 +249,9 @@ public class StartController {
         message.setText("CHOOSE A LEVEL OF DIFFICULTY");
     }
 
+    /**
+     * enables to insert the username
+     */
     private void insertUsername(){
         radioButton1.setVisible(false);
         radioButton2.setVisible(false);
@@ -200,6 +264,9 @@ public class StartController {
         username.setPromptText("username");
     }
 
+    /**
+     * verifies the type of match selected
+     */
     private void matchSelected(){
         if(radioButton1.isSelected()){          //SINGLEPLAYER
             viewGUI.setSinglePlayer(true);
@@ -211,6 +278,9 @@ public class StartController {
         chooseConnection();
     }
 
+    /**
+     * verifies the type of connection selected
+     */
     private void connectionSelected(){
         if(radioButton1.isSelected()){
             connectionType = 1;             //RMI
@@ -223,6 +293,10 @@ public class StartController {
         setIpIndex();
     }
 
+    /**
+     * check if the ip is correct and create/rejoin a match
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void ipInsertion() throws RemoteException {
         if(connectionType == 1)
             viewGUI.setRMIConnection(username.getText());
@@ -273,6 +347,10 @@ public class StartController {
         }
     }
 
+    /**
+     * verifies the difficulty selected and start/rejoin the game
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void singlePlayerSetup() throws RemoteException {
         if(radioButton1.isSelected())
             viewGUI.setLevel(1);
@@ -303,6 +381,13 @@ public class StartController {
             container.getChildren().removeAll(radioButton3, radioButton4, radioButton5);
     }
 
+    /**
+     * verifies if the username is correct.
+     * verifies if the username not already exists.
+     * verifies if the user is reconnecting.
+     * If it's all verified start/rejoin the match, otherwise stop the client
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     private void usernameInserted() throws IOException {
         error.setVisible(false);
         String user = username.getText().trim().toUpperCase();

@@ -19,14 +19,15 @@ import java.rmi.RemoteException;
 
 public class SPMatchController extends MatchController {
 
-    private final static String PICKADICE = "PICK A DICE";
-    private final static String USEATOOLCARD = "USE A TOOLCARD";
-
     @FXML
     private ImageView privateObjective1, privateObjective2;
     @FXML
     private HBox right;
 
+    /**
+     * initializes the match screen of the single player
+     * @throws RemoteException if the reference could not be accessed
+     */
     void init() throws RemoteException{
         loadToolcards();
         loadPublicObjectives();
@@ -56,11 +57,18 @@ public class SPMatchController extends MatchController {
         restartButton.setVisible(false);
     }
 
+    /**
+     * removes all the center graphics and show a message
+     */
     void serverDown() {
         middle.getChildren().removeAll(buttons, tokens, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
         message.setText("SEEMS LIKE THE SERVER HAS BEEN SHUT DOWN");
     }
 
+    /**
+     * sets the toolcards dimension and loads the toolcards images for the single player
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void loadToolcards() throws RemoteException {
         int toolcardsNumber = viewGUI.getGameModel().getField().getToolCards().size();
         int row = 1, column = 0;
@@ -82,15 +90,25 @@ public class SPMatchController extends MatchController {
         }
     }
 
+    /**
+     * loads the public objectives images for the single player
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void loadPublicObjectives() throws RemoteException {
         for(int i=0; i<2; i++){
             ImageView card = new ImageView();
-            path = "images/public_obj/" + viewGUI.getGameModel().getField().getPublicObjectives().get(i).getIdNumber() + ".png";
+            path = PUBLICOBJECTIVEPATH + viewGUI.getGameModel().getField().getPublicObjectives().get(i).getIdNumber() + PNG;
             loadImage(path, 162, 226, card, 0);
             publicObjectives.add(card, 0, i);
         }
     }
 
+    /**
+     * loads the toolcards images for the single player
+     * @param row the row of the toolcards gridPane
+     * @param column the column of the toolcards gridPane
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void addToolcard(int row, int column) throws RemoteException {
         ImageView card = new ImageView();
         path = "images/toolcards/" + viewGUI.getGameModel().getField().getToolCards().get(row + (column + column*2)).getNumber() + ".png";
@@ -105,19 +123,31 @@ public class SPMatchController extends MatchController {
         toolcards.add(card, column, row);
     }
 
+    /**
+     * loads the private objectives images for the single player
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void loadPrivateObjectives() throws RemoteException {
-        path = "images/private_obj/" + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(0).getColor() + ".png";
+        path = PRIVATEOBJECTIVEPATH + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(0).getColor() + PNG;
         loadImage(path, 173, 241, privateObjective1, 0);
-        path = "images/private_obj/" + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(1).getColor() + ".png";
+        path = PRIVATEOBJECTIVEPATH + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(1).getColor() + PNG;
         loadImage(path, 173, 241, privateObjective2, 0);
     }
 
-
+    /**
+     * refreshes the RaundTrack target score
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void refreshTargetScore() throws RemoteException {
         int score = viewGUI.getGameModel().getField().getRoundTrack().calculateRoundTrack();
         tokens.setText("TARGET SCORE: " + score);
     }
 
+    /**
+     * enables all the buttons for the first selection and refreshes the targetScore, the player
+     * window and the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     void selectMove1View() throws RemoteException {
         firstMove = 0;
         refreshTargetScore();
@@ -130,6 +160,10 @@ public class SPMatchController extends MatchController {
         roundtrack.setDisable(true);
     }
 
+    /**
+     * enables all the possible buttons for the second player move and refreshes the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     void selectMove2View() throws RemoteException {
         refreshDraft();
         setWindowGrid();
@@ -144,6 +178,10 @@ public class SPMatchController extends MatchController {
         setStandardTexts();
     }
 
+    /**
+     * enables to select a die from the draft and the abort button
+     * @param toolcardState if true the current state is SELECTDIE, otherwise SELECTDRAFT
+     */
     void selectDraftView(boolean toolcardState){
         abortOnly();
         draft.setDisable(false);
@@ -153,19 +191,28 @@ public class SPMatchController extends MatchController {
             message.setText("SELECT A DICE");
     }
 
+    /**
+     * enables to put a die in your window and the abort button
+     */
     void putDiceInWindowView(){
         abortOnly();
         clientWindow.setDisable(false);
         message.setText("PUT THE DICE IN YOUR WINDOW");
     }
 
+    /**
+     * enables to select a toolcard and the abort button
+     */
     void selectToolcardView(){
-        System.out.println("singolo");
         toolcards.setDisable(false);
         abortOnly();
         message.setText("SELECT A TOOLCARD");
     }
 
+    /**
+     * shows the message of the third stage of the toolcard selected and enables the elements that can be selected
+     * @throws RemoteException if the reference could not be accessed
+     */
     void useToolcard3View() throws RemoteException {
         refreshDraft();
         if(viewGUI.getSelectedToolcardId() == 11){
@@ -181,6 +228,10 @@ public class SPMatchController extends MatchController {
         }
     }
 
+    /**
+     * removes all the center screen graphics and show the final score
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     void endMatchView() throws IOException {
         middle.getChildren().removeAll(buttons, tokens, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
         int myscore = viewGUI.getGameModel().getPlayers().get(0).getFinalScore();
@@ -195,6 +246,11 @@ public class SPMatchController extends MatchController {
         viewGUI.notifyNetwork();
     }
 
+    /**
+     * decides what to do when the pickDiceButton is clicked
+     * @param e pick die button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void pickDiceButton(ActionEvent e) throws IOException {
         switch (pickDice.getText()) {
             case PICKADICE:
@@ -227,6 +283,11 @@ public class SPMatchController extends MatchController {
         }
     }
 
+    /**
+     * decides what to do when the toolcard button is clicked
+     * @param e useToolcard button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void useToolcardButton(ActionEvent e) throws IOException {
         switch (useToolcard.getText()) {
             case USEATOOLCARD:
@@ -259,6 +320,11 @@ public class SPMatchController extends MatchController {
         }
     }
 
+    /**
+     * sets the toolcard selected from the user
+     * @param e toolcard selected event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void toolcardClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
@@ -267,6 +333,9 @@ public class SPMatchController extends MatchController {
         viewGUI.notifyNetwork();
     }
 
+    /**
+     * enables the abort button
+     */
     private void abortOnly(){
         pickDice.setDisable(true);
         useToolcard.setDisable(true);

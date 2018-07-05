@@ -17,8 +17,6 @@ import java.rmi.RemoteException;
 public class MPMatchController extends MatchController {
 
     private static final String FINALSCORE = "'S FINAL SCORE IS: ";
-    private static final String PICKDICE = "PICK A DICE";
-    private static final String USEATOOLCARD = "USE A TOOLCARD";
 
     @FXML
     private GridPane player2windowGrid, player3windowGrid, player4windowGrid;
@@ -35,6 +33,10 @@ public class MPMatchController extends MatchController {
 
     private boolean rejoined;
 
+    /**
+     * initializes the match screen of the multi player
+     * @throws RemoteException if the reference could not be accessed
+     */
     void init() throws RemoteException {
         loadToolCards();
         loadPublicObjectives();
@@ -101,6 +103,10 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * loads the public objectives images for the multi player
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void loadPublicObjectives() throws RemoteException {
         for(int i=0; i<3; i++){
             ImageView card = new ImageView();
@@ -110,6 +116,10 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * loads the private objectives images for the multi player
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void loadPrivateObjective() throws RemoteException {
         path = PRIVATEOBJECTIVEPATH + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(0).getColor() + PNG;
         loadImage(path, 173, 241, privateObjective, 0);
@@ -154,6 +164,10 @@ public class MPMatchController extends MatchController {
         tokens.setText("TOKENS: " + t);
     }
 
+    /**
+     * sets the number of other player window to show
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void setOtherPlayerNumber() throws RemoteException {
         if(viewGUI.getNumberOfPlayers() < 4){
             right.getChildren().removeAll(player4label, player4window);
@@ -162,6 +176,10 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * loads the other player window patterns
+     * @throws RemoteException if the reference could not be accessed
+     */
     private void loadOtherPlayerWindowImages() throws RemoteException {
         int set=0;
         for(int i = 0; i < viewGUI.getNumberOfPlayers(); i++){
@@ -202,6 +220,11 @@ public class MPMatchController extends MatchController {
             viewGUI.setBlockSocketConnection(false);
     }
 
+    /**
+     * enables all the buttons for the first selection and refreshes the targetScore, the players
+     * window and the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     void selectMove1View() throws RemoteException {
         if(rejoined) {
             if (!roundtrack.getChildren().isEmpty())
@@ -227,6 +250,10 @@ public class MPMatchController extends MatchController {
         setStandardTexts();
     }
 
+    /**
+     * enables all the possible buttons for the second player move and refreshes the draft
+     * @throws RemoteException if the reference could not be accessed
+     */
     void selectMove2View() throws RemoteException {
         refreshDraft();
         setWindowGrid();
@@ -242,24 +269,36 @@ public class MPMatchController extends MatchController {
         setStandardTexts();
     }
 
+    /**
+     * enables to select a die from the draft and the abort button
+     */
     void selectDraftView(){
         draft.setDisable(false);
         endTurn.setText("ABORT");
         message.setText("SELECT A DICE");
     }
 
+    /**
+     * enables to put a die in your window and the abort button
+     */
     void putDiceInWindowView(){
         clientWindow.setDisable(false);
         message.setText("PUT THE DICE IN YOUR WINDOW");
     }
 
+    /**
+     * enables to select a toolcard and the abort button
+     */
     void selectToolcardView(){
-        System.out.println("multip");
         toolcards.setDisable(false);
         endTurn.setText("ABORT");
         message.setText("SELECT A TOOLCARD");
     }
 
+    /**
+     * shows the message of the third stage of the toolcard selected and enables the elements that can be selected
+     * @throws RemoteException if the reference could not be accessed
+     */
     void useToolcard3View() throws RemoteException {
         refreshTokens();
         refreshDraft();
@@ -276,6 +315,10 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * removes all the center screen graphics and show the players final score
+     * @throws IOException
+     */
     void endMatchView() throws IOException {
         middle.getChildren().removeAll(buttons, tokens, windowArea, region2, draftArea, region1, roundtrackArea, input, errorMessage);
         message.setText("YOUR FINAL SCORE IS: " + viewGUI.getPlayerScore(viewGUI.getUser()) + "\n" + player2label.getText() + FINALSCORE + viewGUI.getPlayerScore(player2label.getText()));
@@ -288,9 +331,14 @@ public class MPMatchController extends MatchController {
             viewGUI.notifyNetwork();
     }
 
+    /**
+     * decides what to do when the pickDiceButton is clicked
+     * @param e pick die button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void pickDiceButton(ActionEvent e) throws IOException {
         switch (pickDice.getText()) {
-            case PICKDICE:
+            case PICKADICE:
                 viewGUI.setChoose1(1);
                 if (viewGUI.getGameState().equals(States.SELECTMOVE1))
                     firstMove = 1;
@@ -300,7 +348,7 @@ public class MPMatchController extends MatchController {
                 break;
             case "INCREASE":
                 viewGUI.getChoices().add(1);
-                pickDice.setText(PICKDICE);
+                pickDice.setText(PICKADICE);
                 pickDice.setDisable(true);
                 useToolcard.setText(USEATOOLCARD);
                 useToolcard.setDisable(true);
@@ -312,7 +360,7 @@ public class MPMatchController extends MatchController {
                 viewGUI.getChoices().add(1);
                 clientWindow.setDisable(false);
                 message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
-                pickDice.setText(PICKDICE);
+                pickDice.setText(PICKADICE);
                 pickDice.setDisable(true);
                 useToolcard.setText(USEATOOLCARD);
                 useToolcard.setDisable(true);
@@ -322,6 +370,11 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * decides what to do when the toolcard button is clicked
+     * @param e useToolcard button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void useToolcardButton(ActionEvent e) throws IOException {
         switch (useToolcard.getText()) {
             case USEATOOLCARD:
@@ -339,7 +392,7 @@ public class MPMatchController extends MatchController {
                 viewGUI.getChoices().add(-2);
                 useToolcard.setText(USEATOOLCARD);
                 useToolcard.setDisable(true);
-                pickDice.setText(PICKDICE);
+                pickDice.setText(PICKADICE);
                 pickDice.setDisable(true);
                 viewGUI.notifyNetwork();
                 break;
@@ -348,7 +401,7 @@ public class MPMatchController extends MatchController {
                 endTurn.setDisable(false);
                 viewGUI.getChoices().add(2);
                 useToolcard.setText(USEATOOLCARD);
-                pickDice.setText(PICKDICE);
+                pickDice.setText(PICKADICE);
                 viewGUI.notifyNetwork();
                 break;
             default:
@@ -356,6 +409,11 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * sets the toolcard selected from the user
+     * @param e toolcard selected event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void toolcardClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
@@ -364,6 +422,10 @@ public class MPMatchController extends MatchController {
         viewGUI.notifyNetwork();
     }
 
+    /**
+     * loads the images of the dices in the other players window
+     * @throws RemoteException if the reference could not be accessed
+     */
     void refreshOtherPlayerWindow() throws RemoteException {
         for(int i=0; i < player2windowGrid.getRowConstraints().size(); i++){
             for(int j=0; j<player2windowGrid.getColumnConstraints().size(); j++){
@@ -425,6 +487,9 @@ public class MPMatchController extends MatchController {
         }
     }
 
+    /**
+     * hides all the screen graphics and shows only the rejoin button
+     */
     void setInactive(){
         buttons.setVisible(false);
         tokens.setVisible(false);
@@ -442,6 +507,11 @@ public class MPMatchController extends MatchController {
         rejoinButton.setVisible(true);
     }
 
+    /**
+     * hide the rejoin button and add again the player to the match
+     * @param e rejoin button event
+     * @throws IOException any exception thrown by the underlying OutputStream
+     */
     public void rejoinButtonClicked(ActionEvent e) throws IOException {
         viewGUI.matchRejoined();
         rejoinButton.setVisible(false);

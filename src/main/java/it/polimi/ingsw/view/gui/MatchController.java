@@ -48,6 +48,7 @@ public abstract class MatchController {
     static final String SELECTTHEDICEFROMWINDOW = "SELECT FROM YOUR WINDOW THE DICE TO MOVE";
     static final String CHOOSEDICEPOSITIION = "CHOOSE WHERE YOU WANT TO PUT THE DICE";
     static final String PICKADICE = "PICK A DICE";
+    static final String USEATOOLCARD = "USE A TOOLCARD";
 
     ViewGUI viewGUI;
     String path;
