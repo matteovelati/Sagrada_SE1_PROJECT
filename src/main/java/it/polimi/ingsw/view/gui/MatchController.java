@@ -45,6 +45,8 @@ public abstract class MatchController {
     static final String TOOLCARDPATH = "images/toolcards/";
     static final String WINDOWPATH = "images/windows/";
     static final String PNG = ".png";
+    static final String SELECTTHEDICEFROMWINDOW = "SELECT FROM YOUR WINDOW THE DICE TO MOVE";
+    static final String CHOOSEDICEPOSITIION = "CHOOSE WHERE YOU WANT TO PUT THE DICE";
 
     ViewGUI viewGUI;
     String path;
@@ -89,10 +91,8 @@ public abstract class MatchController {
     }
 
     void useToolcardView() throws IOException {
-        System.out.println("usa toolcard");
         viewGUI.getChoices().clear();
         refreshDraft();
-        System.out.println("prima switch");
 
         switch (viewGUI.getSelectedToolcardId()){
             case 1: case 5: case 6: case 8: case 9: case 10: case 11:  //GROZING PLIERS, LENS CUTTER, FLUX BRUSH, FLUX REMOVER, GRINDING STONE, RUNNING PLIERS, CORKBACKEDSTRAIGHTEDGE
@@ -101,7 +101,7 @@ public abstract class MatchController {
                 break;
             case 2: case 3: case 4:         //EGLOMISE BRUSH & COPPER FOIL BURNISHER & LATHEKIN
                 clientWindow.setDisable(false);
-                message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
+                message.setText(SELECTTHEDICEFROMWINDOW);
                 break;
             case 12:                    //TAP WHEEL
                 enableRoundtrack = true;
@@ -125,7 +125,7 @@ public abstract class MatchController {
                 } catch (IndexOutOfBoundsException e){
                     //DO NOTHING
                 }
-                message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
+                message.setText(CHOOSEDICEPOSITIION);
                 clientWindow.setDisable(false);
                 break;
             case 4:                     //LATHEKIN
@@ -137,7 +137,7 @@ public abstract class MatchController {
                 } catch (IndexOutOfBoundsException e){
                     //DO NOTHING
                 }
-                message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
+                message.setText(SELECTTHEDICEFROMWINDOW);
                 clientWindow.setDisable(false);
                 break;
             case 6:                     //FLUX BRUSH
@@ -147,7 +147,7 @@ public abstract class MatchController {
                 } catch (IndexOutOfBoundsException e){
                     //DO NOTHING
                 }
-                message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
+                message.setText(CHOOSEDICEPOSITIION);
                 showErrorMessage("YOU HAVE ROLLED THE DICE IN POSITION: " + (viewGUI.getChoices().get(0)+1));
                 clientWindow.setDisable(false);
                 break;
@@ -263,7 +263,7 @@ public abstract class MatchController {
                 }
                 else if(viewGUI.getSelectedToolcardId() == 8 || viewGUI.getSelectedToolcardId() == 9){
                     clientWindow.setDisable(false);
-                    message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
+                    message.setText(CHOOSEDICEPOSITIION);
                     break;
                 }
                 else if(viewGUI.getSelectedToolcardId() == 10){
@@ -293,9 +293,9 @@ public abstract class MatchController {
             case USETOOLCARD: case USETOOLCARD2: case USETOOLCARD3:
                 viewGUI.getChoices().add(GridPane.getRowIndex(selected));
                 viewGUI.getChoices().add(GridPane.getColumnIndex(selected));
-                if (message.getText().equals("SELECT FROM YOUR WINDOW THE DICE TO MOVE"))
-                    message.setText("CHOOSE WHERE YOU WANT TO PUT THE DICE");
-                else if (message.getText().equals("CHOOSE WHERE YOU WANT TO PUT THE DICE")) {
+                if (message.getText().equals(SELECTTHEDICEFROMWINDOW))
+                    message.setText(CHOOSEDICEPOSITIION);
+                else if (message.getText().equals(CHOOSEDICEPOSITIION)) {
                     clientWindow.setDisable(true);
                     viewGUI.notifyNetwork();
                 }
@@ -313,7 +313,7 @@ public abstract class MatchController {
         enableRoundtrack = false;
         hideRoundtrackDices();
         if(viewGUI.getSelectedToolcardId() == 12) {
-            message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
+            message.setText(SELECTTHEDICEFROMWINDOW);
             clientWindow.setDisable(false);
         }
         else if(viewGUI.getSelectedToolcardId() == 5) {

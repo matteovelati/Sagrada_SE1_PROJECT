@@ -19,6 +19,9 @@ import java.rmi.RemoteException;
 
 public class SPMatchController extends MatchController {
 
+    private final static String PICKADICE = "PICK A DICE";
+    private final static String USEATOOLCARD = "USE A TOOLCARD";
+
     @FXML
     private ImageView privateObjective1, privateObjective2;
     @FXML
@@ -194,7 +197,7 @@ public class SPMatchController extends MatchController {
 
     public void pickDiceButton(ActionEvent e) throws IOException {
         switch (pickDice.getText()) {
-            case "PICK A DICE":
+            case PICKADICE:
                 viewGUI.setChoose1(1);
                 if (viewGUI.getGameState().equals(States.SELECTMOVE1))
                     firstMove = 1;
@@ -202,9 +205,9 @@ public class SPMatchController extends MatchController {
                 break;
             case "INCREASE":
                 viewGUI.getChoices().add(1);
-                pickDice.setText("PICK A DICE");
+                pickDice.setText(PICKADICE);
                 pickDice.setDisable(true);
-                useToolcard.setText("USE A TOOLCARD");
+                useToolcard.setText(USEATOOLCARD);
                 useToolcard.setDisable(true);
                 viewGUI.notifyNetwork();
                 break;
@@ -214,9 +217,9 @@ public class SPMatchController extends MatchController {
                 viewGUI.getChoices().add(1);
                 clientWindow.setDisable(false);
                 message.setText("SELECT FROM YOUR WINDOW THE DICE TO MOVE");
-                pickDice.setText("PICK A DICE");
+                pickDice.setText(PICKADICE);
                 pickDice.setDisable(true);
-                useToolcard.setText("USE A TOOLCARD");
+                useToolcard.setText(USEATOOLCARD);
                 useToolcard.setDisable(true);
                 break;
             default:
@@ -226,7 +229,7 @@ public class SPMatchController extends MatchController {
 
     public void useToolcardButton(ActionEvent e) throws IOException {
         switch (useToolcard.getText()) {
-            case "USE A TOOLCARD":
+            case USEATOOLCARD:
                 if (viewGUI.getGameState().equals(States.SELECTMOVE1)) {
                     viewGUI.setChoose1(2);
                     firstMove = 2;
@@ -237,9 +240,9 @@ public class SPMatchController extends MatchController {
                 break;
             case "DECREASE":
                 viewGUI.getChoices().add(-2);
-                useToolcard.setText("USE A TOOLCARD");
+                useToolcard.setText(USEATOOLCARD);
                 useToolcard.setDisable(true);
-                pickDice.setText("PICK A DICE");
+                pickDice.setText(PICKADICE);
                 pickDice.setDisable(true);
                 viewGUI.notifyNetwork();
                 break;
@@ -247,8 +250,8 @@ public class SPMatchController extends MatchController {
                 errorMessage.setVisible(false);
                 endTurn.setDisable(false);
                 viewGUI.getChoices().add(2);
-                useToolcard.setText("USE A TOOLCARD");
-                pickDice.setText("PICK A DICE");
+                useToolcard.setText(USEATOOLCARD);
+                pickDice.setText(PICKADICE);
                 viewGUI.notifyNetwork();
                 break;
             default:
