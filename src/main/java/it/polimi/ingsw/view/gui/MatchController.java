@@ -47,12 +47,17 @@ public abstract class MatchController {
     static final String PNG = ".png";
     static final String SELECTTHEDICEFROMWINDOW = "SELECT FROM YOUR WINDOW THE DICE TO MOVE";
     static final String CHOOSEDICEPOSITIION = "CHOOSE WHERE YOU WANT TO PUT THE DICE";
+    static final String PICKADICE = "PICK A DICE";
 
     ViewGUI viewGUI;
     String path;
     int firstMove;
     boolean enableRoundtrack;
 
+    /**
+     * sets the reference of the viewGUI
+     * @param viewGUI the reference of the viewGUI
+     */
     void setViewGUI(ViewGUI viewGUI){
         this.viewGUI = viewGUI;
     }
@@ -74,11 +79,27 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * loads the window patterns images
+     * @param player the player whose window has to be loaded
+     * @param width the width of the image that has to be loaded
+     * @param height the height of the image that has to be loaded
+     * @param window the AnchorPane where the image will be loaded as background
+     * @throws RemoteException if the reference could not be accessed
+     */
     void loadWindowImage(String player, int width, int height, AnchorPane window) throws RemoteException {
         String path = WINDOWPATH + viewGUI.getPlayerWindow(player) + PNG;
         loadImage(path, width, height, window, 1);
     }
 
+    /**
+     * loads the ImageView or the AnchorPane's background images
+     * @param path the path of the image that has to be loaded
+     * @param width the width of the image that has to be loaded
+     * @param height the height of the image that has to be loaded
+     * @param element the Node where the image will be loaded
+     * @param type the type of Node passed
+     */
     void loadImage(String path, int width, int height, Node element, int type){//type 0: imageview, type 1: anchorpane
         Image image = new Image(getClass().getResourceAsStream(path), width, height, false, true);
 
@@ -90,6 +111,10 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * shows the message of the first stage of the toolcard selected and enables the elements that can be selected
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     void useToolcardView() throws IOException {
         viewGUI.getChoices().clear();
         refreshDraft();
@@ -114,6 +139,10 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * shows the message of the second stage of the toolcard selected and enables the elements that can be selected
+     * @throws RemoteException if the reference could not be accessed
+     */
     void useToolcard2View() throws RemoteException {
         refreshDraft();
         setWindowGrid();
@@ -178,6 +207,10 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * load the images of the dices in the roundtrack
+     * @throws RemoteException if the reference could not be accessed
+     */
     void endRoundView() throws RemoteException {
         addDiceToRoundtrack(0, viewGUI.getRound()-1);
         if(viewGUI.getDraft().size() > 1){
@@ -190,10 +223,18 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * show the restart button at the end of a match
+     */
     void restartView(){
         restartButton.setVisible(true);
     }
 
+    /**
+     * decides what to do when the endTrun button is clicked based on the written world contained in the button
+     * @param e the event when the endTurn button is clicked
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     public void endTurnButton(ActionEvent e) throws IOException {
         if(endTurn.getText().equals("END TURN")) {
             firstMove = 0;
@@ -219,6 +260,10 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * hides the roundtrack dices if they are visible, shows the roundtrack dices if they are not visible
+     * @param e the event when the showDices button is clicked
+     */
     public void roundtrackButtonClick(ActionEvent e){
         errorMessage.setVisible(false);
         if(showDices.getText().equals("SHOW DICES")) {
@@ -229,6 +274,11 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * decides what to do when the draft is clicked based o the state of the game
+     * @param e the event when the draft is clicked
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     public void draftClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         errorMessage.setVisible(false);
@@ -278,6 +328,11 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * decides what to do when the window is clicked based o the state of the game
+     * @param e the event when the window is clicked
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     public void windowClick(MouseEvent e) throws IOException {
         errorMessage.setVisible(false);
         ImageView selected = (ImageView) e.getSource();
@@ -306,6 +361,11 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * decides what to do when the roundtrack is clicked based o the state of the game
+     * @param e the event when the roundtrack is clicked
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     public void roundtrackClick(MouseEvent e) throws IOException {
         ImageView selected = (ImageView) e.getSource();
         int index = findElementIndex(GridPane.getRowIndex(selected), GridPane.getColumnIndex(selected));
@@ -324,6 +384,11 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * validates the input and add it to the choices ArrayList
+     * @param e the event when the input is entered
+     * @throws IOException Any exception thrown by the underlying OutputStream.
+     */
     public void inputEnter(ActionEvent e) throws IOException {
         int value = isInt(input);
         if(value != 0){
@@ -340,6 +405,11 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * verifies if the parameter is an integer
+     * @param input the TextField from where the String to verify has to be picked
+     * @return the integer converted, otherwise 0
+     */
     public int isInt(TextField input){
         try{
             int i = Integer.parseInt(input.getText());
@@ -349,11 +419,19 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * loads the images of the dices in the draft and in the client window
+     * @throws RemoteException if the reference could not be accessed
+     */
     public void refresh() throws RemoteException {
         refreshDraft();
         setWindowGrid();
     }
 
+    /**
+     * loads the images of the dices in the client window
+     * @throws RemoteException if the reference could not be accessed
+     */
     public void setWindowGrid() throws RemoteException {
         for(Node child : grid.getChildren()){
             if(viewGUI.checkWindowEmptyCell(GridPane.getRowIndex(child), GridPane.getColumnIndex(child)))
@@ -366,6 +444,9 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * enables the pickDice, useToolcard and endTurn buttons
+     */
     public void enableAllButtons(){
         buttons.setDisable(false);
         pickDice.setDisable(false);
@@ -373,11 +454,17 @@ public abstract class MatchController {
         endTurn.setDisable(false);
     }
 
+    /**
+     * set the standard texts
+     */
     public void setStandardTexts(){
         endTurn.setText("END TURN");
         message.setText("CHOOSE YOUR MOVE");
     }
 
+    /**
+     * hides all the elements in the middle section except for the roundtrack, shows all the dices in the roundtrack and enables it if necessary
+     */
     public void showRoundtrackDices(){
         showDices.setText("HIDE DICES");
         for (RowConstraints row : roundtrack.getRowConstraints())
@@ -395,6 +482,9 @@ public abstract class MatchController {
         middle.setAlignment(Pos.TOP_CENTER);
     }
 
+    /**
+     * hides all the dices in the roundtrack, shows all the elements in the middle section and disable the roundtrack click
+     */
     public void hideRoundtrackDices(){
         showDices.setText("SHOW DICES");
         for (RowConstraints row : roundtrack.getRowConstraints())
@@ -411,11 +501,21 @@ public abstract class MatchController {
         middle.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * shows the error message and set its text
+     * @param s the String that has to be shown as error
+     */
     public void showErrorMessage(String s){
         errorMessage.setVisible(true);
         errorMessage.setText(s);
     }
 
+    /**
+     * adds the dice image in the roundtrack at the passed row and column
+     * @param row the row of the roundtrack grid where the image need to be loaded
+     * @param column the column of the roundtrack grid where the image need to be loaded
+     * @throws RemoteException if the reference could not be accessed
+     */
     public void addDiceToRoundtrack(int row, int column) throws RemoteException {
         ImageView dice = new ImageView();
         dice.setFitHeight(57);
@@ -432,6 +532,12 @@ public abstract class MatchController {
         roundtrack.add(dice, column, row);
     }
 
+    /**
+     * find the index of the corrisponding dice in the gamemodel roundtrack of the selected dice in the roundtrack
+     * @param row the row of the selected dice it the roundtrack
+     * @param column the column of the selected dice in the roundtrack
+     * @return the index of the selected dice in the gamemodel roundtrack
+     */
     public int findElementIndex(int row, int column){
         int counter = 0;
         for(Node child : roundtrack.getChildren()){
@@ -442,17 +548,30 @@ public abstract class MatchController {
         return counter;
     }
 
+    /**
+     * shows the error message and set its text
+     * @param error String that has to be shown as error
+     */
     public void error(String error){
         errorMessage.setVisible(true);
         errorMessage.setText(error);
     }
 
+    /**
+     * closes the actual stage and starts a new one
+     * @param e the event when the restart button is clicked
+     * @throws Exception if the operation fail
+     */
     public void restartButtonClicked(ActionEvent e) throws Exception {
         Stage stage = (Stage) restartButton.getScene().getWindow();
         stage.close();
         new ViewGUI().start(new Stage());
     }
 
+    /**
+     * sets the roundtrack grid dimension and loads all the dices images in the roundtrack when reconnecting
+     * @throws RemoteException if the reference could not be accessed
+     */
     public void recreateRoundtrack() throws RemoteException {
         int roundtrackSize = viewGUI.getGameModel().getField().getRoundTrack().getGrid().size();
         int necessaryColumn = viewGUI.getGameModel().getField().getRoundTrack().getRound()-1;
@@ -482,6 +601,12 @@ public abstract class MatchController {
         }
     }
 
+    /**
+     * adds the dice image in the roundtrack at the passed row and column when reconnecting
+     * @param row the row of the roundtrack grid where the image need to be loaded
+     * @param column the column of the roundtrack grid where the image need to be loaded
+     * @param diceName the name of the dice image
+     */
     public void reAddDice(int row, int column, String diceName) {
         ImageView dice = new ImageView();
         dice.setFitHeight(57);
