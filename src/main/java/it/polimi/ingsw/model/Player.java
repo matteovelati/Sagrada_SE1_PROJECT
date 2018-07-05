@@ -114,6 +114,12 @@ public class Player implements Serializable {
         this.dice = dice;
     }
 
+    /**
+     * set the window pattern that the player has choosen
+     * @param card1 the first SchemeCard available for selection
+     * @param card2 the second SchemeCard available for selection
+     * @param i the index of the window
+     */
     public void setWindow(SchemeCard card1, SchemeCard card2, int i){
         switch(i){
             case 1:

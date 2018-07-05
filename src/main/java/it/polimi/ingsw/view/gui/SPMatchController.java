@@ -111,7 +111,7 @@ public class SPMatchController extends MatchController {
      */
     private void addToolcard(int row, int column) throws RemoteException {
         ImageView card = new ImageView();
-        path = "images/toolcards/" + viewGUI.getGameModel().getField().getToolCards().get(row + (column + column*2)).getNumber() + ".png";
+        path = TOOLCARDPATH + viewGUI.getGameModel().getField().getToolCards().get(row + (column + column*2)).getNumber() + PNG;
         loadImage(path, 162, 226, card, 0);
         card.setOnMouseClicked(e -> {
             try {
