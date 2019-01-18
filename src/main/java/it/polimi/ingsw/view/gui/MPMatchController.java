@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.States;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -121,7 +122,8 @@ public class MPMatchController extends MatchController {
      * @throws RemoteException if the reference could not be accessed
      */
     private void loadPrivateObjective() throws RemoteException {
-        path = PRIVATEOBJECTIVEPATH + viewGUI.getGameModel().getPlayers().get(0).getPrivateObjectives().get(0).getColor() + PNG;
+        Player player = viewGUI.findPlayer(viewGUI.getUser());
+        path = PRIVATEOBJECTIVEPATH + player.getPrivateObjectives().get(0).getColor() + PNG;
         loadImage(path, 173, 241, privateObjective, 0);
     }
 

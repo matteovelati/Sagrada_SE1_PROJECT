@@ -975,7 +975,7 @@ public class ViewGUI extends Application implements RemoteView, Serializable {
      * @return the player whose name is equal to the string 's'
      * @throws RemoteException if the reference could not be accessed
      */
-    private Player findPlayer(String s) throws RemoteException {
+    public Player findPlayer(String s) throws RemoteException {
         for(int i=0; i<gameModel.getPlayers().size(); i++) {
             Player p = gameModel.getPlayers().get(i);
             if(p.getUsername().equals(s)) {
